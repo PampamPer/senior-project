@@ -77,7 +77,7 @@ function App() {
             padding: 8,
           },
         },
-      },
+      }, // 
       // MuiSwitch: {
       //   styleOverrides: {
       //     root: {
