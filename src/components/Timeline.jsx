@@ -5,7 +5,7 @@ import { ToggleContext } from "../App";
 
 export default function Main() {
   const [timelines, setTimeline] = useState([]);
-  const path = localStorage.getItem('projectPath') || 'proposal' 
+  const path = localStorage.getItem('projectPath') || 'project' 
   const { toggle, semesterId } = useContext(ToggleContext)
 
   useEffect(()=>
@@ -26,7 +26,7 @@ export default function Main() {
         <Table sx={{ minWidth: 650}} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Deadline</TableCell>
+              <TableCell sx={{ width: 160}}>Deadline</TableCell>
               <TableCell>Detail</TableCell>
             </TableRow>
           </TableHead>

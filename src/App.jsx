@@ -13,7 +13,7 @@ export const ToggleContext = createContext();
 
 function App() {
   axios.defaults.baseURL = "https://cache111.com/seniorprojectapi";
-  const [toggle, setToggle] = useState(localStorage.getItem('projectPath') || true);
+  const [toggle, setToggle] = useState( localStorage.getItem('projectPath')? localStorage.getItem('projectPath')==='project' : true);
   const [semesterId, setSemesterId] = useState(localStorage.getItem('semesterId') || 2);
   const theme = createTheme({
     components: {

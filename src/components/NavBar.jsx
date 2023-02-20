@@ -10,10 +10,8 @@ import axios from "axios";
 import { ToggleContext } from "../App";
 
 export default function NavBar() {
-  const [cookies, setCookie] = useCookies(["toggle", "role", "token"]);
-  // const [toggle, setToggle] = useState(localStorage.getItem('projectPath') === 'project' || false);
-  const { toggle, setToggle, semesterId, setSemesterId } = useContext(ToggleContext);
-  // const [ semester, setSemester ] = useState(localStorage.getItem('semester') || '2565/2')
+  const { toggle, setToggle, semesterId, setSemesterId } =
+    useContext(ToggleContext);
 
   const handleOnChangeToggle = (event) => {
     const isChecked = event.target.checked;
@@ -22,29 +20,10 @@ export default function NavBar() {
   };
 
   const handleOnChangeSemester = (event) => {
-    const semId = event.target.value
-    setSemesterId(semId)
-    localStorage.setItem('semesterId', semId)
-  }
-
-
-  // useEffect(() => {
-  //   if (cookies["toggle"] != null) {
-  //     setToggle(cookies["toggle"]);
-  //   } else {
-  //     axios.get("/togglemodes/current").then((response) => {
-  //       if (response.data.mode == "proposal") {
-  //         setToggle(false);
-  //       }
-  //       if (response.data.mode == "project") {
-  //         setToggle(true);
-  //       }
-  //     });
-  //   }
-  // }, []);
-  // useEffect(() => {
-  //   setCookie("toggle", toggle);
-  // }, [toggle]);
+    const semId = event.target.value;
+    setSemesterId(semId);
+    localStorage.setItem("semesterId", semId);
+  };
 
   let navigate = useNavigate();
 
@@ -69,10 +48,7 @@ export default function NavBar() {
       <Container maxWidth="xl" sx={{ backgroundColor: "#CCCCCC" }}>
         <Toolbar disableGutters>
           <div>
-            <Select
-              value={semesterId}
-              onChange={handleOnChangeSemester}
-            >
+            <Select value={semesterId} onChange={handleOnChangeSemester}>
               <MenuItem value={2}>2565/2</MenuItem>
               <MenuItem value={1}>2565/1</MenuItem>
             </Select>
