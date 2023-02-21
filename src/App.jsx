@@ -4,10 +4,8 @@ import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material";
 import Button from "@mui/material/Button";
 import { Routes, Route } from "react-router-dom";
-
 import SignIn from "./components/SignIn";
 import Main from "./components/MainBeforeLogin";
-import MainStudent from "./components/MainAfterStudent";
 
 export const ToggleContext = createContext();
 
@@ -58,9 +56,19 @@ function App() {
       MuiSvgIcon: {
         styleOverrides: {
           root: {
-            fill: "#0075FF",
+            
           },
         },
+      },
+      MuiIconButton: {
+        styleOverrides: {
+          root: {
+            ":disabled": {
+              color: "#CCCCCC"
+            },
+            color: "#0075FF"
+          },
+        }
       },
       MuiToolbar: {
         styleOverrides: {
@@ -118,7 +126,6 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route path="/main" element={<Main />} />
           <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/main-student" element={<MainStudent />} />
         </Routes>
       </ToggleContext.Provider>
     </ThemeProvider>

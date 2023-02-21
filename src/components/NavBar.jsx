@@ -31,7 +31,7 @@ export default function NavBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <HomeIcon sx={{ width: 32, height: 32 }} />
+          <HomeIcon sx={{ width: 32, height: 32, color: "#0075FF" }} />
           <div>
             <Button variant="text" onClick={() => navigate("/main")}>
               หน้าแรก
@@ -53,6 +53,7 @@ export default function NavBar() {
               <MenuItem value={1}>2565/1</MenuItem>
             </Select>
             <Switch checked={toggle} onChange={handleOnChangeToggle} />
+            {toggle? 'project' : 'proposal'}
           </div>
           <Button variant="outlined">FAQ</Button>
         </Toolbar>
