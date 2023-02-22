@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "../App.css";
 import axios from "axios";
 import { IconButton, Snackbar, Stack } from "@mui/material";
@@ -14,6 +14,7 @@ import NavBar from "./NavBar";
 import Footer from "./Footer";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../App";
 
 function App() {
   const [userId, setUserId] = useState("");
@@ -24,6 +25,7 @@ function App() {
   const [level, setLevel] = useState("info");
   const [mesg, setMesg] = useState("");
   const [open, setOpen] = useState(false);
+  const { setIsLogged } = useContext(AppContext);
 
   let navigate = useNavigate();
 
@@ -41,6 +43,7 @@ function App() {
       )
       .then((response) => {
         // setCookie("token", response.data.token);
+        setIsLogged(true);
         navigate("/main");
         console.log();
       })

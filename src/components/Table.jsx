@@ -77,12 +77,13 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-function createData(name, calories, fat) {
-  return { name, calories, fat };
+function createData(name, calories, fat,x) {
+  // return { name, calories, fat };
+  return [name, calories, fat,x]
 }
 
 const rows = [
-  createData('Cupcake', 305, 3.7),
+  createData('Cupcake', 305, 3.7,10000000000000000),
   createData('Donut', 452, 25.0),
   createData('Eclair', 262, 16.0),
   createData('Frozen yoghurt', 159, 6.0),
@@ -123,15 +124,9 @@ export default function CustomPaginationActionsTable() {
             : rows
           ).map((row) => (
             <TableRow key={row.name}>
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.calories}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.fat}
-              </TableCell>
+              {row.map((element) => 
+                (<TableCell>{element}</TableCell>)
+              )}
             </TableRow>
           ))}
 

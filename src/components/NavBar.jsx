@@ -7,11 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { useEffect } from "react";
 import axios from "axios";
-import { ToggleContext } from "../App";
+import { AppContext } from "../App";
 
 export default function NavBar() {
-  const { toggle, setToggle, semesterId, setSemesterId } =
-    useContext(ToggleContext);
+  const { toggle, setToggle, semesterId, setSemesterId, isLogged } =
+    useContext(AppContext);
 
   const handleOnChangeToggle = (event) => {
     const isChecked = event.target.checked;
@@ -38,6 +38,7 @@ export default function NavBar() {
             </Button>
             <Button variant="text">ตารางสรุป</Button>
             <Button variant="text">เอกสารสำหรับดาวน์โหลด</Button>
+            {isLogged && <Button variant="text">ข้อมูลโครงงาน</Button>}
           </div>
           <Button variant="contained" onClick={() => navigate("/sign-in")}>
             LOGIN
@@ -55,7 +56,7 @@ export default function NavBar() {
             <Switch checked={toggle} onChange={handleOnChangeToggle} />
             {toggle? 'project' : 'proposal'}
           </div>
-          <Button variant="outlined">FAQ</Button>
+          <Button variant="outlined" onClick={() => navigate("/faq")}>FAQ</Button>
         </Toolbar>
       </Container>
     </AppBar>

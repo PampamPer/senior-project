@@ -20,7 +20,7 @@ export default function Main() {
   return (
     <div>
       <NavBar />
-
+      <Table/>
       {/* <Parallax pages={2}>
         <ParallaxLayer offset={0} speed={0.25}>
           <div className="" id="layer3"></div>

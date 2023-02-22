@@ -6,13 +6,15 @@ import Button from "@mui/material/Button";
 import { Routes, Route } from "react-router-dom";
 import SignIn from "./components/SignIn";
 import Main from "./components/MainBeforeLogin";
+import Faq from "./components/FAQ"
 
-export const ToggleContext = createContext();
+export const AppContext = createContext();
 
 function App() {
   axios.defaults.baseURL = "https://cache111.com/seniorprojectapi";
   const [toggle, setToggle] = useState( localStorage.getItem('projectPath')? localStorage.getItem('projectPath')==='project' : true);
   const [semesterId, setSemesterId] = useState(localStorage.getItem('semesterId') || 2);
+  const [isLogged, setIsLogged] = useState()
   const theme = createTheme({
     components: {
       MuiButton: {
@@ -121,13 +123,14 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <ToggleContext.Provider value={{ toggle, setToggle, semesterId, setSemesterId }}>
+      <AppContext.Provider value={{ toggle, setToggle, semesterId, setSemesterId, isLogged, setIsLogged }}>
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/main" element={<Main />} />
           <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/faq" element={<Faq />} />
         </Routes>
-      </ToggleContext.Provider>
+      </AppContext.Provider>
     </ThemeProvider>
   );
 }
