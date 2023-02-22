@@ -32,7 +32,7 @@ export default function Main() {
           <div  className="" id="layer1"></div>
         </ParallaxLayer>
       </Parallax>*/}
-      <Timeline/> 
+      {/* <Timeline/>  */}
     </div>
   );
 }
