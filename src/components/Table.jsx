@@ -65,7 +65,6 @@ const callback = (key) => !ignoreColumn.includes(key);
 
 export default function CustomizedTables(props) {
   const { data, columns } = props;
-  console.log('in comp', props)
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -74,7 +73,7 @@ export default function CustomizedTables(props) {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
   const handleChangePage = (event, newPage) => {
-    ssetPage(newPage);
+    setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -83,7 +82,7 @@ export default function CustomizedTables(props) {
   };
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table" {...props}>
+      <Table sx={{ minWidth: 700}} aria-label="customized table" {...props}>
         <TableHead>
           <TableRow>
             {columns
@@ -111,7 +110,18 @@ export default function CustomizedTables(props) {
               {Object.keys(timeline)
                 .filter(callback)
                 .map((key) => (
-                  <TableCell key={key}>{timeline[key]}</TableCell>
+                  <TableCell key={key}>{
+                    (key == 'downloadLink' && 
+                      <a href={timeline[key]}>{timeline[key]}</a>
+                    )
+                  }
+                  {
+                    (key != 'downloadLink' && 
+                      <span>{timeline[key]}</span>
+                    )
+                  }
+                    
+                  </TableCell>
                 ))}
             </TableRow>
           ))}

@@ -34,15 +34,18 @@ function App() {
       .post(
         "/tokens",
         { userId: userId, password: password },
-        {
-          headers: {
-            /* Authorization: 'Bearer ' + token */
-          },
-          timeout: 5 * 1000,
-        }
+        // {
+        //   headers: {
+        //     /* Authorization: 'Bearer ' + token */
+        //   },
+        //   timeout: 5 * 1000,
+        // }
       )
       .then((response) => {
         // setCookie("token", response.data.token);
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("role", response.data.role);
+        localStorage.setItem("username", response.data.firstname+" "+response.data.lastname);
         setIsLogged(true);
         navigate("/main");
         console.log();

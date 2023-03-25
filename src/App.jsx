@@ -5,8 +5,11 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import Button from "@mui/material/Button";
 import { Routes, Route } from "react-router-dom";
 import SignIn from "./components/SignIn";
-import Main from "./components/MainBeforeLogin";
+import Main from "./components/Main";
 import Faq from "./components/FAQ"
+import DownloadFiles from "./components/DownloadFiles";
+import ProjectInfo from "./components/ProjectInfo";
+import Profile from "./components/Profile";
 
 export const AppContext = createContext();
 
@@ -129,6 +132,9 @@ function App() {
           <Route path="/main" element={<Main />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/faq" element={<Faq />} />
+          <Route path="/download-files" element={<DownloadFiles />} />          
+          <Route path="/project-info" element={<ProjectInfo />} />          
+          <Route path="/profile" element={<Profile />} />          
         </Routes>
       </AppContext.Provider>
     </ThemeProvider>

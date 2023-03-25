@@ -1,16 +1,60 @@
 import AppBar from "@mui/material/AppBar";
-import { useState, useContext } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import HomeIcon from "@mui/icons-material/Home";
-import { Select, MenuItem, Switch, Toolbar, Button } from "@mui/material";
+import {
+  Select,
+  MenuItem,
+  Switch,
+  Toolbar,
+  Button,
+  MenuList,
+  Popper,
+  ClickAwayListener,
+  Paper,
+  Grow,
+} from "@mui/material";
 import { Container } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import { useEffect } from "react";
 import axios from "axios";
 import { AppContext } from "../App";
 
 export default function NavBar() {
-  const { toggle, setToggle, semesterId, setSemesterId, isLogged } =
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === "Escape") {
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = useRef(open);
+  useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
+
+  const { toggle, setToggle, semesterId, setSemesterId, isLogged, setIsLogged } =
     useContext(AppContext);
 
   const handleOnChangeToggle = (event) => {
@@ -28,7 +72,7 @@ export default function NavBar() {
   let navigate = useNavigate();
 
   return (
-    <AppBar position="static">
+    <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <HomeIcon sx={{ width: 32, height: 32, color: "#0075FF" }} />
@@ -36,13 +80,91 @@ export default function NavBar() {
             <Button variant="text" onClick={() => navigate("/main")}>
               หน้าแรก
             </Button>
+            {isLogged && (
+              <Button variant="text" onClick={() => navigate("/project-info")}>
+                ข้อมูลโครงงาน
+              </Button>
+            )}
             <Button variant="text">ตารางสรุป</Button>
-            <Button variant="text">เอกสารสำหรับดาวน์โหลด</Button>
-            {isLogged && <Button variant="text">ข้อมูลโครงงาน</Button>}
+            <Button variant="text" onClick={() => navigate("/download-files")}>
+              เอกสารสำหรับดาวน์โหลด
+            </Button>
           </div>
-          <Button variant="contained" onClick={() => navigate("/sign-in")}>
-            LOGIN
-          </Button>
+          {!isLogged && (
+            <Button variant="contained" onClick={() => navigate("/sign-in")}>
+              LOGIN
+            </Button>
+          )}
+          {isLogged && (
+            <div>
+              <Button
+                ref={anchorRef}
+                id="composition-button"
+                variant="contained"
+                aria-controls={open ? "composition-menu" : undefined}
+                aria-expanded={open ? "true" : undefined}
+                aria-haspopup="true"
+                onClick={handleToggle}
+              >
+                {localStorage.getItem("username")}
+              </Button>
+              <Popper
+                open={open}
+                anchorEl={anchorRef.current}
+                role={undefined}
+                placement="bottom-start"
+                transition
+                disablePortal
+                style={{ zIndex: 1301 }}
+              >
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      transformOrigin:
+                        placement === "bottom-start"
+                          ? "left top"
+                          : "left bottom",
+                    }}
+                  >
+                    <Paper>
+                      <ClickAwayListener onClickAway={handleClose}>
+                        <MenuList
+                          autoFocusItem={open}
+                          id="composition-menu"
+                          aria-labelledby="composition-button"
+                          onKeyDown={handleListKeyDown}
+                        >
+                          <MenuItem
+                            onClick={() => {
+                              handleClose;
+                              // setIsLogged(false);
+                              navigate("/profile");
+                              // localStorage.setItem("token", "");
+                            }}
+                            autoFocus="true"
+                          >
+                            ข้อมูลผู้ใช้งาน
+                          </MenuItem>
+                          <MenuItem
+                            onClick={() => {
+                              handleClose;
+                              // setIsLogged(false);
+                              navigate("/main");
+                              // localStorage.setItem("token", "");
+                            }}
+                            autoFocus="true"
+                          >
+                            ออกจากระบบ
+                          </MenuItem>
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
+            </div>
+          )}
         </Toolbar>
       </Container>
 
@@ -54,9 +176,11 @@ export default function NavBar() {
               <MenuItem value={1}>2565/1</MenuItem>
             </Select>
             <Switch checked={toggle} onChange={handleOnChangeToggle} />
-            {toggle? 'project' : 'proposal'}
+            {toggle ? "project" : "proposal"}
           </div>
-          <Button variant="outlined" onClick={() => navigate("/faq")}>FAQ</Button>
+          <Button variant="outlined" onClick={() => navigate("/faq")}>
+            FAQ
+          </Button>
         </Toolbar>
       </Container>
     </AppBar>
