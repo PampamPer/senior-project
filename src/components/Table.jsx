@@ -13,55 +13,70 @@ import TablePaginationActions from "./TablePagination";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 
-const ignoreColumn = ["semester", "id", "semesterId"];
-const callback = (key) => !ignoreColumn.includes(key);
+export function preprocess(data, columns, dateColumns, datetimeColumns) {
+  const monthNames = [
+    "มกราคม",
+    "กุมภาพันธ์",
+    "มีนาคม",
+    "เมษายน",
+    "พฤษภาคม",
+    "มิถุนายน",
+    "กรกฎาคม",
+    "สิงหาคม.",
+    "กันยายน",
+    "ตุลาคม",
+    "พฤศจิกายน",
+    "ธันวาคม",
+  ];
+  const toThaiDateTimeString = (date) => {
+    let year = date.getFullYear() + 543;
+    let month = monthNames[date.getMonth()];
+    let numOfDay = date.getDate();
 
-// function createData(id, semesterId, semester, deadline, todo) {
-//   return { id, semesterId, semester, deadline, todo };
-// }
+    let hour = date.getHours().toString().padStart(2, "0");
+    let minutes = date.getMinutes().toString().padStart(2, "0");
+    let second = date.getSeconds().toString().padStart(2, "0");
+    return (
+      `${numOfDay} ${month} ${year} ` +
+      `เวลา ` +
+      `${hour}:${minutes}:${second} น.`
+    );
+  };
+  const toThaiDateString = (date) => {
+    let year = date.getFullYear() + 543;
+    let month = monthNames[date.getMonth()];
+    let numOfDay = date.getDate();
 
-// const data = [
-//   createData(
-//     1,
-//     2,
-//     "2565/2",
-//     "2023-01-31",
-//     "นิสิตอัปโหลดไฟล์ สป.1 และ สป. 2 ได้ตั้งแต่วันที่ 9 ม.ค. 2567"
-//   ),
-//   createData(
-//     2,
-//     2,
-//     "2565/2",
-//     "2023-02-28",
-//     "นิสิตแจ้งอาจารย์ผู้ประสานงานรายวิชาเพื่อขออัปเดตข้อมูลโครงงาน (กรณีเปลี่ยนอาจารย์ที่ปรึกษา สมาชิกในกลุ่ม หรือหัวข้อโครงงาน) ได้ตั้งแต่วันที่ 9 ม.ค. 2567"
-//   ),
-//   createData(
-//     3,
-//     2,
-//     "2565/2",
-//     "2023-02-28",
-//     "ระบบแสดงตารางสรุปรวมบนหน้าเว็บก่อนสอบ/จัดนิทรรศการ"
-//   ),
-//   createData(
-//     4,
-//     2,
-//     "2565/2",
-//     "2023-03-10",
-//     "สัปดาห์สอบกลางภาค เริ่มตั้งแต่วันที่ 3 มี.ค. 2567"
-//   ),
-//   createData(
-//     5,
-//     2,
-//     "2565/2",
-//     "2023-04-01",
-//     "อาจารย์ผู้ประสานงานรายวิชาอัปโหลดไฟล์ สป. 3 ที่ภาคส่งออกและที่คณะอนุมัติ"
-//   ),
-//   createData(6, 2, "2565/2", "2023-04-01", "6"),
-//   createData(7, 2, "2565/2", "2023-04-01", "7"),
-//   createData(8, 2, "2565/2", "2023-04-01", "8"),
-//   createData(9, 2, "2565/2", "2023-04-01", "9"),
-//   createData(10, 2, "2565/2", "2023-04-01", "10"),
-// ];
+    let hour = date.getHours().toString().padStart(2, "0");
+    let minutes = date.getMinutes().toString().padStart(2, "0");
+    let second = date.getSeconds().toString().padStart(2, "0");
+    return `${numOfDay} ${month} ${year} `;
+  };
+  // console.log("before", data); // DEBUG
+  var processedData = [];
+  for (const [index, row] of data.entries()) {
+    let newRow = {};
+    newRow["id"] = index;
+    Object.keys(row).forEach((key) => {
+      if (columns.includes(key)) {
+        if (datetimeColumns.includes(key)) {
+          console.log(row[key]); // DEBUG
+          console.log(toThaiDateTimeString(new Date(row[key]))); // DEBUG
+          newRow[key] = toThaiDateTimeString(new Date(row[key]));
+        } else if (dateColumns.includes(key)) {
+          console.log(row[key]); // DEBUG
+          console.log(toThaiDateString(new Date(row[key]))); // DEBUG
+          newRow[key] = toThaiDateString(new Date(row[key]));
+        } else {
+          newRow[key] = row[key];
+        }
+      }
+    });
+    processedData.push(newRow);
+  }
+  // console.log("after", processedData); // DEBUG
+  return processedData;
+}
 
 export function Test() {
   return(
@@ -72,11 +87,10 @@ export function Test() {
 }
 
 export default function CustomizedTables(props) {
-  const { data, columns } = props;
+  const { data, columns, linkcolumns } = props;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
@@ -88,47 +102,37 @@ export default function CustomizedTables(props) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+  // console.log("this is data", data); // DEBUG
+  // console.log("this is columns", columns); // DEBUG
+  // console.log("this is linkcolumns", linkcolumns); // DEBUG
+
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700}} aria-label="customized table" {...props}>
+      <Table sx={{ minWidth: 700 }} aria-label="customized table" {...props}>
         <TableHead>
           <TableRow>
-            {columns
-              .filter(callback)
-              .map((key) => (
-                <TableCell key={key}>{key}</TableCell>
-              ))}
+            {columns.map((column) => (
+              <TableCell key={column.id} sx={column.sx}>
+                {column.label}
+              </TableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {/* {console.log(
-            data.slice(
-              page * rowsPerPage,
-              page * rowsPerPage + rowsPerPage
-            )
-          )} */}
           {(rowsPerPage > 0
-            ? data.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              )
+            ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : data
-          ).map((timeline) => (
-            <TableRow key={timeline.id}>
-              {Object.keys(timeline)
-                .filter(callback)
+          ).map((datarow) => (
+            <TableRow key={datarow.id}>
+              {Object.keys(datarow)
+                .filter((key) => key != "id")
                 .map((key) => (
-                  <TableCell key={key}>{
-                    (key == 'downloadLink' && 
-                      <a href={timeline[key]}>{timeline[key]}</a>
-                    )
-                  }
-                  {
-                    (key != 'downloadLink' && 
-                      <span>{timeline[key]}</span>
-                    )
-                  }
-                    
+                  <TableCell key={key}>
+                    {linkcolumns.includes(key) ? (
+                      <a href={datarow[key]}>{datarow[key]}</a>
+                    ) : (
+                      datarow[key]
+                    )}
                   </TableCell>
                 ))}
             </TableRow>
@@ -165,7 +169,7 @@ export default function CustomizedTables(props) {
   );
 }
 
-CustomizedTables.propTypes= {
+CustomizedTables.propTypes = {
   data: PropTypes.array,
   columns: PropTypes.array.isRequired,
 };
