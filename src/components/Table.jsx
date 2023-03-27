@@ -14,11 +14,10 @@ import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 
 export function preprocess(data, columns) {
-  // console.log("before", data); // DEBUG
+  console.log("before", data); // DEBUG
   var processedData = [];
   for (const [index, row] of data.entries()) {
     let newRow = {};
-    console.log(index, row);
     newRow["id"] = index;
     Object.keys(row).forEach((key) => {
       if (columns.includes(key)) {
@@ -27,7 +26,7 @@ export function preprocess(data, columns) {
     });
     processedData.push(newRow);
   }
-  // console.log("after", processedData); // DEBUG
+  console.log("after", processedData); // DEBUG
   return processedData;
 }
 
@@ -49,6 +48,7 @@ export default function CustomizedTables(props) {
   };
   console.log("this is data", data);
   console.log("this is columns", columns);
+  console.log("this is linkcolumns", linkcolumns);
 
   return (
     <TableContainer component={Paper}>

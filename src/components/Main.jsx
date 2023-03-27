@@ -61,7 +61,7 @@ export default function Main() {
 
   const columns = [
     { id: "deadline", label: "Deadline", sx: { width: "50%" } },
-    { id: "todo", label: "To Do", sx: { width: "50%" } },
+    { id: "todo", label: "Todo", sx: { width: "50%" } },
   ];
   const linkColumns = [];
 
@@ -70,7 +70,7 @@ export default function Main() {
       <NavBar />
       <img src={lineQR.qr} width="200px" />
       <br />
-      {lineQR.url}
+      <a href={lineQR.url}>{lineQR.url}</a>
       <Table data={data} columns={columns} linkcolumns={linkColumns} />
       {/* <Parallax pages={2}>
         <ParallaxLayer offset={0} speed={0.25}>
