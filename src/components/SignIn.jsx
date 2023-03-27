@@ -15,6 +15,7 @@ import Footer from "./Footer";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../App";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 
 function App() {
   const [userId, setUserId] = useState("");
@@ -25,7 +26,7 @@ function App() {
   const [level, setLevel] = useState("info");
   const [mesg, setMesg] = useState("");
   const [open, setOpen] = useState(false);
-  const { setIsLogged } = useContext(AppContext);
+  const { isLogged, setIsLogged } = useContext(AppContext);
 
   let navigate = useNavigate();
 
@@ -33,7 +34,7 @@ function App() {
     axios
       .post(
         "/tokens",
-        { userId: userId, password: password },
+        { userId: userId, password: password }
         // {
         //   headers: {
         //     /* Authorization: 'Bearer ' + token */
@@ -45,7 +46,12 @@ function App() {
         // setCookie("token", response.data.token);
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("role", response.data.role);
-        localStorage.setItem("username", response.data.firstname+" "+response.data.lastname);
+        localStorage.setItem(
+          "username",
+          response.data.firstname + " " + response.data.lastname
+        );
+        // localStorage.setItem("pic", response.data.profilePicture==''? "https://www.clipartmax.com/png/middle/434-4349876_profile-icon-vector-png.png": response.data.profilePicture);
+        // localStorage.setItem("pic", response.data.profilePicture==''? "AccountCircle": response.data.profilePicture);
         setIsLogged(true);
         navigate("/main");
         console.log();
@@ -62,8 +68,6 @@ function App() {
         }
       });
   };
-
- 
 
   return (
     <div className="App">

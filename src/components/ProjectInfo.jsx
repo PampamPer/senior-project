@@ -59,7 +59,7 @@ export default function ProjectInfo() {
   return (
     <div>
       <NavBar />
-      <Table
+      {/* <Table
         data={data}
         columns={[
           "หมายเลขโครงงาน",
@@ -78,7 +78,7 @@ export default function ProjectInfo() {
           "ผลการศึกษาสมาชิกคนที่ 2",
           "ผลการศึกษาสมาชิกคนที่ 3",
         ]}
-      />
+      /> */}
       <Footer />
     </div>
   );

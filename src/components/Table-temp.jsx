@@ -63,14 +63,6 @@ const callback = (key) => !ignoreColumn.includes(key);
 //   createData(10, 2, "2565/2", "2023-04-01", "10"),
 // ];
 
-export function Test() {
-  return(
-    <div>
-      This is test export function
-    </div>
-  )
-}
-
 export default function CustomizedTables(props) {
   const { data, columns } = props;
   const [page, setPage] = useState(0);

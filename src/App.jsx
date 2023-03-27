@@ -6,18 +6,25 @@ import Button from "@mui/material/Button";
 import { Routes, Route } from "react-router-dom";
 import SignIn from "./components/SignIn";
 import Main from "./components/Main";
-import Faq from "./components/FAQ"
+import Faq from "./components/FAQ";
 import DownloadFiles from "./components/DownloadFiles";
 import ProjectInfo from "./components/ProjectInfo";
 import Profile from "./components/Profile";
+import SummaryTable from "./components/SummaryTable";
 
 export const AppContext = createContext();
 
 function App() {
   axios.defaults.baseURL = "https://cache111.com/seniorprojectapi";
-  const [toggle, setToggle] = useState( localStorage.getItem('projectPath')? localStorage.getItem('projectPath')==='project' : true);
-  const [semesterId, setSemesterId] = useState(localStorage.getItem('semesterId') || 2);
-  const [isLogged, setIsLogged] = useState()
+  const [toggle, setToggle] = useState(
+    localStorage.getItem("projectPath")
+      ? localStorage.getItem("projectPath") === "project"
+      : true
+  );
+  const [semesterId, setSemesterId] = useState(
+    localStorage.getItem("semesterId") || 2
+  );
+  const [isLogged, setIsLogged] = useState();
   const theme = createTheme({
     components: {
       MuiButton: {
@@ -60,20 +67,18 @@ function App() {
       },
       MuiSvgIcon: {
         styleOverrides: {
-          root: {
-            
-          },
+          root: {},
         },
       },
       MuiIconButton: {
         styleOverrides: {
           root: {
             ":disabled": {
-              color: "#CCCCCC"
+              color: "#CCCCCC",
             },
-            color: "#0075FF"
+            color: "#0075FF",
           },
-        }
+        },
       },
       MuiToolbar: {
         styleOverrides: {
@@ -90,7 +95,7 @@ function App() {
             padding: 8,
           },
         },
-      }, // 
+      }, //
       // MuiSwitch: {
       //   styleOverrides: {
       //     root: {
@@ -126,15 +131,25 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppContext.Provider value={{ toggle, setToggle, semesterId, setSemesterId, isLogged, setIsLogged }}>
+      <AppContext.Provider
+        value={{
+          toggle,
+          setToggle,
+          semesterId,
+          setSemesterId,
+          isLogged,
+          setIsLogged,
+        }}
+      >
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/main" element={<Main />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/faq" element={<Faq />} />
-          <Route path="/download-files" element={<DownloadFiles />} />          
-          <Route path="/project-info" element={<ProjectInfo />} />          
-          <Route path="/profile" element={<Profile />} />          
+          <Route path="/download-files" element={<DownloadFiles />} />
+          <Route path="/project-info" element={<ProjectInfo />} />
+          <Route path="/profile" element={<Profile />} />{" "}
+          <Route path="/summary-table" element={<SummaryTable />} />
         </Routes>
       </AppContext.Provider>
     </ThemeProvider>

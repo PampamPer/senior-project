@@ -85,7 +85,7 @@ export default function NavBar() {
                 ข้อมูลโครงงาน
               </Button>
             )}
-            <Button variant="text">ตารางสรุป</Button>
+            <Button variant="text" onClick={() => navigate("/summary-table")}>ตารางสรุป</Button>
             <Button variant="text" onClick={() => navigate("/download-files")}>
               เอกสารสำหรับดาวน์โหลด
             </Button>
@@ -138,9 +138,7 @@ export default function NavBar() {
                           <MenuItem
                             onClick={() => {
                               handleClose;
-                              // setIsLogged(false);
                               navigate("/profile");
-                              // localStorage.setItem("token", "");
                             }}
                             autoFocus="true"
                           >
@@ -149,9 +147,9 @@ export default function NavBar() {
                           <MenuItem
                             onClick={() => {
                               handleClose;
-                              // setIsLogged(false);
+                              setIsLogged(false);
                               navigate("/main");
-                              // localStorage.setItem("token", "");
+                              localStorage.setItem("token", "");
                             }}
                             autoFocus="true"
                           >

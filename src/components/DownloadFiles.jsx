@@ -1,9 +1,10 @@
-import React, { useEffect, useContext, useState } from 'react'
-import Footer from './Footer';
-import NavBar from './NavBar'
-import Table from './Table'
+import React, { useEffect, useContext, useState } from "react";
+import Footer from "./Footer";
+import NavBar from "./NavBar";
+import Table from "./Table";
 import { AppContext } from "../App";
-import axios from 'axios';
+import axios from "axios";
+import { useQuery } from "react-query";
 
 export default function DownloadFiles() {
   const [data, setData] = useState([]);
@@ -11,7 +12,7 @@ export default function DownloadFiles() {
   const { toggle } = useContext(AppContext);
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  
+
   useEffect(() => {
     axios
       .get(`/${path}downloads`)
@@ -26,24 +27,29 @@ export default function DownloadFiles() {
           console.log('dont get data')
         }
       })
-      .catch((err) => 
+      .catch((err) =>
       {setError(err);
       setLoading(false);});
   }, [toggle]);
 
-  if (loading){
-    return <p>loading...</p>
+
+
+  if (loading) {
+    return <p>loading...</p>;
   }
 
   if (error) {
-    return <p>Err: {error.message} </p>
+    return <p>Err: {error.message} </p>;
   }
 
   return (
     <div>
-      <NavBar/>
-      <Table data={data} columns={['ชื่อเอกสาร', 'ดาวน์โหลดเอกสาร', 'แก้ไขล่าสุด', 'ขนาดไฟล์']}/> 
-      <Footer/>
+      <NavBar />
+      <Table
+        data={data}
+        columns={["ชื่อเอกสาร", "ดาวน์โหลดเอกสาร", "แก้ไขล่าสุด", "ขนาดไฟล์"]}
+      />
+      <Footer />
     </div>
-  )
+  );
 }
