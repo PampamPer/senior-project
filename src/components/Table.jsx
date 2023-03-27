@@ -13,20 +13,68 @@ import TablePaginationActions from "./TablePagination";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 
-export function preprocess(data, columns) {
-  console.log("before", data); // DEBUG
+export function preprocess(data, columns, dateColumns, datetimeColumns) {
+  const monthNames = [
+    "มกราคม",
+    "กุมภาพันธ์",
+    "มีนาคม",
+    "เมษายน",
+    "พฤษภาคม",
+    "มิถุนายน",
+    "กรกฎาคม",
+    "สิงหาคม.",
+    "กันยายน",
+    "ตุลาคม",
+    "พฤศจิกายน",
+    "ธันวาคม",
+  ];
+  const toThaiDateTimeString = (date) => {
+    let year = date.getFullYear() + 543;
+    let month = monthNames[date.getMonth()];
+    let numOfDay = date.getDate();
+
+    let hour = date.getHours().toString().padStart(2, "0");
+    let minutes = date.getMinutes().toString().padStart(2, "0");
+    let second = date.getSeconds().toString().padStart(2, "0");
+    return (
+      `${numOfDay} ${month} ${year} ` +
+      `เวลา ` +
+      `${hour}:${minutes}:${second} น.`
+    );
+  };
+  const toThaiDateString = (date) => {
+    let year = date.getFullYear() + 543;
+    let month = monthNames[date.getMonth()];
+    let numOfDay = date.getDate();
+
+    let hour = date.getHours().toString().padStart(2, "0");
+    let minutes = date.getMinutes().toString().padStart(2, "0");
+    let second = date.getSeconds().toString().padStart(2, "0");
+    return `${numOfDay} ${month} ${year} `;
+  };
+  // console.log("before", data); // DEBUG
   var processedData = [];
   for (const [index, row] of data.entries()) {
     let newRow = {};
     newRow["id"] = index;
     Object.keys(row).forEach((key) => {
       if (columns.includes(key)) {
-        newRow[key] = row[key];
+        if (datetimeColumns.includes(key)) {
+          console.log(row[key]); // DEBUG
+          console.log(toThaiDateTimeString(new Date(row[key]))); // DEBUG
+          newRow[key] = toThaiDateTimeString(new Date(row[key]));
+        } else if (dateColumns.includes(key)) {
+          console.log(row[key]); // DEBUG
+          console.log(toThaiDateString(new Date(row[key]))); // DEBUG
+          newRow[key] = toThaiDateString(new Date(row[key]));
+        } else {
+          newRow[key] = row[key];
+        }
       }
     });
     processedData.push(newRow);
   }
-  console.log("after", processedData); // DEBUG
+  // console.log("after", processedData); // DEBUG
   return processedData;
 }
 
@@ -46,9 +94,9 @@ export default function CustomizedTables(props) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  console.log("this is data", data);
-  console.log("this is columns", columns);
-  console.log("this is linkcolumns", linkcolumns);
+  // console.log("this is data", data); // DEBUG
+  // console.log("this is columns", columns); // DEBUG
+  // console.log("this is linkcolumns", linkcolumns); // DEBUG
 
   return (
     <TableContainer component={Paper}>

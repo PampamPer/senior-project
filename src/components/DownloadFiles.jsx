@@ -21,12 +21,12 @@ export default function DownloadFiles() {
         if (res.data) {
           console.log("get data");
           setData(
-            preprocess(res.data, [
-              "fileName",
-              "downloadLink",
-              "modifiedDate",
-              "fileSize",
-            ])
+            preprocess(
+              res.data,
+              ["fileName", "downloadLink", "modifiedDate", "fileSize"],
+              [],
+              ["modifiedDate"]
+            )
           );
         } else {
           setData([]);

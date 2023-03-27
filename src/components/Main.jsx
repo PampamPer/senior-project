@@ -24,7 +24,7 @@ export default function Main() {
         setLoading(false);
         if (res.data) {
           // console.log("get data");
-          setData(preprocess(res.data, ["deadline", "todo"]));
+          setData(preprocess(res.data, ["deadline", "todo"], ["deadline"], []));
           // console.log("this is data", data);
         } else {
           setData([]);
@@ -60,8 +60,8 @@ export default function Main() {
   }
 
   const columns = [
-    { id: "deadline", label: "Deadline", sx: { width: "50%" } },
-    { id: "todo", label: "Todo", sx: { width: "50%" } },
+    { id: "deadline", label: "Deadline", sx: { width: "20%" } },
+    { id: "todo", label: "Todo", sx: { width: "80%" } },
   ];
   const linkColumns = [];
 
