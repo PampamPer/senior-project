@@ -2,10 +2,12 @@ import NavBar from "./NavBar";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { Parallax, ParallaxLayer } from "@react-spring/parallax";
-import { Button } from "@mui/material";
+import { Button, Link, Typography } from "@mui/material";
 import Table, { preprocess } from "./Table";
 import { AppContext } from "../App";
 import Footer from "./Footer";
+import { Stack } from "@mui/system";
+import CustomizedTimeline from "./Timeline1";
 
 export default function Main() {
   const [data, setData] = useState([]);
@@ -60,31 +62,70 @@ export default function Main() {
   }
 
   const columns = [
-    { id: "deadline", label: "Deadline", sx: { width: "20%" } },
-    { id: "todo", label: "Todo", sx: { width: "80%" } },
+    { id: "deadline", label: "กำหนดการ", sx: { width: "20%" } },
+    { id: "todo", label: "รายการที่ต้องทำ", sx: { width: "80%" } },
   ];
   const linkColumns = [];
 
   return (
     <div>
       <NavBar />
-      <img src={lineQR.qr} width="200px" />
-      <br />
-      <a href={lineQR.url}>{lineQR.url}</a>
-      <Table data={data} columns={columns} linkcolumns={linkColumns} />
-      {/* <Parallax pages={2}>
+
+
+      <Parallax pages={2} style={{ top: "0", left: "0" }} class="animation">
         <ParallaxLayer offset={0} speed={0.25}>
-          <div className="" id="layer3"></div>
+          <div class="animation_layer parallax" id="artback"></div>
+        </ParallaxLayer>
+        <ParallaxLayer offset={0} speed={1}>
+          <div class="animation_layer parallax" id="layer3"></div>
+        </ParallaxLayer>
+        <ParallaxLayer offset={0} speed={0.5}>
+          <div class="animation_layer parallax" id="layer2"></div>
         </ParallaxLayer>
         <ParallaxLayer offset={0} speed={0.25}>
-          <div  className="" id="layer2"></div>
+          <div class="animation_layer parallax" id="layer1"></div>
         </ParallaxLayer>
-        <ParallaxLayer offset={0} speed={0.25}>
-          <div  className="" id="layer1"></div>
+        <ParallaxLayer offset={0} speed={0.3}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            gap="250px"
+            sx={{ mt: 180, p: 64 }}
+          >
+            <Stack>
+              <Typography variant="h1" color="#243460">
+                Welcome!
+              </Typography>
+              <Typography variant="body1">
+                ยินดีต้อนรับเข้าสู่เว็บแอปพลิเคชัน:
+                ระบบติดตามความก้าวหน้าของโครงงานวิทยาศาสตร์
+                ในภาควิชาคณิตศาสตร์และวิทยาการคอมพิวเตอร์
+                โดยมีจุดประสงค์เพื่อใช้เก็บข้อมูลและอัปโหลดเอกสารต่าง ๆ
+                จากอาจารย์และนิสิต สามารถติดตามข่าวสารเพิ่มเติมได้ที่ Line group
+                ดังนี้
+              </Typography>
+            </Stack>
+            <Stack>
+              <img src={lineQR.qr} width="75%" />
+              <br />
+              <Link href={lineQR.url} underline="hover" color="secondary">
+                {lineQR.url}
+              </Link>
+            </Stack>
+          </Stack>
         </ParallaxLayer>
-      </Parallax>*/}
+        <ParallaxLayer offset={1} speed={0.25}>
+          <div id="main_table">
+            <Typography variant="h3" color="white">
+              {path == "proposal" ? "Proposal" : "Senior Project"} Timeline
+            </Typography>
+            <CustomizedTimeline timelines={data}/>
+            {/* <Table data={data} columns={columns} linkcolumns={linkColumns} /> */}
+            <Footer />
+          </div>
+        </ParallaxLayer>
+      </Parallax>
       {/* <Timeline/>  */}
-      <Footer />
     </div>
   );
 }

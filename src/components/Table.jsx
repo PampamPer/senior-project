@@ -12,6 +12,7 @@ import Paper from "@mui/material/Paper";
 import TablePaginationActions from "./TablePagination";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
+import { Link } from "@mui/material";
 
 export function preprocess(data, columns, dateColumns, datetimeColumns) {
   const monthNames = [
@@ -78,18 +79,11 @@ export function preprocess(data, columns, dateColumns, datetimeColumns) {
   return processedData;
 }
 
-export function Test() {
-  return(
-    <div>
-      This is test export function
-    </div>
-  )
-}
-
 export default function CustomizedTables(props) {
   const { data, columns, linkcolumns } = props;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
@@ -107,7 +101,7 @@ export default function CustomizedTables(props) {
   // console.log("this is linkcolumns", linkcolumns); // DEBUG
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{maxHeight: 650}}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table" {...props}>
         <TableHead>
           <TableRow>
@@ -129,7 +123,7 @@ export default function CustomizedTables(props) {
                 .map((key) => (
                   <TableCell key={key}>
                     {linkcolumns.includes(key) ? (
-                      <a href={datarow[key]}>{datarow[key]}</a>
+                      <Link href={datarow[key]} underline="hover" color="secondary">{datarow["fileName"]}</Link>
                     ) : (
                       datarow[key]
                     )}

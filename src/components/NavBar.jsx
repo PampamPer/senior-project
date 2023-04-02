@@ -92,7 +92,7 @@ export default function NavBar() {
           </div>
           {!isLogged && (
             <Button variant="contained" onClick={() => navigate("/sign-in")}>
-              LOGIN
+              เข้าสู่ระบบ
             </Button>
           )}
           {isLogged && (
