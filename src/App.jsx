@@ -113,6 +113,7 @@ function App() {
     },
     palette: {
       primary: {
+        // main: "#fff",
         main: "#616777",
         //light: "#00EB09"
       },

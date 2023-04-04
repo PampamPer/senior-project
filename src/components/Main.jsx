@@ -7,7 +7,7 @@ import Table, { preprocess } from "./Table";
 import { AppContext } from "../App";
 import Footer from "./Footer";
 import { Stack } from "@mui/system";
-import CustomizedTimeline from "./Timeline1";
+import CustomizedTimeline from "./Timeline";
 
 export default function Main() {
   const [data, setData] = useState([]);
@@ -70,27 +70,52 @@ export default function Main() {
   return (
     <div>
       <NavBar />
-
-
-      <Parallax pages={2} style={{ top: "0", left: "0" }} class="animation">
+      <Parallax pages={2} style={{ top: "0", left: "0" }} className="animation">
         <ParallaxLayer offset={0} speed={0.25}>
-          <div class="animation_layer parallax" id="artback"></div>
+          <div className="animation_layer parallax" id="artback"></div>
         </ParallaxLayer>
         <ParallaxLayer offset={0} speed={1}>
-          <div class="animation_layer parallax" id="layer3"></div>
+          <div className="animation_layer parallax" id="layer3"></div>
         </ParallaxLayer>
-        <ParallaxLayer offset={0} speed={0.5}>
-          <div class="animation_layer parallax" id="layer2"></div>
+        <ParallaxLayer offset={0} speed={0.45}>
+          <div className="animation_layer parallax" id="layer2"></div>
         </ParallaxLayer>
-        <ParallaxLayer offset={0} speed={0.25}>
-          <div class="animation_layer parallax" id="layer1"></div>
+        <ParallaxLayer offset={0} speed={0.4}>
+          <div className="animation_layer parallax" id="layer1"></div>
         </ParallaxLayer>
         <ParallaxLayer offset={0} speed={0.3}>
           <Stack
             direction="row"
             justifyContent="space-between"
             gap="250px"
-            sx={{ mt: 180, p: 64 }}
+            sx={{ mt: 180, p: 64, display: { sm: "none", md: "flex" } }}
+          >
+            <Stack>
+              <Typography variant="h1" color="#243460">
+                Welcome!
+              </Typography>
+              <Typography variant="body1">
+                ยินดีต้อนรับเข้าสู่เว็บแอปพลิเคชัน:
+                ระบบติดตามความก้าวหน้าของโครงงานวิทยาศาสตร์
+                ในภาควิชาคณิตศาสตร์และวิทยาการคอมพิวเตอร์
+                โดยมีจุดประสงค์เพื่อใช้เก็บข้อมูลและอัปโหลดเอกสารต่าง ๆ
+                จากอาจารย์และนิสิต สามารถติดตามข่าวสารเพิ่มเติมได้ที่ Line group
+                ดังนี้
+              </Typography>
+            </Stack>
+            <Stack sx={{ width: "300px" }}>
+              <img src={lineQR.qr} width="75%" />
+              <br />
+              <Link href={lineQR.url} underline="hover" color="secondary">
+                {lineQR.url}
+              </Link>
+            </Stack>
+          </Stack>
+          <Stack
+            direction="column"
+            justifyContent="space-between"
+            gap="64px"
+            sx={{ mt: 180, p: 32, display: { sm: "flex", md: "none" } }}
           >
             <Stack>
               <Typography variant="h1" color="#243460">
@@ -106,7 +131,7 @@ export default function Main() {
               </Typography>
             </Stack>
             <Stack>
-              <img src={lineQR.qr} width="75%" />
+              <img src={lineQR.qr} width="200px" />
               <br />
               <Link href={lineQR.url} underline="hover" color="secondary">
                 {lineQR.url}
@@ -119,13 +144,11 @@ export default function Main() {
             <Typography variant="h3" color="white">
               {path == "proposal" ? "Proposal" : "Senior Project"} Timeline
             </Typography>
-            <CustomizedTimeline timelines={data}/>
-            {/* <Table data={data} columns={columns} linkcolumns={linkColumns} /> */}
+            <CustomizedTimeline timelines={data} />
             <Footer />
           </div>
         </ParallaxLayer>
       </Parallax>
-      {/* <Timeline/>  */}
     </div>
   );
 }

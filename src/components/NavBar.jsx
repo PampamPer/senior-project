@@ -112,7 +112,7 @@ export default function NavBar() {
                 open={open}
                 anchorEl={anchorRef.current}
                 role={undefined}
-                placement="bottom-start"
+                placement="bottom-end"
                 transition
                 disablePortal
                 style={{ zIndex: 1301 }}
@@ -166,7 +166,7 @@ export default function NavBar() {
         </Toolbar>
       </Container>
 
-      <Container maxWidth="xl" sx={{ backgroundColor: "#CCCCCC" }}>
+      <Container maxWidth="xl" sx={{ backgroundColor: "#234FBB" }}>
         <Toolbar disableGutters>
           <div>
             <Select value={semesterId} onChange={handleOnChangeSemester}>
@@ -176,7 +176,7 @@ export default function NavBar() {
             <Switch checked={toggle} onChange={handleOnChangeToggle} />
             {toggle ? "project" : "proposal"}
           </div>
-          <Button variant="outlined" onClick={() => navigate("/faq")}>
+          <Button variant="outlined" sx={{color: "#fff", borderColor: "#fff"}} onClick={() => navigate("/faq")}>
             FAQ
           </Button>
         </Toolbar>

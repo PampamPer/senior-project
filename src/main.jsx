@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   //<React.StrictMode>
   // <BrowserRouter basename={process.env.PUBLIC_URL}>
 
-  <BrowserRouter>
+  <BrowserRouter basename="/seniorproject">
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>

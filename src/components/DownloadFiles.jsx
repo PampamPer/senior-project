@@ -5,6 +5,7 @@ import Table, { preprocess } from "./Table";
 import { AppContext } from "../App";
 import axios from "axios";
 import TableSearch from "./TableSearch";
+import TableFilter from "./TableFilter";
 
 export default function DownloadFiles() {
   const [data, setData] = useState([]);
@@ -81,6 +82,7 @@ export default function DownloadFiles() {
   return (
     <div>
       <NavBar />
+      <TableFilter data={data} columns={columns} childToParent={childToParent} />
       <TableSearch data={data} childToParent={childToParent} />
       <Table data={filteredData} columns={columns} linkcolumns={linkColumns} />
       <Footer />

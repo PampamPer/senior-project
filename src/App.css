@@ -19,12 +19,7 @@
   bottom: 0;
 }
 
-.content {
-  background-color: red;
-  /* flex: 1; */
-}
-
-.animation,
+/* .animation, */
 .animation_layer {
   height: 1000px;
 }
@@ -96,4 +91,5 @@
   gap: 32px;
   align-items: center;
   background-color: #2D95E1;
+  height: 2000px;
 }
