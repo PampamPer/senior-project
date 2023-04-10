@@ -73,7 +73,7 @@ export default function CustomizedTimeline(props) {
           )}
         </Timeline>
         <TableFooter>
-          <TableRow sx={{backgroundColor: "#D1F5FF"}}>
+          <TableRow>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
               colSpan={3}

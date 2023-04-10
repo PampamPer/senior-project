@@ -70,7 +70,7 @@ export default function Main() {
   return (
     <div>
       <NavBar />
-      <Parallax pages={2} style={{ top: "0", left: "0" }} className="animation">
+      {/* <Parallax pages={2} style={{ top: "0", left: "0" }} className="animation">
         <ParallaxLayer offset={0} speed={0.25}>
           <div className="animation_layer parallax" id="artback"></div>
         </ParallaxLayer>
@@ -83,72 +83,73 @@ export default function Main() {
         <ParallaxLayer offset={0} speed={0.4}>
           <div className="animation_layer parallax" id="layer1"></div>
         </ParallaxLayer>
-        <ParallaxLayer offset={0} speed={0.3}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            gap="250px"
-            sx={{ mt: 180, p: 64, display: { sm: "none", md: "flex" } }}
-          >
-            <Stack>
-              <Typography variant="h1" color="#243460">
-                Welcome!
-              </Typography>
-              <Typography variant="body1">
-                ยินดีต้อนรับเข้าสู่เว็บแอปพลิเคชัน:
-                ระบบติดตามความก้าวหน้าของโครงงานวิทยาศาสตร์
-                ในภาควิชาคณิตศาสตร์และวิทยาการคอมพิวเตอร์
-                โดยมีจุดประสงค์เพื่อใช้เก็บข้อมูลและอัปโหลดเอกสารต่าง ๆ
-                จากอาจารย์และนิสิต สามารถติดตามข่าวสารเพิ่มเติมได้ที่ Line group
-                ดังนี้
-              </Typography>
-            </Stack>
-            <Stack sx={{ width: "300px" }}>
-              <img src={lineQR.qr} width="75%" />
-              <br />
-              <Link href={lineQR.url} underline="hover" color="secondary">
-                {lineQR.url}
-              </Link>
-            </Stack>
-          </Stack>
-          <Stack
-            direction="column"
-            justifyContent="space-between"
-            gap="64px"
-            sx={{ mt: 180, p: 32, display: { sm: "flex", md: "none" } }}
-          >
-            <Stack>
-              <Typography variant="h1" color="#243460">
-                Welcome!
-              </Typography>
-              <Typography variant="body1">
-                ยินดีต้อนรับเข้าสู่เว็บแอปพลิเคชัน:
-                ระบบติดตามความก้าวหน้าของโครงงานวิทยาศาสตร์
-                ในภาควิชาคณิตศาสตร์และวิทยาการคอมพิวเตอร์
-                โดยมีจุดประสงค์เพื่อใช้เก็บข้อมูลและอัปโหลดเอกสารต่าง ๆ
-                จากอาจารย์และนิสิต สามารถติดตามข่าวสารเพิ่มเติมได้ที่ Line group
-                ดังนี้
-              </Typography>
-            </Stack>
-            <Stack>
-              <img src={lineQR.qr} width="200px" />
-              <br />
-              <Link href={lineQR.url} underline="hover" color="secondary">
-                {lineQR.url}
-              </Link>
-            </Stack>
-          </Stack>
+        <ParallaxLayer offset={0} speed={0.3}></ParallaxLayer>
+        <ParallaxLayer offset={1} speed={0.25} id="main_table">
         </ParallaxLayer>
-        <ParallaxLayer offset={1} speed={0.25}>
-          <div id="main_table">
-            <Typography variant="h3" color="white">
-              {path == "proposal" ? "Proposal" : "Senior Project"} Timeline
-            </Typography>
-            <CustomizedTimeline timelines={data} />
-            <Footer />
-          </div>
-        </ParallaxLayer>
-      </Parallax>
+      </Parallax> */}
+      <Stack
+        label="default-screen-welcome"
+        direction="row"
+        justifyContent="space-between"
+        gap="160px"
+        sx={{ p: 64, marginY: 120, display: { sm: "none", md: "flex" } }}
+      >
+        <Stack>
+          <Typography variant="h1" color="#243460">
+            Welcome!
+          </Typography>
+          <Typography variant="body1">
+            ยินดีต้อนรับเข้าสู่เว็บแอปพลิเคชัน:
+            ระบบติดตามความก้าวหน้าของโครงงานวิทยาศาสตร์
+            ในภาควิชาคณิตศาสตร์และวิทยาการคอมพิวเตอร์
+            โดยมีจุดประสงค์เพื่อใช้เก็บข้อมูลและอัปโหลดเอกสารต่าง ๆ
+            จากอาจารย์และนิสิต สามารถติดตามข่าวสารเพิ่มเติมได้ที่ Line group
+            ดังนี้
+          </Typography>
+        </Stack>
+        <Stack sx={{ width: "300px" }}>
+          <img src={lineQR.qr} width="75%" />
+          <br />
+          <Link href={lineQR.url} underline="hover" color="secondary">
+            {lineQR.url}
+          </Link>
+        </Stack>
+      </Stack>
+      <Stack
+        label="smaller-screen-welcome"
+        direction="column"
+        justifyContent="space-between"
+        alignItems="center"
+        spacing={80}
+        sx={{ p: 32, mb: 160, display: { sm: "flex", md: "none" } }}
+      >
+        <Stack spacing={16}>
+          <Typography variant="h1" color="#243460">
+            Welcome!
+          </Typography>
+          <Typography variant="body1">
+            ยินดีต้อนรับเข้าสู่เว็บแอปพลิเคชัน:
+            ระบบติดตามความก้าวหน้าของโครงงานวิทยาศาสตร์
+            ในภาควิชาคณิตศาสตร์และวิทยาการคอมพิวเตอร์
+            โดยมีจุดประสงค์เพื่อใช้เก็บข้อมูลและอัปโหลดเอกสารต่าง ๆ
+            จากอาจารย์และนิสิต สามารถติดตามข่าวสารเพิ่มเติมได้ที่ Line group
+            ดังนี้
+          </Typography>
+        </Stack>
+        <Stack spacing={16} alignItems="center">
+          <img src={lineQR.qr} width="200px" />
+          <Link href={lineQR.url} underline="hover" color="secondary">
+            {lineQR.url}
+          </Link>
+        </Stack>
+      </Stack>
+      <Stack spacing={32} alignItems="center" label="Timeline">
+        <Typography variant="h3" color="primary.main">
+          {path == "proposal" ? "Proposal" : "Senior Project"} Timeline
+        </Typography>
+        <CustomizedTimeline timelines={data} />
+      </Stack>
+      <Footer />
     </div>
   );
 }

@@ -1,4 +1,10 @@
-import { IconButton, InputAdornment, TextField } from "@mui/material";
+import {
+  Button,
+  ClickAwayListener,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -6,9 +12,11 @@ import ClearIcon from "@mui/icons-material/Clear";
 export default function TableSearch(props) {
   const { data, childToParent } = props;
   const [defaultText, setDefaultText] = useState("");
+  const [isSearched, setIsSearched] = useState(false);
 
   const onSearch = (event) => {
-    setDefaultText(event.target.value)
+    setDefaultText(event.target.value);
+    let defaultText = event.target.value;
     const filteredData = data.filter((keyword) => {
       let isTrue = false;
       for (const value of Object.values(keyword)) {
@@ -23,32 +31,42 @@ export default function TableSearch(props) {
     childToParent(filteredData);
   };
 
+  const isOnSearched = () => {
+    // setIsSearched((previousIsSearched) => !previousIsSearched);
+    setIsSearched(true);
+  };
+
   const cancelSearch = () => {
     setDefaultText("");
-    childToParent([... data])
+    setIsSearched(false);
+    childToParent([...data]);
   };
 
   return (
     <div>
-      <TextField
-        id="dowloadtable search"
-        label="ค้นหา"
-        variant="standard"
-        value={defaultText}
-        onChange={onSearch}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                // aria-label="toggle password visibility"
-                onClick={cancelSearch}
-              >
-                <ClearIcon/>
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
+      <ClickAwayListener onClickAway={() => setIsSearched(false)}>
+        <TextField
+          id="dowloadtable search"
+          label="ค้นหา"
+          variant="standard"
+          value={defaultText}
+          onChange={onSearch}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                {isSearched && (
+                  <IconButton
+                    onClick={cancelSearch}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                )}
+                {console.log(isSearched)}
+              </InputAdornment>
+            ),
+          }}
+        />
+      </ClickAwayListener>
     </div>
   );
 }

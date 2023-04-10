@@ -80,10 +80,9 @@ export function preprocess(data, columns, dateColumns, datetimeColumns) {
 }
 
 export default function CustomizedTables(props) {
-  const { data, columns, linkcolumns } = props;
+  const { data, columns, linkcolumns, linkname } = props;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
@@ -101,7 +100,7 @@ export default function CustomizedTables(props) {
   // console.log("this is linkcolumns", linkcolumns); // DEBUG
 
   return (
-    <TableContainer component={Paper} sx={{maxHeight: 650}}>
+    <TableContainer component={Paper} sx={{ maxHeight: 650 }}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table" {...props}>
         <TableHead>
           <TableRow>
@@ -119,11 +118,19 @@ export default function CustomizedTables(props) {
           ).map((datarow) => (
             <TableRow key={datarow.id}>
               {Object.keys(datarow)
-                .filter((key) => key != "id")
+                .filter((key) => key != "id" && key != linkname)
                 .map((key) => (
                   <TableCell key={key}>
+                    {/* {console.log("datarow = ", datarow, "key= ", key)}
+                    {console.log("is it true? ", key == linkname)} */}
                     {linkcolumns.includes(key) ? (
-                      <Link href={datarow[key]} underline="hover" color="secondary">{datarow["fileName"]}</Link>
+                      <Link
+                        href={datarow[key]}
+                        underline="hover"
+                        color="secondary"
+                      >
+                        {datarow[linkname]}
+                      </Link>
                     ) : (
                       datarow[key]
                     )}

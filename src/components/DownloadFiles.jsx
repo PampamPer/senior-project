@@ -60,12 +60,13 @@ export default function DownloadFiles() {
   }
 
   const columns = [
-    {
-      id: "fileName",
-      label: "ชื่อเอกสาร",
-      sx: { width: "25%", minWidth: 250 },
-    },
-    { id: "downloadLink", label: "ดาวน์โหลดเอกสาร", sx: { width: "25%" } },
+    // {
+    //   id: "fileName",
+    //   label: "ชื่อเอกสาร",
+    //   sx: { width: "25%", minWidth: 250 },
+    // },
+    // { id: "downloadLink", label: "ดาวน์โหลดเอกสาร", sx: { width: "25%" } },
+    { id: "downloadLink", label: "เอกสารสำหรับดาวน์โหลด", sx: { width: "25%" } },
     {
       id: "modifiedDate",
       label: "แก้ไขล่าสุด",
@@ -74,6 +75,8 @@ export default function DownloadFiles() {
     { id: "fileSize", label: "ขนาดไฟล์", sx: { width: "5%", minWidth: 100 } },
   ];
   const linkColumns = ["downloadLink"];
+  const linkName = "fileName";
+  // const linkColumns = [["downloadLink"], ["fileName"]];
 
   const childToParent = (childdata) => {
     setFilteredData(childdata);
@@ -82,9 +85,9 @@ export default function DownloadFiles() {
   return (
     <div>
       <NavBar />
-      <TableFilter data={data} columns={columns} childToParent={childToParent} />
+      <TableFilter data={data} columns={columns} childToParent={childToParent} linkcolumns={linkColumns} linkname={linkName} />
       <TableSearch data={data} childToParent={childToParent} />
-      <Table data={filteredData} columns={columns} linkcolumns={linkColumns} />
+      <Table data={filteredData} columns={columns} linkcolumns={linkColumns} linkname={linkName} />
       <Footer />
     </div>
   );

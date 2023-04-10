@@ -13,6 +13,14 @@
   flex-direction: column;
 }
 
+.content {
+  display: flex;
+
+  justify-content: space-around;
+  flex-flow: row wrap;
+  align-items: stretch;
+}
+
 .footer {
   background-color: #234fbb;
   padding: 32px;
@@ -52,8 +60,8 @@
   display: flex;
   position: absolute;
   flex-direction: column;
-  top: 180px;
-  left: 60px;
+  /* top: 180px;
+  left: 60px; */
 }
 
 #qr_code {
@@ -62,8 +70,8 @@
   flex-direction: column;
   align-items: center;
   /* z-index: 10; */
-  top: 180px;
-  right: 60px;
+  /* top: 180px;
+  right: 60px; */
 }
 
 #artback {

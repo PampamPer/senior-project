@@ -56,6 +56,13 @@ function App() {
           h4: {
             color: "#234FBB",
           },
+          subtitle1: {
+            color: "#234FBB",
+            fontWeight: 600
+          },
+          subtitle2: {
+            color: "#234FBB",
+          },
         },
       },
       MuiAppBar: {

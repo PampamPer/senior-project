@@ -15,7 +15,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 
 export default function TableFilter(props) {
-  const { data, columns, childToParent } = props;
+  const { data, columns, childToParent, linkcolumns, linkname } = props;
   const [defaultText, setDefaultText] = useState("");
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState();
@@ -24,6 +24,8 @@ export default function TableFilter(props) {
     setAnchorEl(event.currentTarget);
     setOpen((previousOpen) => !previousOpen);
   };
+
+  console.log("this is data", data);
 
   const handleClose = () => {
     setOpen(false);
@@ -37,7 +39,7 @@ export default function TableFilter(props) {
   const onFilter = (event) => {
     setDefaultText(event.target.value);
     let defaultText = event.target.value;
-    console.log("this is default txt", defaultText);
+    // console.log("this is default txt", defaultText);
     const filteredData = data.filter((keyword) => {
       let isTrue = false;
       for (const value of Object.values(keyword)) {
@@ -78,8 +80,13 @@ export default function TableFilter(props) {
                   onChange={onFilter}
                 >
                   {data.map((item) => (
+                    // console.log(item)
+                    // {column.id==linkname ? 
+
+                    // }
                     <MenuItem key={item.id} value={item[column.id]}>
-                      {item[column.id]}
+                      {linkcolumns.includes(column.id) ? item[linkname]
+                      :item[column.id]}
                     </MenuItem>
                   ))}
                 </Select>
