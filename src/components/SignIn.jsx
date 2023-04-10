@@ -16,6 +16,7 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../App";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import PWTextField from "./PasswordTextField";
 
 function App() {
   const [userId, setUserId] = useState("");
@@ -88,29 +89,12 @@ function App() {
           }}
           onChange={(event) => setUserId(event.target.value)}
         />
-        <TextField
-          placeholder="Enter your password"
-          label="password"
-          onChange={(event) => setPassword(event.target.value)}
-          type={showPassword ? "string" : "password"}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <LockIcon />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
+        <PWTextField
+          setPassword={setPassword}
+          label={"รหัสผ่าน"}
+          placeholder={"รหัสผ่าน"}
         />
+
         <Button variant="contained" onClick={Login}>
           login
         </Button>

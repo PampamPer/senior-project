@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import NavBar from "./NavBar";
 import {
   Avatar,
+  Button,
   Container,
   Divider,
   IconButton,
@@ -16,6 +17,7 @@ import {
 } from "@mui/material";
 import { ClearRounded, EditRounded, PhotoCamera } from "@mui/icons-material";
 import PWTextField from "./PasswordTextField";
+import CustomizedModal from "./Modal";
 
 export default function Profile() {
   const [data, setData] = useState();
@@ -27,22 +29,23 @@ export default function Profile() {
   const [openEditPhoneNO, setOpenEditPhoneNO] = useState(false);
   const [openEditAddress, setOpenEditAddress] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const [newPassword, setNewPassword] = useState("");
+  const [phoneNo, setPhoneNo] = useState("");
+  const [address, setAddress] = useState("");
 
   const username = localStorage.getItem("username");
   const pic = localStorage.getItem("pic");
 
   const editPassword = () => {
-    setOpenEditPW(true);
+    alert(newPassword);
   };
 
   const editPhoneNumber = () => {
-    setOpenEditPhoneNO(true);
+    alert(phoneNo);
   };
 
   const editAddress = () => {
-    setOpenEditAddress(true);
+    alert(address);
   };
 
   const handleClose = () => {
@@ -152,7 +155,7 @@ export default function Profile() {
               readOnly: true,
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={editPassword}>
+                  <IconButton onClick={() => setOpenEditPW(true)}>
                     <EditRounded />
                   </IconButton>
                 </InputAdornment>
@@ -160,31 +163,20 @@ export default function Profile() {
             }}
           />
 
-          {/* Modal */}
-          <Modal open={openEditPW} onClose={handleClose}>
-            <Stack
-              justifyContent="center"
-              alignItems="center"
-              sx={{ position: "relative", top: "50%" }}
-            >
-              <Paper sx={{ width: 450 }}>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  sx={{ px: 8, py: 8 }}
-                >
-                  <Typography variant="subtitle2" sx={{ mt: 8, ml: 8 }}>
-                    แก้ไขรหัสผ่าน
-                  </Typography>
-                  <IconButton onClick={handleClose}>
-                    <ClearRounded />
-                  </IconButton>
-                </Stack>
-                <Divider variant="middle" />
-                <PWTextField setPassword={setOldPassword} label={"รหัสผ่านปัจจุบัน"} placeholder={"รหัสผ่านปัจจุบัน"}/>
-              </Paper>
-            </Stack>
-          </Modal>
+            {/* Edit PW Modal */}
+          <CustomizedModal
+            isPassword={true}
+            ModalHeader="แก้ไขรหัสผ่าน"
+            open={openEditPW}
+            handleClose={handleClose}
+            oldLabel="รหัสผ่านเดิม"
+            newLabel="รหัสผ่านใหม่"
+            defaultValue=""
+            setOnChange=""
+            setOldPassword={setOldPassword}
+            setNewPassword={setNewPassword}
+            setEditOnClick={editPassword}
+          />
 
           <br />
           <Typography variant="subtitle1">ข้อมูลส่วนตัว</Typography>
@@ -200,13 +192,29 @@ export default function Profile() {
               readOnly: true,
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={editPhoneNumber}>
+                  <IconButton onClick={() => setOpenEditPhoneNO(true)}>
                     <EditRounded />
                   </IconButton>
                 </InputAdornment>
               ),
             }}
           />
+
+          {/* Edit Phone Number Modal */}
+          <CustomizedModal
+            isPassword={false}
+            ModalHeader="แก้ไขเบอร์โทรศัพท์"
+            open={openEditPhoneNO}
+            handleClose={handleClose}
+            oldLabel="เบอร์โทรศัพท์เดิม"
+            newLabel="เบอร์โทรศัพท์ใหม่"
+            defaultValue=""
+            setOnChange={setPhoneNo}
+            setOldPassword=""
+            setNewPassword=""
+            setEditOnClick={editPhoneNumber}
+          />
+
           <Typography variant="subtitle2">ที่อยู่</Typography>
 
           <TextField
@@ -217,12 +225,26 @@ export default function Profile() {
               readOnly: true,
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={editAddress}>
+                  <IconButton onClick={()=>setOpenEditAddress(true)}>
                     <EditRounded />
                   </IconButton>
                 </InputAdornment>
               ),
             }}
+          />
+          {/* Edit Address Modal */}
+          <CustomizedModal
+            isPassword={false}
+            ModalHeader="แก้ไขที่อยู่"
+            open={openEditAddress}
+            handleClose={handleClose}
+            oldLabel="ที่อยู่ปัจจุบัน"
+            newLabel="ที่อยู่ใหม่"
+            defaultValue=""
+            setOnChange={setAddress}
+            setOldPassword=""
+            setNewPassword=""
+            setEditOnClick={editAddress}
           />
         </Stack>
       </Stack>
