@@ -4,19 +4,14 @@ import Footer from "./Footer";
 import NavBar from "./NavBar";
 import {
   Avatar,
-  Button,
   Container,
-  Divider,
   IconButton,
   InputAdornment,
-  Modal,
-  Paper,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import { ClearRounded, EditRounded, PhotoCamera } from "@mui/icons-material";
-import PWTextField from "./PasswordTextField";
+import { EditRounded, PhotoCamera } from "@mui/icons-material";
 import CustomizedModal from "./Modal";
 
 export default function Profile() {
@@ -32,26 +27,25 @@ export default function Profile() {
   const [newPassword, setNewPassword] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
   const [address, setAddress] = useState("");
+  const [picture, setPicture] = useState("");
 
-  const username = localStorage.getItem("username");
-  const pic = localStorage.getItem("pic");
-
-  const editPassword = () => {
-    alert(newPassword);
-  };
-
-  const editPhoneNumber = () => {
-    alert(phoneNo);
-  };
-
-  const editAddress = () => {
-    alert(address);
-  };
+  const [showedPhoneNo, setShowedPhoneNo] = useState();
+  const [showedAddress, setShowedAddress] = useState();
 
   const handleClose = () => {
     setOpenEditPW(false);
     setOpenEditPhoneNO(false);
     setOpenEditAddress(false);
+  };
+
+  const setDefault = (resData) => {
+    setPhoneNo(resData.phoneNumber);
+    setOldPassword(resData.password);
+    setNewPassword(resData.password);
+    setAddress(resData.address);
+    setPicture(resData.profilePicture);
+    setShowedAddress(resData.address);
+    setShowedPhoneNo(resData.phoneNumber);
   };
 
   useEffect(() => {
@@ -66,13 +60,13 @@ export default function Profile() {
           },
         }
       )
-      // .get('/proposaltimelines?semesterid=1')
       .then((res) => {
         console.log(res.data);
         setLoading(false);
         if (res.data) {
           console.log("get data");
           setData(res.data);
+          setDefault(res.data);
         } else {
           setData([]);
           console.log("dont get data");
@@ -83,6 +77,148 @@ export default function Profile() {
         setLoading(false);
       });
   }, []);
+
+  const editPassword = () => {
+    setOldPassword(newPassword);
+    axios
+      .put(
+        `/personalinfo/${role}/editpassword`,
+        // "/proposalinfo/student?semesterid=1",
+        {
+          oldPassword: oldPassword,
+          newPassword: newPassword,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            timeout: 5 * 1000,
+          },
+        }
+      )
+      // .get('/proposaltimelines?semesterid=1')
+      .then((res) => {
+        console.log(res.data);
+        setLoading(false);
+        alert("Change password Success!");
+        setOpenEditPW(false);
+        // if (res.data) {
+        //   console.log("get data");
+        //   setData(res.data);
+        // } else {
+        //   setData([]);
+        //   console.log("dont get data");
+        // }
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+      });
+  };
+
+  const editPhoneNumber = () => {
+    setShowedPhoneNo(phoneNo);
+    axios
+      .put(
+        `/personalinfo/${role}/editphone`,
+        // "/proposalinfo/student?semesterid=1",
+        {
+          phone: phoneNo,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            timeout: 5 * 1000,
+          },
+        }
+      )
+      // .get('/proposaltimelines?semesterid=1')
+      .then((res) => {
+        console.log(res.data);
+        setLoading(false);
+        alert("edit phone number Success!");
+        setOpenEditPhoneNO(false);
+        // if (res.data) {
+        //   console.log("get data");
+        //   setData(res.data);
+        // } else {
+        //   setData([]);
+        //   console.log("dont get data");
+        // }
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+      });
+  };
+
+  const editAddress = () => {
+    setShowedAddress(address);
+    axios
+      .put(
+        `/personalinfo/${role}/editaddress`,
+        {
+          address: address,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            timeout: 5 * 1000,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+        setLoading(false);
+        alert("edit address Success!");
+        setOpenEditAddress(false);
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+      });
+  };
+
+  const uploadPicture = (event) => {
+    const formData = new FormData();
+    setPicture(URL.createObjectURL(event.target.files[0]));
+    const newPic = event.target.files[0];
+    formData.append("file", newPic);
+    editPicture();
+  };
+
+  const editPicture = () => {
+    axios
+      .put(
+        `/personalinfo/${role}/editpicture`,
+        // "/proposalinfo/student?semesterid=1",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: "Bearer " + token,
+            timeout: 5 * 1000,
+          },
+        }
+      )
+      // .get('/proposaltimelines?semesterid=1')
+      .then((res) => {
+        console.log(res.data);
+        setLoading(false);
+        alert("Upload Profile pic Success!");
+        setOpenEditPW(false);
+        // if (res.data) {
+        //   console.log("get data");
+        //   setData(res.data);
+        // } else {
+        //   setData([]);
+        //   console.log("dont get data");
+        // }
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+      });
+  };
 
   if (loading) {
     return <p>loading...</p>;
@@ -108,7 +244,7 @@ export default function Profile() {
         >
           <Container sx={{ position: "relative" }}>
             <Avatar
-              src="src\assets\mclogo.svg"
+              src={picture == null ? "srcassetsmclogo.svg" : picture}
               sx={{ backgroundColor: "grey", height: 160, width: 160 }}
             />
             <IconButton
@@ -123,7 +259,12 @@ export default function Profile() {
                 bottom: 0,
               }}
             >
-              <input hidden accept="image/*" type="file" />
+              <input
+                hidden
+                accept="image/*"
+                type="file"
+                onChange={(event) => uploadPicture(event)}
+              />
               <PhotoCamera />
             </IconButton>
           </Container>
@@ -140,17 +281,19 @@ export default function Profile() {
           <Typography variant="subtitle2">อีเมล</Typography>
           <TextField
             sx={{ width: 255 }}
-            defaultValue={data.email}
+            value={data.email}
             InputProps={{
               readOnly: true,
             }}
           ></TextField>
           <Typography variant="subtitle2">รหัสผ่าน</Typography>
           <TextField
-            //onChange={editPassword}
             sx={{ width: 255 }}
             type="password"
-            defaultValue={data.password == null ? "password" : data.password}
+            value={
+              // data.password == null ? "password" : data.password
+              oldPassword == null ? "password" : oldPassword
+            }
             InputProps={{
               readOnly: true,
               endAdornment: (
@@ -163,7 +306,7 @@ export default function Profile() {
             }}
           />
 
-            {/* Edit PW Modal */}
+          {/* Edit PW Modal */}
           <CustomizedModal
             isPassword={true}
             ModalHeader="แก้ไขรหัสผ่าน"
@@ -183,10 +326,10 @@ export default function Profile() {
           <Typography variant="subtitle2">เบอร์โทรศัพท์</Typography>
 
           <TextField
-            //onChange={editPassword}
             sx={{ width: 255 }}
-            defaultValue={
-              data.phoneNumber == null ? "phone number" : data.phoneNumber
+            value={
+              // data.phoneNumber == null ? "phone number" : data.phoneNumber
+              showedPhoneNo == null ? "phone number" : showedPhoneNo
             }
             InputProps={{
               readOnly: true,
@@ -208,24 +351,26 @@ export default function Profile() {
             handleClose={handleClose}
             oldLabel="เบอร์โทรศัพท์เดิม"
             newLabel="เบอร์โทรศัพท์ใหม่"
-            defaultValue=""
+            defaultValue={phoneNo == null ? "phone number" : phoneNo}
             setOnChange={setPhoneNo}
             setOldPassword=""
             setNewPassword=""
             setEditOnClick={editPhoneNumber}
           />
-
+          {openEditPhoneNO
+            ? console.log("new phone", phoneNo)
+            : console.log("old phone", phoneNo)}
           <Typography variant="subtitle2">ที่อยู่</Typography>
 
           <TextField
             //onChange={editPassword}
             sx={{ width: 255 }}
-            defaultValue={data.address == null ? "address" : data.address}
+            value={showedAddress == null ? "address" : showedAddress}
             InputProps={{
               readOnly: true,
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={()=>setOpenEditAddress(true)}>
+                  <IconButton onClick={() => setOpenEditAddress(true)}>
                     <EditRounded />
                   </IconButton>
                 </InputAdornment>
@@ -240,7 +385,7 @@ export default function Profile() {
             handleClose={handleClose}
             oldLabel="ที่อยู่ปัจจุบัน"
             newLabel="ที่อยู่ใหม่"
-            defaultValue=""
+            defaultValue={address == null ? "address" : address}
             setOnChange={setAddress}
             setOldPassword=""
             setNewPassword=""

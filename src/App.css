@@ -82,15 +82,15 @@
 }
 
 #layer1 {
-  background-image: url(D:/ปี 4/term 2/senior-project/src/assets/layer1.png);
+  background-image: url(/src/assets/layer1.png);
 }
 
 #layer2 {
-  background-image: url(D:/ปี 4/term 2/senior-project/src/assets/layer2.png);
+  background-image: url(/src/assets/layer2.png);
 }
 
 #layer3 {
-  background-image: url(D:/ปี 4/term 2/senior-project/src/assets/layer3.png);
+  background-image: url(/src/assets/layer3.png);
 }
 
 #main_table {
