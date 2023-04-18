@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import "./App.css";
 import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material";
@@ -24,6 +24,7 @@ function App() {
   const [semesterId, setSemesterId] = useState(
     localStorage.getItem("semesterId") || 2
   );
+  const token = localStorage.getItem("token");
   const [isLogged, setIsLogged] = useState();
   const theme = createTheme({
     components: {
@@ -58,7 +59,7 @@ function App() {
           },
           subtitle1: {
             color: "#234FBB",
-            fontWeight: 600
+            fontWeight: 600,
           },
           subtitle2: {
             color: "#234FBB",
@@ -133,9 +134,48 @@ function App() {
       allVariants: {
         color: "#616777",
       },
+      h1: {
+        fontWeight: 600
+      },
+      h2: {
+        fontWeight: 600
+      },
+      h3: {
+        fontWeight: 600
+      },
+      h4: {
+        fontWeight: 600
+      },
+      h5: {
+        fontWeight: 600
+      },
+      h6: {
+        fontWeight: 600
+      },
     },
     spacing: 1,
   });
+
+  const checkIfLogged = () => {
+    axios
+      .get(`/personalinfo/student`, {
+        headers: {
+          Authorization: "Bearer " + token,
+          timeout: 5 * 1000,
+        },
+      })
+      .then((res) => {
+        setIsLogged(true);
+      })
+      .catch((err) => {
+        // alert(err);
+        setIsLogged(false);
+      });
+  }
+
+  useEffect(() => {
+    checkIfLogged();
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>

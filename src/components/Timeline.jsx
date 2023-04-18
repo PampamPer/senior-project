@@ -53,8 +53,8 @@ export default function CustomizedTimeline(props) {
           ).map((timeline) => (
             <TimelineItem key={timeline.id} sx={{gap: 24}}>
               <TimelineSeparator>
-                <TimelineDot sx={{backgroundColor: "#fff"}}/>
-                <TimelineConnector sx={{backgroundColor: "#fff"}} />
+                <TimelineDot sx={{backgroundColor: "#2D95E1"}}/>
+                <TimelineConnector sx={{backgroundColor: "#8FE7FF"}} />
               </TimelineSeparator>
               <Paper sx={{width:"75%"}}>
                 <TimelineContent color="textSecondary">

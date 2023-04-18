@@ -61,7 +61,6 @@ export default function TableSearch(props) {
                     <ClearIcon />
                   </IconButton>
                 )}
-                {console.log(isSearched)}
               </InputAdornment>
             ),
           }}

@@ -6,6 +6,8 @@ import { AppContext } from "../App";
 import axios from "axios";
 import TableSearch from "./TableSearch";
 import TableFilter from "./TableFilter";
+import CustomTable from "./CustomTable";
+import { Stack, Typography } from "@mui/material";
 
 export default function DownloadFiles() {
   const [data, setData] = useState([]);
@@ -66,7 +68,11 @@ export default function DownloadFiles() {
     //   sx: { width: "25%", minWidth: 250 },
     // },
     // { id: "downloadLink", label: "ดาวน์โหลดเอกสาร", sx: { width: "25%" } },
-    { id: "downloadLink", label: "เอกสารสำหรับดาวน์โหลด", sx: { width: "25%" } },
+    {
+      id: "downloadLink",
+      label: "เอกสารสำหรับดาวน์โหลด",
+      sx: { width: "25%" },
+    },
     {
       id: "modifiedDate",
       label: "แก้ไขล่าสุด",
@@ -85,9 +91,20 @@ export default function DownloadFiles() {
   return (
     <div>
       <NavBar />
-      <TableFilter data={data} columns={columns} childToParent={childToParent} linkcolumns={linkColumns} linkname={linkName} />
-      <TableSearch data={data} childToParent={childToParent} />
-      <Table data={filteredData} columns={columns} linkcolumns={linkColumns} linkname={linkName} />
+      <Stack alignItems="center" sx={{ mt: 24 }}>
+        <Typography variant="h4">
+          เอกสารสำหรับดาวน์โหลด
+        </Typography>
+      </Stack>
+      <CustomTable
+        data={data}
+        columns={columns}
+        childToParent={childToParent}
+        linkcolumns={linkColumns}
+        linkname={linkName}
+        filteredData={filteredData}
+        needFilter={true}
+      />
       <Footer />
     </div>
   );

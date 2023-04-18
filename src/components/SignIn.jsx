@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import "../App.css";
 import axios from "axios";
-import { IconButton, Snackbar, Stack } from "@mui/material";
+import { Typography, Paper, Snackbar, Stack } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -31,28 +31,26 @@ function App() {
 
   let navigate = useNavigate();
 
+  useEffect(()=>{
+    if(isLogged) {
+      navigate('/main')
+    }
+  }, [])
+
   const Login = () => {
     axios
       .post(
         "/tokens",
         { userId: userId, password: password }
-        // {
-        //   headers: {
-        //     /* Authorization: 'Bearer ' + token */
-        //   },
-        //   timeout: 5 * 1000,
-        // }
+
       )
       .then((response) => {
-        // setCookie("token", response.data.token);
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("role", response.data.role);
         localStorage.setItem(
           "username",
           response.data.firstname + " " + response.data.lastname
         );
-        // localStorage.setItem("pic", response.data.profilePicture==''? "https://www.clipartmax.com/png/middle/434-4349876_profile-icon-vector-png.png": response.data.profilePicture);
-        // localStorage.setItem("pic", response.data.profilePicture==''? "AccountCircle": response.data.profilePicture);
         setIsLogged(true);
         navigate("/main");
         console.log();
@@ -71,14 +69,17 @@ function App() {
   };
 
   return (
-    <div className="App">
+      <Stack gap={120} className="content">
       <NavBar />
       {/* {toggle} */}
+      
+      <Stack alignItems="center">
+      <Paper elevation={4} sx={{opacity:0.75, p:48, width: 360, borderRadius:3}}>
       <Stack maxWidth="360px" m="auto" spacing={16}>
         <TextField
           variant="outlined"
-          placeholder="Enter your email"
-          label="email"
+          placeholder="อีเมล"
+          label="อีเมล"
           //onChange={(event) => setPassword(event.target.value)}
           InputProps={{
             startAdornment: (
@@ -106,9 +107,8 @@ function App() {
         >
           <Alert severity={level}>{mesg}</Alert>
         </Snackbar>
-      </Stack>
-      <Footer />
-    </div>
+      </Stack></Paper></Stack>
+      <Footer /></Stack>
   );
 }
 

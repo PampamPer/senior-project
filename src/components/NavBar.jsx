@@ -12,6 +12,7 @@ import {
   ClickAwayListener,
   Paper,
   Grow,
+  IconButton,
 } from "@mui/material";
 import { Container } from "@mui/system";
 import { useNavigate } from "react-router-dom";
@@ -54,8 +55,14 @@ export default function NavBar() {
     prevOpen.current = open;
   }, [open]);
 
-  const { toggle, setToggle, semesterId, setSemesterId, isLogged, setIsLogged } =
-    useContext(AppContext);
+  const {
+    toggle,
+    setToggle,
+    semesterId,
+    setSemesterId,
+    isLogged,
+    setIsLogged,
+  } = useContext(AppContext);
 
   const handleOnChangeToggle = (event) => {
     const isChecked = event.target.checked;
@@ -75,7 +82,9 @@ export default function NavBar() {
     <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <HomeIcon sx={{ width: 32, height: 32, color: "#0075FF" }} />
+          <IconButton onClick={() => navigate("/")}>
+            <HomeIcon sx={{ width: 32, height: 32, color: "#0075FF" }} />
+          </IconButton>
           <div>
             <Button variant="text" onClick={() => navigate("/main")}>
               หน้าแรก
@@ -85,7 +94,9 @@ export default function NavBar() {
                 ข้อมูลโครงงาน
               </Button>
             )}
-            <Button variant="text" onClick={() => navigate("/summary-table")}>ตารางสรุป</Button>
+            <Button variant="text" onClick={() => navigate("/summary-table")}>
+              ตารางสรุป
+            </Button>
             <Button variant="text" onClick={() => navigate("/download-files")}>
               เอกสารสำหรับดาวน์โหลด
             </Button>
@@ -166,7 +177,12 @@ export default function NavBar() {
         </Toolbar>
       </Container>
 
-      <Container maxWidth="xl" sx={{ backgroundColor: "#234FBB" }}>
+      <Container
+        maxWidth="xl"
+        sx={{
+          background: "linear-gradient(to right bottom, #0075FF, #234fbb)",
+        }}
+      >
         <Toolbar disableGutters>
           <div>
             <Select value={semesterId} onChange={handleOnChangeSemester}>
@@ -176,7 +192,11 @@ export default function NavBar() {
             <Switch checked={toggle} onChange={handleOnChangeToggle} />
             {toggle ? "project" : "proposal"}
           </div>
-          <Button variant="outlined" sx={{color: "#fff", borderColor: "#fff"}} onClick={() => navigate("/faq")}>
+          <Button
+            variant="outlined"
+            sx={{ color: "#fff", borderColor: "#fff" }}
+            onClick={() => navigate("/faq")}
+          >
             FAQ
           </Button>
         </Toolbar>

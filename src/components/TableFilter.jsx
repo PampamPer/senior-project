@@ -1,7 +1,6 @@
 import { CloseRounded, FilterListSharp } from "@mui/icons-material";
 import {
   Button,
-  Fade,
   FormControl,
   IconButton,
   InputLabel,
@@ -12,20 +11,37 @@ import {
   Stack,
 } from "@mui/material";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+export function getUniqueOptions(arr, key) {
+  return [...new Set(arr.map((item) => item[key]))];
+}
 
 export default function TableFilter(props) {
   const { data, columns, childToParent, linkcolumns, linkname } = props;
   const [defaultText, setDefaultText] = useState("");
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState();
+  const [newData, setNewData] = useState();
+  let option = {};
+  const filterOption = (data) => {
+    Object.keys(data[0]).forEach((column) => {
+      option[column] = getUniqueOptions(data, column);
+    });
+    option[linkcolumns[0]]
+    console.log("option", option);
+    setNewData(option);
+  };
+  useEffect(() => {
+    filterOption(data);
+  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     setOpen((previousOpen) => !previousOpen);
   };
 
-  console.log("this is data", data);
+  // console.log("this is data", data);
 
   const handleClose = () => {
     setOpen(false);
@@ -33,8 +49,8 @@ export default function TableFilter(props) {
 
   const handleReset = (event) => {
     setDefaultText("");
-    onFilter(event)
-  }
+    onFilter(event);
+  };
 
   const onFilter = (event) => {
     setDefaultText(event.target.value);
@@ -43,7 +59,7 @@ export default function TableFilter(props) {
     const filteredData = data.filter((keyword) => {
       let isTrue = false;
       for (const value of Object.values(keyword)) {
-        console.log("this is val", defaultText);
+        // console.log("this is val", defaultText);
         if (String(value).includes(defaultText)) {
           isTrue = true;
           break;
@@ -73,20 +89,23 @@ export default function TableFilter(props) {
               <FormControl fullWidth>
                 <InputLabel id={column.id}>{column.label}</InputLabel>
                 <Select
+                  key={column.id}
                   labelId={column.id}
                   id={"id-" + column.id}
                   value={defaultText}
                   label={column.label}
                   onChange={onFilter}
                 >
-                  {data.map((item) => (
-                    // console.log(item)
-                    // {column.id==linkname ? 
-
-                    // }
-                    <MenuItem key={item.id} value={item[column.id]}>
-                      {linkcolumns.includes(column.id) ? item[linkname]
-                      :item[column.id]}
+                  {console.log("col", column)}
+                  {console.log("new data", newData)}
+                  {newData?.[column.id].map((item, index) => (
+                    
+                    <MenuItem key={item} value={item}>
+                      {linkcolumns.includes(column.id)
+                        ? newData?.[linkname][index]
+                        :item}
+                        {/* {item} */}
+                          
                     </MenuItem>
                   ))}
                 </Select>

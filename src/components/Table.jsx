@@ -61,12 +61,12 @@ export function preprocess(data, columns, dateColumns, datetimeColumns) {
     Object.keys(row).forEach((key) => {
       if (columns.includes(key)) {
         if (datetimeColumns.includes(key)) {
-          console.log(row[key]); // DEBUG
-          console.log(toThaiDateTimeString(new Date(row[key]))); // DEBUG
+          // console.log(row[key]); // DEBUG
+          // console.log(toThaiDateTimeString(new Date(row[key]))); // DEBUG
           newRow[key] = toThaiDateTimeString(new Date(row[key]));
         } else if (dateColumns.includes(key)) {
-          console.log(row[key]); // DEBUG
-          console.log(toThaiDateString(new Date(row[key]))); // DEBUG
+          // console.log(row[key]); // DEBUG
+          // console.log(toThaiDateString(new Date(row[key]))); // DEBUG
           newRow[key] = toThaiDateString(new Date(row[key]));
         } else {
           newRow[key] = row[key];

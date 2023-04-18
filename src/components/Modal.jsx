@@ -24,6 +24,7 @@ export default function CustomizedModal(props) {
     setOnChange,
     setOldPassword,
     setNewPassword,
+    setRenewPassword,
     setEditOnClick,
   } = props;
 
@@ -56,6 +57,11 @@ export default function CustomizedModal(props) {
                     setPassword={setNewPassword}
                     label={"รหัสผ่านใหม่"}
                     placeholder={"รหัสผ่านใหม่"}
+                  />
+                  <PWTextField
+                    setPassword={setRenewPassword}
+                    label={"ยืนยันรหัสผ่าน"}
+                    placeholder={"ยืนยันรหัสผ่าน"}
                   />
                 </Stack>
               ) : (

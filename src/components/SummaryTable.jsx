@@ -4,6 +4,8 @@ import NavBar from "./NavBar";
 import Table, { preprocess } from "./Table";
 import { AppContext } from "../App";
 import axios from "axios";
+import { Stack, Typography } from "@mui/material";
+import CustomTable from "./CustomTable";
 
 export default function DownloadFiles() {
   const [data, setData] = useState([]);
@@ -11,6 +13,7 @@ export default function DownloadFiles() {
   const { toggle, semesterId } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filteredData, setFilteredData] = useState();
 
   useEffect(() => {
     axios
@@ -22,6 +25,33 @@ export default function DownloadFiles() {
         if (res.data) {
           // console.log("get data");
           setData(
+            preprocess(
+              res.data,
+              [
+                "no",
+                "major",
+                "projectNameTh",
+                "projectNameEn",
+                "semester",
+                "advisor1",
+                "advisor2",
+                "committee1",
+                "committee2",
+                "student1",
+                "student2",
+                "student3",
+                "gradeStudent1",
+                "gradeStudent2",
+                "gradeStudent3",
+                "latestAssignmentName",
+                "lastAssignmentURL",
+                "latestSubmitDate",
+              ],
+              [],
+              []
+            )
+          );
+          setFilteredData(
             preprocess(
               res.data,
               [
@@ -85,16 +115,35 @@ export default function DownloadFiles() {
     { id: "gradeStudent1", label: "ผลการศึกษาสมาชิกคนที่ 1", sx: { minWidth: 125 } },
     { id: "gradeStudent2", label: "ผลการศึกษาสมาชิกคนที่ 2", sx: { minWidth: 125 } },
     { id: "gradeStudent3", label: "ผลการศึกษาสมาชิกคนที่ 3", sx: { minWidth: 125 } },
-    { id: "latestAssignmentName", label: "งานที่ส่งล่าสุด", sx: { minWidth: 180 } },
-    { id: "lastAssignmentURL", label: "ลิงก์ดาวน์โหลดเอกสาร", sx: { minWidth: 250 } },
+    // { id: "latestAssignmentName", label: "งานที่ส่งล่าสุด", sx: { minWidth: 180 } },
+    { id: "lastAssignmentURL", label: "งานที่ส่งล่าสุด", sx: { minWidth: 180 } },
     { id: "latestSubmitDate", label: "ส่งงานล่าสุด", sx: { minWidth: 120 } },
   ];
   const linkColumns = ["lastAssignmentURL"];
+  const linkName = "latestAssignmentName";
+
+  const childToParent = (childdata) => {
+    setFilteredData(childdata);
+  };
 
   return (
     <div>
       <NavBar />
-      <Table data={data} columns={columns} linkcolumns={linkColumns} />
+      <Stack alignItems="center" sx={{ mt: 24 }}>
+        <Typography variant="h4">
+          ตารางสรุป
+        </Typography>
+      </Stack>
+      <CustomTable
+        data={data}
+        columns={columns}
+        childToParent={childToParent}
+        linkcolumns={linkColumns}
+        linkname={linkName}
+        filteredData={filteredData}
+        needFilter="true"
+      />
+      {/* <Table data={data} columns={columns} linkcolumns={linkColumns} /> */}
       <Footer />
     </div>
   );

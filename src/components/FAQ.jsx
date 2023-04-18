@@ -1,5 +1,12 @@
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import { Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Stack,
+  Typography,
+  Divider,
+} from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Footer from "./Footer";
@@ -44,7 +51,7 @@ export default function FAQ() {
   }
 
   return (
-    <div>
+    <div className="content">
       <NavBar />
       {/* <List>
       {data.map((obj) => (
@@ -54,19 +61,22 @@ export default function FAQ() {
           </ListItemButton>
         ))}
       </List> */}
-      {data.map((obj) => (
-      <Accordion>
-        
-            <AccordionSummary
-            expandIcon= {<ExpandMore/>}>
-                {obj.question}
+      <Stack sx={{ mx: 32, mb:24}}>
+        <Stack alignItems="center" sx={{my:24}}>
+          <Typography variant="h4">
+            คำถามที่พบบ่อย
+          </Typography>
+        </Stack>
+        {data.map((obj) => (
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMore />} sx={{px:12}}>
+              {obj.question}
             </AccordionSummary>
-            <AccordionDetails>
-                {obj.answer}
-            </AccordionDetails>
-        
-      </Accordion>
-      ))}
+            <Divider variant="middle"/>
+            <AccordionDetails sx={{m:12}}>{obj.answer}</AccordionDetails>
+          </Accordion>
+        ))}
+      </Stack>
       <Footer />
     </div>
   );

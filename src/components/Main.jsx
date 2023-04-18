@@ -2,7 +2,7 @@ import NavBar from "./NavBar";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { Parallax, ParallaxLayer } from "@react-spring/parallax";
-import { Button, Link, Typography } from "@mui/material";
+import { Button, Link, Paper, Typography } from "@mui/material";
 import Table, { preprocess } from "./Table";
 import { AppContext } from "../App";
 import Footer from "./Footer";
@@ -17,17 +17,17 @@ export default function Main() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  
+
+
   useEffect(() => {
     axios
       .get(`/${path}timelines?semesterid=${semesterId}`)
-      // .get('/proposaltimelines?semesterid=1')
       .then((res) => {
-        // console.log("this is res.data", res.data);
         setLoading(false);
         if (res.data) {
           // console.log("get data");
           setData(preprocess(res.data, ["deadline", "todo"], ["deadline"], []));
-          // console.log("this is data", data);
         } else {
           setData([]);
           // console.log("dont get data");
@@ -37,10 +37,8 @@ export default function Main() {
         setError(err);
         setLoading(false);
       });
-  }, [toggle, semesterId]);
 
-  useEffect(() => {
-    axios
+      axios
       .get(`/linegroups/${path}`)
       .then((res) => {
         // console.log(res.data);
@@ -51,7 +49,21 @@ export default function Main() {
         setError(err);
         setLoading(false);
       });
-  }, [toggle]);
+  }, [toggle, semesterId]);
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`/linegroups/${path}`)
+  //     .then((res) => {
+  //       // console.log(res.data);
+  //       setLoading(false);
+  //       setQR(res.data);
+  //     })
+  //     .catch((err) => {
+  //       setError(err);
+  //       setLoading(false);
+  //     });
+  // }, [toggle]);
 
   if (loading) {
     return <p>loading...</p>;
@@ -68,7 +80,7 @@ export default function Main() {
   const linkColumns = [];
 
   return (
-    <div>
+    <div className="content">
       <NavBar />
       {/* <Parallax pages={2} style={{ top: "0", left: "0" }} className="animation">
         <ParallaxLayer offset={0} speed={0.25}>
@@ -87,18 +99,19 @@ export default function Main() {
         <ParallaxLayer offset={1} speed={0.25} id="main_table">
         </ParallaxLayer>
       </Parallax> */}
+      <Paper elevation={4} sx={{opacity:0.75, m:120}}>
       <Stack
         label="default-screen-welcome"
         direction="row"
         justifyContent="space-between"
         gap="160px"
-        sx={{ p: 64, marginY: 120, display: { sm: "none", md: "flex" } }}
+        sx={{ p: 64, display: { sm: "none", md: "flex" } }}
       >
         <Stack>
           <Typography variant="h1" color="#243460">
-            Welcome!
-          </Typography>
-          <Typography variant="body1">
+            Welcome! 
+          </Typography><br/>
+          <Typography variant="body1" sx={{textIndent:30}}>
             ยินดีต้อนรับเข้าสู่เว็บแอปพลิเคชัน:
             ระบบติดตามความก้าวหน้าของโครงงานวิทยาศาสตร์
             ในภาควิชาคณิตศาสตร์และวิทยาการคอมพิวเตอร์
@@ -114,7 +127,7 @@ export default function Main() {
             {lineQR.url}
           </Link>
         </Stack>
-      </Stack>
+      </Stack></Paper>
       <Stack
         label="smaller-screen-welcome"
         direction="column"
@@ -144,7 +157,7 @@ export default function Main() {
         </Stack>
       </Stack>
       <Stack spacing={32} alignItems="center" label="Timeline">
-        <Typography variant="h3" color="primary.main">
+        <Typography variant="h3" color="#234FBB">
           {path == "proposal" ? "Proposal" : "Senior Project"} Timeline
         </Typography>
         <CustomizedTimeline timelines={data} />
