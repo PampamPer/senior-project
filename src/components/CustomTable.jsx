@@ -3,22 +3,44 @@ import CustomizedTables from "./Table";
 import TableFilter from "./TableFilter";
 import TableSearch from "./TableSearch";
 import PropTypes from "prop-types";
-import { Container, Stack } from "@mui/material";
+import { Button, Container, Stack } from "@mui/material";
+import ProjectInfoFilter from "./ProjectInfoFilter";
 
 export default function CustomTable(props) {
-  const { data, columns, childToParent, linkcolumns, linkname, filteredData, needFilter } =
-    props;
+  const {
+    data,
+    columns,
+    childToParent,
+    linkcolumns,
+    linkname,
+    filteredData,
+    originalFilter,
+    setFilter,
+    isProjectInfo,
+    openModal1,
+    openModal2
+  } = props;
   return (
-    <Stack spacing={16} sx={{mt:24}}>
-      <Stack direction="row" justifyContent="end" alignItems="center">
-        <TableSearch data={data} childToParent={childToParent} />
-        {needFilter &&<TableFilter
-          data={data}
-          columns={columns}
-          childToParent={childToParent}
-          linkcolumns={linkcolumns}
-          linkname={linkname}
-        />}
+    <Stack spacing={16} sx={{ mt: 24 }}>
+      <Stack direction="row" alignItems="center">
+        {isProjectInfo && <Stack direction="row" spacing={16} sx={{position:"absolute", left:0}}>
+          <Button variant="contained" onClick={()=>openModal1(true)}>ประวัติการส่งงาน</Button>
+          <Button variant="outlined" onClick={()=>openModal2(true)}>ใบรายงานผลสอบ</Button>
+        </Stack>}
+        <Stack direction="row" sx={{position:"absolute", right:0}}>
+          <TableSearch data={data} childToParent={childToParent} />
+          {originalFilter ? (
+            <TableFilter
+              data={data}
+              columns={columns}
+              childToParent={childToParent}
+              linkcolumns={linkcolumns}
+              linkname={linkname}
+            />
+          ) : (
+            <ProjectInfoFilter setFilter={setFilter} />
+          )}
+        </Stack>
       </Stack>
       <CustomizedTables
         data={filteredData}

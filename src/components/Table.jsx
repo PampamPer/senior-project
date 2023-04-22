@@ -63,11 +63,20 @@ export function preprocess(data, columns, dateColumns, datetimeColumns) {
         if (datetimeColumns.includes(key)) {
           // console.log(row[key]); // DEBUG
           // console.log(toThaiDateTimeString(new Date(row[key]))); // DEBUG
-          newRow[key] = toThaiDateTimeString(new Date(row[key]));
+          if (row[key] == null) {
+            newRow[key] = "-";
+          }
+          else {
+            newRow[key] = toThaiDateTimeString(new Date(row[key]));
+          }
         } else if (dateColumns.includes(key)) {
           // console.log(row[key]); // DEBUG
           // console.log(toThaiDateString(new Date(row[key]))); // DEBUG
-          newRow[key] = toThaiDateString(new Date(row[key]));
+          if (row[key] == null) {
+            newRow[key] = "-";
+          } else {
+            newRow[key] = toThaiDateString(new Date(row[key]));
+          }
         } else {
           newRow[key] = row[key];
         }

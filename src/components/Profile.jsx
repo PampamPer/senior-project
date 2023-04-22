@@ -346,24 +346,26 @@ export default function Profile() {
                 setNewPassword=""
                 setEditOnClick={editPhoneNumber}
               />
-              
-              <Typography variant="subtitle2">ที่อยู่</Typography>
 
-              <TextField
-                //onChange={editPassword}
-                sx={{ width: 255 }}
-                value={showedAddress == null ? "address" : showedAddress}
-                InputProps={{
-                  readOnly: true,
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={() => setOpenEditAddress(true)}>
-                        <EditRounded />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+              {role == "student" &&<Typography variant="subtitle2">ที่อยู่</Typography>}
+
+              {role == "student" && (
+                <TextField
+                  //onChange={editPassword}
+                  sx={{ width: 255 }}
+                  value={showedAddress == null ? "address" : showedAddress}
+                  InputProps={{
+                    readOnly: true,
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={() => setOpenEditAddress(true)}>
+                          <EditRounded />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              )}
               {/* Edit Address Modal */}
               <CustomizedModal
                 isPassword={false}

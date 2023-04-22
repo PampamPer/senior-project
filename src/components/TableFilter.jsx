@@ -5,6 +5,7 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
+  MenuList,
   Paper,
   Popper,
   Select,
@@ -28,8 +29,7 @@ export default function TableFilter(props) {
     Object.keys(data[0]).forEach((column) => {
       option[column] = getUniqueOptions(data, column);
     });
-    option[linkcolumns[0]]
-    console.log("option", option);
+    option[linkcolumns[0]];
     setNewData(option);
   };
   useEffect(() => {
@@ -41,8 +41,6 @@ export default function TableFilter(props) {
     setOpen((previousOpen) => !previousOpen);
   };
 
-  // console.log("this is data", data);
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -53,13 +51,12 @@ export default function TableFilter(props) {
   };
 
   const onFilter = (event) => {
+    console.log(event.target.value);
     setDefaultText(event.target.value);
     let defaultText = event.target.value;
-    // console.log("this is default txt", defaultText);
     const filteredData = data.filter((keyword) => {
       let isTrue = false;
       for (const value of Object.values(keyword)) {
-        // console.log("this is val", defaultText);
         if (String(value).includes(defaultText)) {
           isTrue = true;
           break;
@@ -77,39 +74,49 @@ export default function TableFilter(props) {
       </IconButton>
 
       <Popper open={open} anchorEl={anchorEl}>
-        <Paper sx={{ p: 16 }}>
+        <Paper sx={{ px: 16, pb:16, maxHeight: 300, overflowY: "scroll" }}>
           <Stack spacing={8} sx={{ minWidth: 200, maxWidth: 200 }}>
-            <Stack direction="row-reverse">
-              <IconButton onClick={handleClose}>
+            <Stack
+              direction="row"
+              justifyContent="end"
+              alignItems="center"
+              sx={{
+                position: "sticky",
+                top: 0,
+                zIndex: 2,
+                backgroundColor: "white",
+                py: 16,
+                height: 50,
+              }}
+            >
+              <Button onClick={handleReset}>Reset</Button>
+              <IconButton onClick={handleClose} sx={{width:24, height:24}}>
                 <CloseRounded />
               </IconButton>
-              <Button onClick={handleReset}>Reset</Button>
             </Stack>
             {columns.map((column) => (
-              <FormControl fullWidth>
-                <InputLabel id={column.id}>{column.label}</InputLabel>
+              <FormControl fullWidth key={column.id}>
+                <InputLabel id={column.id} key={column.id} sx={{ pr: 32 }}>
+                  {column.label}
+                </InputLabel>
                 <Select
-                  key={column.id}
+                  key={"key_" + column.id}
                   labelId={column.id}
                   id={"id-" + column.id}
                   value={defaultText}
                   label={column.label}
                   onChange={onFilter}
                 >
-                  {console.log("col", column)}
-                  {console.log("new data", newData)}
-                  {newData?.[column.id].map((item, index) => (
-                    
-                    <MenuItem key={item} value={item}>
-                      {linkcolumns.includes(column.id)
-                        ? newData?.[linkname][index]
-                        :item}
-                        {/* {item} */}
-                          
-                    </MenuItem>
-                  ))}
+                  {/* <MenuList sx={{maxHeight:300}}> */}
+                    {newData?.[column.id].map((item, index) => (
+                      <MenuItem key={item} value={item} sx={{ maxWidth: 200, display:"block", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>
+                        {linkcolumns.includes(column.id)
+                          ? newData?.[linkname][index]
+                          : item}
+                      </MenuItem>
+                    ))}
+                  {/* </MenuList> */}
                 </Select>
-                {/* {console.log("this is default txt from select", defaultText)} */}
               </FormControl>
             ))}
           </Stack>

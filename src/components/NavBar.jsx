@@ -185,7 +185,7 @@ export default function NavBar() {
       >
         <Toolbar disableGutters>
           <div>
-            <Select value={semesterId} onChange={handleOnChangeSemester}>
+            <Select value={semesterId} onChange={handleOnChangeSemester} sx={{}}>
               <MenuItem value={2}>2565/2</MenuItem>
               <MenuItem value={1}>2565/1</MenuItem>
             </Select>

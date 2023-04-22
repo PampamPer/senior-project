@@ -48,7 +48,7 @@ export default function DownloadFiles() {
                 "latestSubmitDate",
               ],
               [],
-              []
+              ["latestSubmitDate"]
             )
           );
           setFilteredData(
@@ -75,7 +75,7 @@ export default function DownloadFiles() {
                 "latestSubmitDate",
               ],
               [],
-              []
+              ["latestSubmitDate"]
             )
           );
           // console.log("this is data", data);
@@ -105,19 +105,19 @@ export default function DownloadFiles() {
     { id: "projectNameTh", label: "ชื่อโครงงานภาษาไทย", sx: { minWidth: 300 } },
     { id: "projectNameEn", label: "ชื่อโครงงานภาษาอังกฤษ", sx: { minWidth: 300 } },
     { id: "semester", label: "ภาคการศึกษา", sx: { minWidth: 120 } },
-    { id: "advisor1", label: "อาจารย์ที่ปรึกษาโครงงาน 1", sx: { minWidth: 250 } },
-    { id: "advisor2", label: "อาจารย์ที่ปรึกษาโครงงาน 2", sx: { minWidth: 250 } },
-    { id: "committee1", label: "กรรมการ 1", sx: { minWidth: 250 } },
-    { id: "committee2", label: "กรรมการ 2", sx: { minWidth: 250 } },
-    { id: "student1", label: "สมาชิกโครงงาน 1", sx: { minWidth: 250 } },
-    { id: "student2", label: "สมาชิกโครงงาน 2", sx: { minWidth: 250 } },
-    { id: "student3", label: "สมาชิกโครงงาน 3", sx: { minWidth: 250 } },
+    { id: "advisor1", label: "อาจารย์ที่ปรึกษาโครงงาน 1", sx: { minWidth: 275 } },
+    { id: "advisor2", label: "อาจารย์ที่ปรึกษาโครงงาน 2", sx: { minWidth: 275 } },
+    { id: "committee1", label: "กรรมการ 1", sx: { minWidth: 275 } },
+    { id: "committee2", label: "กรรมการ 2", sx: { minWidth: 275 } },
+    { id: "student1", label: "สมาชิกโครงงาน 1", sx: { minWidth: 275 } },
+    { id: "student2", label: "สมาชิกโครงงาน 2", sx: { minWidth: 275 } },
+    { id: "student3", label: "สมาชิกโครงงาน 3", sx: { minWidth: 275 } },
     { id: "gradeStudent1", label: "ผลการศึกษาสมาชิกคนที่ 1", sx: { minWidth: 125 } },
     { id: "gradeStudent2", label: "ผลการศึกษาสมาชิกคนที่ 2", sx: { minWidth: 125 } },
     { id: "gradeStudent3", label: "ผลการศึกษาสมาชิกคนที่ 3", sx: { minWidth: 125 } },
     // { id: "latestAssignmentName", label: "งานที่ส่งล่าสุด", sx: { minWidth: 180 } },
-    { id: "lastAssignmentURL", label: "งานที่ส่งล่าสุด", sx: { minWidth: 180 } },
-    { id: "latestSubmitDate", label: "ส่งงานล่าสุด", sx: { minWidth: 120 } },
+    { id: "lastAssignmentURL", label: "งานที่ส่งล่าสุด", sx: { minWidth: 250 } },
+    { id: "latestSubmitDate", label: "วันที่ส่งล่าสุด", sx: { minWidth: 150 } },
   ];
   const linkColumns = ["lastAssignmentURL"];
   const linkName = "latestAssignmentName";
@@ -141,7 +141,7 @@ export default function DownloadFiles() {
         linkcolumns={linkColumns}
         linkname={linkName}
         filteredData={filteredData}
-        needFilter="true"
+        originalFilter="true"
       />
       {/* <Table data={data} columns={columns} linkcolumns={linkColumns} /> */}
       <Footer />

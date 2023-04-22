@@ -3,7 +3,7 @@ import "./App.css";
 import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material";
 import Button from "@mui/material/Button";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import SignIn from "./components/SignIn";
 import Main from "./components/Main";
 import Faq from "./components/FAQ";
@@ -13,6 +13,37 @@ import Profile from "./components/Profile";
 import SummaryTable from "./components/SummaryTable";
 
 export const AppContext = createContext();
+
+async function checkIfLogged() {
+  const role = localStorage.getItem("role");
+  const token = localStorage.getItem("token");
+  // const { setIsLogged } = useContext(AppContext);
+
+  if (role != null && token != null) {
+    const login = await axios
+      .get(`/personalinfo/${role}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+          // timeout: 5 * 1000,
+        },
+      })
+      // setIsLogged();
+      return login?.status=="200"
+      
+      // .then((res) => {
+      //   setIsLogged(true);
+      // })
+      // .catch((err) => {
+      //   // alert(err);
+      //   setIsLogged(false);
+      //   navigate("/");
+      // });
+  }
+  else{
+    // setIsLogged(false);
+    return false
+  }
+};
 
 function App() {
   axios.defaults.baseURL = "https://cache111.com/seniorprojectapi";
@@ -26,6 +57,9 @@ function App() {
   );
   const token = localStorage.getItem("token");
   const [isLogged, setIsLogged] = useState();
+  const role = localStorage.getItem("role");
+  let navigate = useNavigate();
+
   const theme = createTheme({
     components: {
       MuiButton: {
@@ -100,10 +134,11 @@ function App() {
         styleOverrides: {
           outlined: {
             background: "#fff",
-            padding: 8,
+            p: 8,
           },
         },
-      }, //
+      },
+      //
       // MuiSwitch: {
       //   styleOverrides: {
       //     root: {
@@ -135,46 +170,37 @@ function App() {
         color: "#616777",
       },
       h1: {
-        fontWeight: 600
+        fontWeight: 600,
       },
       h2: {
-        fontWeight: 600
+        fontWeight: 600,
       },
       h3: {
-        fontWeight: 600
+        fontWeight: 600,
       },
       h4: {
-        fontWeight: 600
+        fontWeight: 600,
       },
       h5: {
-        fontWeight: 600
+        fontWeight: 600,
       },
       h6: {
-        fontWeight: 600
+        fontWeight: 600,
       },
     },
     spacing: 1,
   });
 
-  const checkIfLogged = () => {
-    axios
-      .get(`/personalinfo/student`, {
-        headers: {
-          Authorization: "Bearer " + token,
-          timeout: 5 * 1000,
-        },
-      })
-      .then((res) => {
-        setIsLogged(true);
-      })
-      .catch((err) => {
-        // alert(err);
-        setIsLogged(false);
-      });
-  }
+   const checkLogin = async() => {
+      const isLogin = await checkIfLogged();
+      setIsLogged(isLogin);
+      if(!isLogin){
+        navigate("/");
+      }
+   }
 
-  useEffect(() => {
-    checkIfLogged();
+  useEffect(()=>{
+    checkLogin();
   }, []);
 
   return (

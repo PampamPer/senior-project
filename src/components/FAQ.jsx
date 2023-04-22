@@ -73,7 +73,7 @@ export default function FAQ() {
               {obj.question}
             </AccordionSummary>
             <Divider variant="middle"/>
-            <AccordionDetails sx={{m:12}}>{obj.answer}</AccordionDetails>
+            <AccordionDetails sx={{m:12, whiteSpace:"pre-wrap", lineHeight:1.8, wordBreak:"break-word"}}>{obj.answer}</AccordionDetails>
           </Accordion>
         ))}
       </Stack>

@@ -22,10 +22,8 @@ export default function DownloadFiles() {
     axios
       .get(`/${path}downloads`)
       .then((res) => {
-        console.log(res.data);
         setLoading(false);
         if (res.data) {
-          console.log("get data");
           setData(
             preprocess(
               res.data,
@@ -44,7 +42,6 @@ export default function DownloadFiles() {
           );
         } else {
           setData([]);
-          console.log("dont get data");
         }
       })
       .catch((err) => {
@@ -103,7 +100,7 @@ export default function DownloadFiles() {
         linkcolumns={linkColumns}
         linkname={linkName}
         filteredData={filteredData}
-        needFilter={true}
+        originalFilter={true}
       />
       <Footer />
     </div>

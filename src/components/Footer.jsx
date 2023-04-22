@@ -88,11 +88,11 @@ export default function Footer() {
               <Typography variant="body2" sx={{ color: "#98DAFF" }}>
                 Website:{" "}
                 <Link
-                  href="http://pioneer.netserv.chula.ac.th/~achatcha/"
+                  href="https://cache111.com/me/"
                   underline="hover"
                   color="#0075FF"
                 >
-                  http://pioneer.netserv.chula.ac.th/~achatcha/
+                  https://cache111.com/me/
                 </Link>
               </Typography>
             </Stack>
