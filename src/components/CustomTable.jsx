@@ -21,7 +21,7 @@ export default function CustomTable(props) {
     openModal2
   } = props;
   return (
-    <Stack spacing={16} sx={{ mt: 24 }}>
+    <Stack spacing={32} sx={{ mt: 40 }}>
       <Stack direction="row" alignItems="center">
         {isProjectInfo && <Stack direction="row" spacing={16} sx={{position:"absolute", left:0}}>
           <Button variant="contained" onClick={()=>openModal1(true)}>ประวัติการส่งงาน</Button>

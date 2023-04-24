@@ -1,9 +1,8 @@
 import NavBar from "./NavBar";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { Parallax, ParallaxLayer } from "@react-spring/parallax";
-import { Button, Link, Paper, Typography } from "@mui/material";
-import Table, { preprocess } from "./Table";
+import { Link, Paper, Typography } from "@mui/material";
+import { preprocess } from "./Table";
 import { AppContext } from "../App";
 import Footer from "./Footer";
 import { Stack } from "@mui/system";
@@ -82,23 +81,6 @@ export default function Main() {
   return (
     <div className="content">
       <NavBar />
-      {/* <Parallax pages={2} style={{ top: "0", left: "0" }} className="animation">
-        <ParallaxLayer offset={0} speed={0.25}>
-          <div className="animation_layer parallax" id="artback"></div>
-        </ParallaxLayer>
-        <ParallaxLayer offset={0} speed={1}>
-          <div className="animation_layer parallax" id="layer3"></div>
-        </ParallaxLayer>
-        <ParallaxLayer offset={0} speed={0.45}>
-          <div className="animation_layer parallax" id="layer2"></div>
-        </ParallaxLayer>
-        <ParallaxLayer offset={0} speed={0.4}>
-          <div className="animation_layer parallax" id="layer1"></div>
-        </ParallaxLayer>
-        <ParallaxLayer offset={0} speed={0.3}></ParallaxLayer>
-        <ParallaxLayer offset={1} speed={0.25} id="main_table">
-        </ParallaxLayer>
-      </Parallax> */}
       <Paper elevation={4} sx={{opacity:0.75, m:120}}>
       <Stack
         label="default-screen-welcome"

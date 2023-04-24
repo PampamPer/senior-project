@@ -20,8 +20,7 @@ export default function TableSearch(props) {
     const filteredData = data.filter((keyword) => {
       let isTrue = false;
       for (const value of Object.values(keyword)) {
-        console.log("this is val", defaultText);
-        if (String(value).includes(defaultText)) {
+        if (String(value).toLowerCase().includes(defaultText.toLowerCase())) {
           isTrue = true;
           break;
         }

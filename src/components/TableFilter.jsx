@@ -74,7 +74,7 @@ export default function TableFilter(props) {
       </IconButton>
 
       <Popper open={open} anchorEl={anchorEl}>
-        <Paper sx={{ px: 16, pb:16, maxHeight: 300, overflowY: "scroll" }}>
+        <Paper sx={{ px: 16, pb: 16, maxHeight: 300, overflowY: "scroll" }}>
           <Stack spacing={8} sx={{ minWidth: 200, maxWidth: 200 }}>
             <Stack
               direction="row"
@@ -90,7 +90,7 @@ export default function TableFilter(props) {
               }}
             >
               <Button onClick={handleReset}>Reset</Button>
-              <IconButton onClick={handleClose} sx={{width:24, height:24}}>
+              <IconButton onClick={handleClose} sx={{ width: 24, height: 24 }}>
                 <CloseRounded />
               </IconButton>
             </Stack>
@@ -108,13 +108,23 @@ export default function TableFilter(props) {
                   onChange={onFilter}
                 >
                   {/* <MenuList sx={{maxHeight:300}}> */}
-                    {newData?.[column.id].map((item, index) => (
-                      <MenuItem key={item} value={item} sx={{ maxWidth: 200, display:"block", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"}}>
-                        {linkcolumns.includes(column.id)
-                          ? newData?.[linkname][index]
-                          : item}
-                      </MenuItem>
-                    ))}
+                  {newData?.[column.id].map((item, index) => (
+                    <MenuItem
+                      key={item}
+                      value={item}
+                      sx={{
+                        maxWidth: 200,
+                        display: "block",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {linkcolumns.includes(column.id)
+                        ? newData?.[linkname][index]
+                        : item}
+                    </MenuItem>
+                  ))}
                   {/* </MenuList> */}
                 </Select>
               </FormControl>

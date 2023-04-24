@@ -1,13 +1,24 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
-import { preprocess } from "./Table";
+import CustomizedTables, { preprocess } from "./Table";
 import CustomTable from "./CustomTable";
 import UploadModal from "./UploadModal";
-import { FormControl, InputLabel, Menu, MenuItem, Select, Typography } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  Link,
+  Menu,
+  MenuItem,
+  Select,
+  Stack,
+  Typography,
+} from "@mui/material";
 
 export default function ProjectInfoLecturer() {
   const [data, setData] = useState([]);
+  const [arrId, setArrId] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [filter, setFilter] = useState("relevance");
   const path = localStorage.getItem("projectPath") || "project";
@@ -18,10 +29,13 @@ export default function ProjectInfoLecturer() {
   const [error, setError] = useState(null);
   const [openUploadHistory, setOpenUploadHistory] = useState(false);
   const [openGradingHistory, setOpenGradingHistory] = useState(false);
+  const [openGradingUpload, setOpenGradingUpload] = useState(false);
   const [showUploadTable, setShowUploadTable] = useState(false);
   const [showGradingTable, setShowGradingTable] = useState(false);
-  const selectName = [];
-  const [age, setAge] = useState("");
+  const selectName = new Map();
+  const [uploadData, setUploadData] = useState([]);
+  const [gradingData, setGradingData] = useState([]);
+  const formData = new FormData();
 
   useEffect(() => {
     axios
@@ -38,6 +52,7 @@ export default function ProjectInfoLecturer() {
       .then((res) => {
         setLoading(false);
         setIsLogged(true);
+        setArrId(res.data);
         if (res.data) {
           setData(
             preprocess(
@@ -146,8 +161,6 @@ export default function ProjectInfoLecturer() {
       sx: { minWidth: 125 },
     },
   ];
-  const linkColumns = ["lastAssignmentURL"];
-  const linkName = "latestAssignmentName";
 
   const childToParent = (childdata) => {
     setFilteredData(childdata);
@@ -156,35 +169,110 @@ export default function ProjectInfoLecturer() {
   const handleClose = () => {
     setOpenGradingHistory(false);
     setOpenUploadHistory(false);
+    setOpenGradingUpload(false);
   };
 
-  
+  const uploadColumns = [
+    {
+      id: "assignmentName",
+      label: "ชื่องาน",
+      sx: { width: "60%", minWidth: 300 },
+    },
+    {
+      id: "submitDate",
+      label: "วันที่ส่ง",
+      sx: { width: "20%", minWidth: 250 },
+    },
+    { id: "sender", label: "ชื่อผู้ส่ง", sx: { width: "20%", minWidth: 300 } },
+  ];
+
+  const uploadlinkColumns = ["fileName"];
+  const uploadlinkName = "assignmentName";
+
+  const getUploading = (projectName) => {
+    setOpenUploadHistory(false);
+    setShowUploadTable(true);
+    const projectId = selectName.get(projectName);
+    axios
+      .get(`/${path}Uploads/lecturer?${path}Id=${projectId}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+          timeout: 5 * 1000,
+        },
+      })
+      .then((res) => {
+        setLoading(false);
+        setIsLogged(true);
+        if (res.data) {
+          setUploadData(
+            preprocess(
+              res.data,
+              ["assignmentName", "fileName", "submitDate", "sender"],
+              [],
+              ["submitDate"]
+            )
+          );
+        } else {
+          setData([]);
+        }
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+      });
+  };
+
+  const getGrading = (projectName) => {
+    setOpenGradingHistory(false);
+    setShowGradingTable(true);
+    const projectId = selectName.get(projectName);
+    axios
+      .get(`/${path}Uploads/grading?${path}Id=${projectId}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+          timeout: 5 * 1000,
+        },
+      })
+      .then((res) => {
+        setLoading(false);
+        setIsLogged(true);
+        setGradingData(res.data);
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+      });
+  };
+
+  const uploadGrading = (projectName) => {
+    setOpenGradingHistory(false);
+    setShowGradingTable(true);
+    const projectId = selectName.get(projectName);
+    axios
+      .put(`/${path}Uploads?${path}Id=${projectId}`, {
+        ///ProposalUpload?ProposalId={id} 
+        headers: {
+          Authorization: "Bearer " + token,
+          timeout: 5 * 1000,
+        },
+      })
+      .then((res) => {
+        setLoading(false);
+        setIsLogged(true);
+        setGradingData(res.data);
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+      });
+  };
 
   return (
+    // const dict = {id: "", id2: ""}
     <div>
-      <FormControl fullWidth>
-        <InputLabel>Age</InputLabel>
-        <Select label="Age" value={age} onChange={(event)=>setAge(event.target.value)}>
-          <MenuItem value="10">10</MenuItem>
-          <MenuItem value="20">20</MenuItem>
-          <MenuItem value="30">30</MenuItem>
-        </Select>
-      </FormControl>
-      <CustomTable
-        data={data}
-        columns={columns}
-        childToParent={childToParent}
-        linkcolumns={linkColumns}
-        linkname={linkName}
-        filteredData={filteredData}
-        originalFilter={false}
-        setFilter={setFilter}
-        isProjectInfo={true}
-        openModal1={setOpenUploadHistory}
-        openModal2={setOpenGradingHistory}
-      />
-      {data.map((proj) => {
-        selectName.push(proj.no + " - " + proj.projectNameTh);
+      {arrId.map((proj) => {
+        selectName.set(proj.no + " - " + proj.projectNameTh, proj.id);
+        //selectName.push(proj.no + " - " + proj.projectNameTh);
       })}
 
       {/* Modal ประวัติการส่งงาน */}
@@ -193,10 +281,75 @@ export default function ProjectInfoLecturer() {
         handleClose={handleClose}
         ModalHeader={"ดูประวัติการส่งงาน"}
         selectOption={selectName}
-        setSubmit={setShowUploadTable}
+        setSubmit={getUploading}
+        uploadFile={false}
       />
 
-      {showUploadTable && <Typography variant="h3">This is work?</Typography>}
+      {/* Modal ใบรายงานผลสอบ */}
+      <UploadModal
+        open={openGradingHistory}
+        handleClose={handleClose}
+        ModalHeader={"จัดการใบรายงานผลสอบ"}
+        selectOption={selectName}
+        setSubmit={getGrading}
+        uploadFile={false}
+      />
+
+      <Stack spacing={56}>
+        <CustomTable
+          data={data}
+          columns={columns}
+          childToParent={childToParent}
+          linkcolumns={[]}
+          linkname={[]}
+          filteredData={filteredData}
+          originalFilter={false}
+          setFilter={setFilter}
+          isProjectInfo={true}
+          openModal1={setOpenUploadHistory}
+          openModal2={setOpenGradingHistory}
+        />
+
+        {showUploadTable && (
+          <Stack alignItems="center" spacing={32}>
+            <Typography variant="h5" color="#2D95E1">
+              ประวัติการส่งงาน
+            </Typography>
+            <CustomizedTables
+              data={uploadData}
+              columns={uploadColumns}
+              linkcolumns={uploadlinkColumns}
+              linkname={uploadlinkName}
+            />
+          </Stack>
+        )}
+
+        {showGradingTable && (
+          <Stack alignItems="center" spacing={32}>
+            <Typography variant="h5" color="#2D95E1">
+              ใบรายงานผลสอบ
+            </Typography>
+            <Stack alignItems="end">
+              {/* คลิกปุ่มแล้วเรียก Modal เพื่ออัพโหลดไฟล์ */}
+              <Button variant="contained" onClick={()=>setOpenGradingUpload(true)}>
+                อัพโหลดใบรายงานผลสอบ
+              </Button>
+              <Link href={gradingData.url} underline="hover" color="#0075FF">
+                {gradingData.fileName}
+              </Link>
+            </Stack>
+          </Stack>
+        )}
+
+        {/* Modal อัพโหลดใบรายงานผลสอบ */}
+      {/* <UploadModal
+        open={openGradingUpload}
+        handleClose={handleClose}
+        ModalHeader={"อัพโหลดใบรายงานผลสอบ"}
+        setSubmit={uploadGrading}
+        uploadFile={true}
+      /> */}
+      </Stack>
     </div>
   );
 }

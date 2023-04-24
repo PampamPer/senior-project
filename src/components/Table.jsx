@@ -57,7 +57,7 @@ export function preprocess(data, columns, dateColumns, datetimeColumns) {
   var processedData = [];
   for (const [index, row] of data.entries()) {
     let newRow = {};
-    newRow["id"] = index;
+    newRow["tableId"] = index;
     Object.keys(row).forEach((key) => {
       if (columns.includes(key)) {
         if (datetimeColumns.includes(key)) {
@@ -125,9 +125,9 @@ export default function CustomizedTables(props) {
             ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : data
           ).map((datarow) => (
-            <TableRow key={datarow.id}>
+            <TableRow key={datarow.tableId}>
               {Object.keys(datarow)
-                .filter((key) => key != "id" && key != linkname)
+                .filter((key) => key != "tableId" && key != linkname)
                 .map((key) => (
                   <TableCell key={key}>
                     {/* {console.log("datarow = ", datarow, "key= ", key)}

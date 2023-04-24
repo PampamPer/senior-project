@@ -17,26 +17,30 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 export default function UploadModal(props) {
-  const { open, handleClose, ModalHeader, selectOption, setSubmit } = props;
+  const {
+    open,
+    handleClose,
+    ModalHeader,
+    selectOption,
+    setSubmit,
+    uploadFile,
+  } = props;
   const [val, setVal] = useState("");
+  const arrSelectOption = [...selectOption];
+  const [isNotSelected, setIsNotSelected] = useState(true);
 
   const setOnChange = (event) => {
-    console.log("Is this work?")
-    console.log(event.target.value)
     const selectedVal = event?.target?.value || "";
     setVal(selectedVal);
-  }
+    setIsNotSelected(false);
+  };
 
   return (
     <Modal open={open} onClose={handleClose}>
       <Stack alignItems="center" sx={{ position: "relative", top: "30%" }}>
-        <Paper sx={{ width: 450 }}>
+        <Paper sx={{ width: 332 }}>
           <Stack spacing={16} sx={{ p: 16 }}>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              sx={{ p: 8 }}
-            >
+            <Stack direction="row" justifyContent="space-between" sx={{ p: 8 }}>
               <Typography variant="subtitle1" sx={{ mt: 8, ml: 8 }}>
                 {ModalHeader}
               </Typography>
@@ -45,31 +49,58 @@ export default function UploadModal(props) {
               </IconButton>
             </Stack>
             <Divider variant="middle" />
-            <Stack alignItems="center">
+            {uploadFile ? (
+              <Button variant="outlined" component="label">
+                อัพโหลดใบรายงานผลสอบ
+                <input
+                  hidden
+                  accept=".pdf, .jpg, .jpeg, .png"
+                  multiple
+                  type="file"
+                  // onChange={(event) => setSubmit(event)}
+                />
+              </Button>
+            ) : (
               <FormControl fullWidth>
-                <InputLabel>
-                  เลือกโครงงาน
-                </InputLabel>
+                <InputLabel>เลือกโครงงาน</InputLabel>
                 <Select
                   label="เลือกโครงงาน"
                   value={val}
-                  sx={{ width: 300, p:0}}
-                  onChange={(event)=>{setOnChange(event)}}
+                  sx={{ width: 300, p: 0 }}
+                  onChange={(event) => {
+                    setOnChange(event);
+                  }}
                 >
                   {/* <MenuList sx={{ maxWidth: 300, maxHeight: 400 }}> */}
-                  {selectOption ? selectOption.map((data, index) => (
-                      <MenuItem key={index} value={data}>
-                        {data}
+                  {arrSelectOption ? (
+                    arrSelectOption.map(([value, key]) => (
+                      <MenuItem
+                        key={key}
+                        value={value}
+                        sx={{
+                          maxWidth: 300,
+                          display: "block",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {value}
                       </MenuItem>
-                      
-                    )) :
+                    ))
+                  ) : (
                     <MenuItem value="">--- ไม่พบข้อมูล ---</MenuItem>
-                    }
+                  )}
                   {/* </MenuList> */}
                 </Select>
               </FormControl>
-            </Stack>
-            <Button variant="contained" onClick={setSubmit}>
+            )}
+
+            <Button
+              variant="contained"
+              onClick={() => setSubmit(val)}
+              disabled={isNotSelected}
+            >
               ยืนยัน
             </Button>
           </Stack>
@@ -78,7 +109,3 @@ export default function UploadModal(props) {
     </Modal>
   );
 }
-
-UploadModal.propTypes = {
-  selectOption: PropTypes.array,
-};
