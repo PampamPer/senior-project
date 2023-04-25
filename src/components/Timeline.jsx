@@ -49,8 +49,8 @@ export default function CustomizedTimeline(props) {
               page * rowsPerPage + rowsPerPage
             )
           : timelines
-        ).map((timeline) => (
-          <TimelineItem key={timeline.id} sx={{ gap: 24 }}>
+        ).map((timeline, index) => (
+          <TimelineItem key={index} sx={{ gap: 24 }}>
             <TimelineSeparator>
               <TimelineDot sx={{ backgroundColor: "#2D95E1" }} />
               <TimelineConnector sx={{ backgroundColor: "#8FE7FF" }} />

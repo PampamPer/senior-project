@@ -47,13 +47,12 @@ function App() {
       .then((response) => {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("role", response.data.role);
-        localStorage.setItem(
-          "username",
-          response.data.firstname + " " + response.data.lastname
-        );
+        // localStorage.setItem(
+        //   "username",
+        //   response.data.firstname + " " + response.data.lastname
+        // );
         setIsLogged(true);
         navigate("/main");
-        console.log();
       })
       .catch((error) => {
         if (error.code === "ECONNABORTED") {

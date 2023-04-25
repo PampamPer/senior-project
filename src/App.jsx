@@ -18,19 +18,19 @@ async function checkIfLogged() {
   const role = localStorage.getItem("role");
   const token = localStorage.getItem("token");
   // const { setIsLogged } = useContext(AppContext);
-  const isExpired = isTokenExpired(token);
+  if (token) {
+    const isExpired = isTokenExpired(token);
 
-  if (role != null && token != null && !isExpired) {
-    const login = await axios
-      .get(`/personalinfo/${role}`, {
+    if (role != null && !isExpired) {
+      const login = await axios.get(`/personalinfo/${role}`, {
         headers: {
           Authorization: "Bearer " + token,
           // timeout: 5 * 1000,
         },
-      })
+      });
       // setIsLogged();
-      return login?.status=="200"
-      
+      return login?.status == "200";
+
       // .then((res) => {
       //   setIsLogged(true);
       // })
@@ -39,15 +39,15 @@ async function checkIfLogged() {
       //   setIsLogged(false);
       //   navigate("/");
       // });
-  }
-  else{
+    }
+  } else {
     // setIsLogged(false);
-    return false
+    return false;
   }
-};
+}
 
 function isTokenExpired(token) {
-  const decodedToken = JSON.parse(atob(token.split('.')[1]));
+  const decodedToken = JSON.parse(atob(token.split(".")[1]));
   const expirationTime = decodedToken.exp * 1000; // convert expiration time to milliseconds
   const currentTime = Date.now();
   return currentTime > expirationTime;
@@ -63,7 +63,7 @@ function App() {
   const [semesterId, setSemesterId] = useState(
     localStorage.getItem("semesterId") || 2
   );
-  
+
   const [isLogged, setIsLogged] = useState();
   const role = localStorage.getItem("role");
   let navigate = useNavigate();
@@ -199,15 +199,15 @@ function App() {
     spacing: 1,
   });
 
-   const checkLogin = async() => {
-      const isLogin = await checkIfLogged();
-      setIsLogged(isLogin);
-      if(!isLogin){
-        navigate("/");
-      }
-   }
+  const checkLogin = async () => {
+    const isLogin = await checkIfLogged();
+    setIsLogged(isLogin);
+    if (!isLogin) {
+      navigate("/");
+    }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     checkLogin();
   }, []);
 

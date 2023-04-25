@@ -26,6 +26,8 @@ export default function UploadModal(props) {
     uploadFile,
     uploadFunction,
     selectFile,
+    isStudentUpload,
+    studentUpload,
   } = props;
   const [val, setVal] = useState("");
   const arrSelectOption = [...selectOption];
@@ -70,39 +72,60 @@ export default function UploadModal(props) {
                 )}
               </Stack>
             ) : (
-              <FormControl fullWidth>
-                <InputLabel>เลือกโครงงาน</InputLabel>
-                <Select
-                  label="เลือกโครงงาน"
-                  value={val}
-                  sx={{ width: 300, p: 0 }}
-                  onChange={(event) => {
-                    setOnChange(event);
-                  }}
-                >
-                  {/* <MenuList sx={{ maxWidth: 300, maxHeight: 400 }}> */}
-                  {arrSelectOption ? (
-                    arrSelectOption.map(([value, key]) => (
-                      <MenuItem
-                        key={key}
-                        value={value}
-                        sx={{
-                          maxWidth: 300,
-                          display: "block",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
+              <Stack alignItems="center" spacing={16}>
+                <FormControl fullWidth>
+                  <InputLabel>เลือกโครงงาน</InputLabel>
+                  <Select
+                    label="เลือกโครงงาน"
+                    value={val}
+                    sx={{ width: 300, p: 0 }}
+                    onChange={(event) => {
+                      setOnChange(event);
+                    }}
+                  >
+                    {/* <MenuList sx={{ maxWidth: 300, maxHeight: 400 }}> */}
+                    {arrSelectOption ? (
+                      arrSelectOption.map(([value, key]) => (
+                        <MenuItem
+                          key={key}
+                          value={value}
+                          sx={{
+                            maxWidth: 300,
+                            display: "block",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {value}
+                        </MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem value="">--- ไม่พบข้อมูล ---</MenuItem>
+                    )}
+                    {/* </MenuList> */}
+                  </Select>
+                </FormControl>
+                {isStudentUpload && (
+                  <Stack alignItems="center" spacing={8}> 
+                    <Button variant="outlined" component="label">
+                      อัพโหลดเอกสาร
+                      <input
+                        hidden
+                        accept=".pdf, .jpg, .jpeg, .png"
+                        type="file"
+                        onChange={(event) => {
+                          uploadFunction(event);
+                          setIsNotSelected(false);
                         }}
-                      >
-                        {value}
-                      </MenuItem>
-                    ))
-                  ) : (
-                    <MenuItem value="">--- ไม่พบข้อมูล ---</MenuItem>
-                  )}
-                  {/* </MenuList> */}
-                </Select>
-              </FormControl>
+                      />
+                    </Button>
+                    {selectFile && (
+                      <Typography variant="body2">{selectFile.name}</Typography>
+                    )}
+                  </Stack>
+                )}
+              </Stack>
             )}
 
             <Button

@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
 import { Button, Paper, Stack, Typography } from "@mui/material";
 import CustomizedModal from "./Modal";
+import StudentUploadTable from "./StudentUploadTable";
 
 export default function ProjectInfoStudent() {
   const [data, setData] = useState([]);
@@ -39,7 +40,7 @@ export default function ProjectInfoStudent() {
   const handleClose = () => {
     setOpenEditEnModal(false);
     setOpenEditThModal(false);
-  }
+  };
 
   useEffect(() => {
     axios
@@ -86,7 +87,7 @@ export default function ProjectInfoStudent() {
       .put(
         `${path}Info/editProjectNameTh `,
         {
-          projectNameTh : projNameTh,
+          projectNameTh: projNameTh,
         },
         {
           headers: {
@@ -112,7 +113,7 @@ export default function ProjectInfoStudent() {
       .put(
         `${path}Info/editProjectNameEn `,
         {
-          projectNameEn : projNameEn,
+          projectNameEn: projNameEn,
         },
         {
           headers: {
@@ -134,7 +135,7 @@ export default function ProjectInfoStudent() {
 
   return (
     <div>
-      <Stack alignItems="center">
+      <Stack alignItems="center" spacing={32} sx={{mb:48}}>
         <Paper sx={{ width: 1000, p: 32 }}>
           <Stack>
             {Object.entries(data).map(([key, value], index) => {
@@ -164,17 +165,20 @@ export default function ProjectInfoStudent() {
               );
             })}
           </Stack>
-          <Stack
-            direction="row"
-            spacing={8}
-            justifyContent="end"
-          >
-            <Button variant="contained" onClick={()=>setOpenEditThModal(true)}>แก้ไขชื่อโครงงานภาษาไทย</Button>
-            <Button variant="outlined" onClick={()=>setOpenEditEnModal(true)}>แก้ไขชื่อโครงงานภาษาอังกฤษ</Button>
+          <Stack direction="row" spacing={8} justifyContent="end">
+            <Button
+              variant="contained"
+              onClick={() => setOpenEditThModal(true)}
+            >
+              แก้ไขชื่อโครงงานภาษาไทย
+            </Button>
+            <Button variant="outlined" onClick={() => setOpenEditEnModal(true)}>
+              แก้ไขชื่อโครงงานภาษาอังกฤษ
+            </Button>
           </Stack>
         </Paper>
+        <StudentUploadTable />
       </Stack>
-
       {/* Edit Th Project Name Modal */}
       <CustomizedModal
         isPassword={false}

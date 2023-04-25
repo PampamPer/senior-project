@@ -271,7 +271,7 @@ export default function ProjectInfoLecturer() {
         setLoading(false);
         setIsLogged(true);
         alert("Upload Grading file success!");
-        // setGradingData(res.data);
+        setGradingData(res.data);
       })
       .catch((err) => {
         setError(err);
@@ -344,7 +344,6 @@ export default function ProjectInfoLecturer() {
               <Paper sx={{ p: 24, width: 850 }}>
                 <Stack alignItems="start" spacing={12}>
                   <Stack direction="row" spacing={128}>
-                    {/* คลิกปุ่มแล้วเรียก Modal เพื่ออัพโหลดไฟล์ */}
                     <Stack direction="row" spacing={32}>
                       <Typography variant="subtitle1" sx={{minWidth:104}}>
                         โครงงานที่เลือก
@@ -353,6 +352,7 @@ export default function ProjectInfoLecturer() {
                         {projectNames.get(gradingFileID)}
                       </Typography>
                     </Stack>
+                    {/* คลิกปุ่มแล้วเรียก Modal เพื่ออัพโหลดไฟล์ */}
                     <Button
                       variant="contained"
                       onClick={() => setOpenGradingUpload(true)}
