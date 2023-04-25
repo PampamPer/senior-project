@@ -24,6 +24,8 @@ export default function UploadModal(props) {
     selectOption,
     setSubmit,
     uploadFile,
+    uploadFunction,
+    selectFile,
   } = props;
   const [val, setVal] = useState("");
   const arrSelectOption = [...selectOption];
@@ -50,16 +52,23 @@ export default function UploadModal(props) {
             </Stack>
             <Divider variant="middle" />
             {uploadFile ? (
-              <Button variant="outlined" component="label">
-                อัพโหลดใบรายงานผลสอบ
-                <input
-                  hidden
-                  accept=".pdf, .jpg, .jpeg, .png"
-                  multiple
-                  type="file"
-                  // onChange={(event) => setSubmit(event)}
-                />
-              </Button>
+              <Stack alignItems="center" spacing={12}>
+                <Button variant="outlined" component="label">
+                  อัพโหลดเอกสาร
+                  <input
+                    hidden
+                    accept=".pdf, .jpg, .jpeg, .png"
+                    type="file"
+                    onChange={(event) => {
+                      uploadFunction(event);
+                      setIsNotSelected(false);
+                    }}
+                  />
+                </Button>
+                {selectFile && (
+                  <Typography variant="body2">{selectFile.name}</Typography>
+                )}
+              </Stack>
             ) : (
               <FormControl fullWidth>
                 <InputLabel>เลือกโครงงาน</InputLabel>

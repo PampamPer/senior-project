@@ -190,7 +190,6 @@ export default function Profile() {
       )
       // .get('/proposaltimelines?semesterid=1')
       .then((res) => {
-        console.log(res.data);
         setLoading(false);
         alert("Upload Profile pic Success!");
         setOpenEditPW(false);

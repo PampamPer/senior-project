@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
-import { Button, Stack, Typography } from "@mui/material";
+import { Button, Paper, Stack, Typography } from "@mui/material";
+import CustomizedModal from "./Modal";
 
 export default function ProjectInfoStudent() {
   const [data, setData] = useState([]);
@@ -11,6 +12,12 @@ export default function ProjectInfoStudent() {
   const { toggle, semesterId } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [projNameTh, setProjNameTh] = useState();
+  const [projNameEn, setProjNameEn] = useState();
+  const [showedProjNameTh, setshowedProjNameTh] = useState();
+  const [showedProjNameEn, setshowedProjNameEn] = useState();
+  const [openEditThModal, setOpenEditThModal] = useState(false);
+  const [openEditEnModal, setOpenEditEnModal] = useState(false);
   const keyMap = {
     no: "หมายเลขโครงงาน",
     major: "ภาควิชา",
@@ -29,6 +36,11 @@ export default function ProjectInfoStudent() {
     gradeStudent3: "ผลการศึกษาสมาชิกคนที่ 3",
   };
 
+  const handleClose = () => {
+    setOpenEditEnModal(false);
+    setOpenEditThModal(false);
+  }
+
   useEffect(() => {
     axios
       .get(
@@ -44,8 +56,11 @@ export default function ProjectInfoStudent() {
       .then((res) => {
         setLoading(false);
         setIsLogged(true);
+        setProjNameEn(res.data.projectNameEn);
+        setProjNameTh(res.data.projectNameTh);
+        setshowedProjNameEn(res.data.projectNameEn);
+        setshowedProjNameTh(res.data.projectNameTh);
         if (res.data) {
-          console.log("get data");
           setData(res.data);
         } else {
           setData([]);
@@ -65,33 +80,130 @@ export default function ProjectInfoStudent() {
     return <p>Err: {error.message} </p>;
   }
 
-  const editProjectName = ()=>{}
+  const editProjectThName = () => {
+    setshowedProjNameTh(projNameTh);
+    axios
+      .put(
+        `${path}Info/editProjectNameTh `,
+        {
+          projectNameTh : projNameTh,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            timeout: 5 * 1000,
+          },
+        }
+      )
+      .then((res) => {
+        setLoading(false);
+        alert("edit th project name Success!");
+        setOpenEditThModal(false);
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+      });
+  };
+
+  const editProjectEnName = () => {
+    setshowedProjNameEn(projNameEn);
+    axios
+      .put(
+        `${path}Info/editProjectNameEn `,
+        {
+          projectNameEn : projNameEn,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            timeout: 5 * 1000,
+          },
+        }
+      )
+      .then((res) => {
+        setLoading(false);
+        alert("edit en project name Success!");
+        setOpenEditEnModal(false);
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+      });
+  };
 
   return (
     <div>
-      <Stack alignItems="center" sx={{ position: "relative" }}>
-        <Button variant="contained" sx={{ position: "absolute", right: 0 }}>
-          แก้ไขชื่อโครงงาน
-        </Button>
-        <Stack>
-          {Object.entries(data).map(([key, value]) => {
-            if (value == null || key == "id") {
-              // Skip null and undefined values
-              return null;
-            }
-            return (
-              <Stack direction="row" spacing={8}>
-                <Typography variant="subtitle2" key={key}>
-                  {keyMap[key]}:
-                </Typography>
-                <Typography variant="body2" key={key}>
-                  {value}
-                </Typography>
-              </Stack>
-            );
-          })}
-        </Stack>
+      <Stack alignItems="center">
+        <Paper sx={{ width: 1000, p: 32 }}>
+          <Stack>
+            {Object.entries(data).map(([key, value], index) => {
+              if (value == null || key == "id") {
+                // Skip null and undefined values
+                return null;
+              } else if (key == "projectNameTh") {
+                return (
+                  <Stack direction="row" spacing={8} key={index}>
+                    <Typography variant="subtitle2">{keyMap[key]}:</Typography>
+                    <Typography variant="body2">{showedProjNameTh}</Typography>
+                  </Stack>
+                );
+              } else if (key == "projectNameEn") {
+                return (
+                  <Stack direction="row" spacing={8} key={index}>
+                    <Typography variant="subtitle2">{keyMap[key]}:</Typography>
+                    <Typography variant="body2">{showedProjNameEn}</Typography>
+                  </Stack>
+                );
+              }
+              return (
+                <Stack direction="row" spacing={8} key={index}>
+                  <Typography variant="subtitle2">{keyMap[key]}:</Typography>
+                  <Typography variant="body2">{value}</Typography>
+                </Stack>
+              );
+            })}
+          </Stack>
+          <Stack
+            direction="row"
+            spacing={8}
+            justifyContent="end"
+          >
+            <Button variant="contained" onClick={()=>setOpenEditThModal(true)}>แก้ไขชื่อโครงงานภาษาไทย</Button>
+            <Button variant="outlined" onClick={()=>setOpenEditEnModal(true)}>แก้ไขชื่อโครงงานภาษาอังกฤษ</Button>
+          </Stack>
+        </Paper>
       </Stack>
+
+      {/* Edit Th Project Name Modal */}
+      <CustomizedModal
+        isPassword={false}
+        ModalHeader="แก้ไขชื่อโครงงานภาษาไทย"
+        open={openEditThModal}
+        handleClose={handleClose}
+        oldLabel="ขื่อโครงงานเดิม"
+        newLabel="ชื่อโครงงานใหม่"
+        defaultValue={projNameTh}
+        setOnChange={setProjNameTh}
+        setOldPassword=""
+        setNewPassword=""
+        setEditOnClick={editProjectThName}
+      />
+
+      {/* Edit En Project Name Modal */}
+      <CustomizedModal
+        isPassword={false}
+        ModalHeader="แก้ไขชื่อโครงงานภาษาอังกฤษ"
+        open={openEditEnModal}
+        handleClose={handleClose}
+        oldLabel="ขื่อโครงงานเดิม"
+        newLabel="ชื่อโครงงานใหม่"
+        defaultValue={projNameEn}
+        setOnChange={setProjNameEn}
+        setOldPassword=""
+        setNewPassword=""
+        setEditOnClick={editProjectEnName}
+      />
     </div>
   );
 }
