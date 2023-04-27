@@ -46,38 +46,40 @@ export default function CustomizedModal(props) {
               </IconButton>
             </Stack>
             <Divider variant="middle" />
-              {isPassword ? (
-                <Stack spacing={16}>
-                  <PWTextField
-                    setPassword={setOldPassword}
-                    label={"รหัสผ่านปัจจุบัน"}
-                    placeholder={"รหัสผ่านปัจจุบัน"}
-                  />
-                  <PWTextField
-                    setPassword={setNewPassword}
-                    label={"รหัสผ่านใหม่"}
-                    placeholder={"รหัสผ่านใหม่"}
-                  />
-                  <PWTextField
-                    setPassword={setRenewPassword}
-                    label={"ยืนยันรหัสผ่าน"}
-                    placeholder={"ยืนยันรหัสผ่าน"}
-                  />
-                </Stack>
-              ) : (
-                <Stack spacing={16}>
-                  <TextField
-                    label={oldLabel}
-                    //onChange={editPassword}
-                    defaultValue={defaultValue}
-                    InputProps={{ readOnly: true }}
-                  />
-                  <TextField
-                    label={newLabel}
-                    onChange={(event) => setOnChange(event.target.value)}
-                  />
-                </Stack>
-              )}
+            {isPassword ? (
+              <Stack spacing={16}>
+                <PWTextField
+                  setPassword={setOldPassword}
+                  label={"รหัสผ่านปัจจุบัน"}
+                  placeholder={"รหัสผ่านปัจจุบัน"}
+                />
+                <PWTextField
+                  setPassword={setNewPassword}
+                  label={"รหัสผ่านใหม่"}
+                  placeholder={"รหัสผ่านใหม่"}
+                />
+                <PWTextField
+                  setPassword={setRenewPassword}
+                  label={"ยืนยันรหัสผ่าน"}
+                  placeholder={"ยืนยันรหัสผ่าน"}
+                />
+              </Stack>
+            ) : (
+              <Stack spacing={16}>
+                <TextField
+                  multiline
+                  label={oldLabel}
+                  //onChange={editPassword}
+                  defaultValue={defaultValue}
+                  InputProps={{ readOnly: true }}
+                />
+                <TextField
+                  multiline
+                  label={newLabel}
+                  onChange={(event) => setOnChange(event.target.value)}
+                />
+              </Stack>
+            )}
             <Button variant="contained" onClick={setEditOnClick}>
               ยืนยัน
             </Button>

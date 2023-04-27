@@ -61,11 +61,7 @@ export default function ProjectInfoStudent() {
         setProjNameTh(res.data.projectNameTh);
         setshowedProjNameEn(res.data.projectNameEn);
         setshowedProjNameTh(res.data.projectNameTh);
-        if (res.data) {
-          setData(res.data);
-        } else {
-          setData([]);
-        }
+        setData(res.data);
       })
       .catch((err) => {
         setError(err);
@@ -85,7 +81,7 @@ export default function ProjectInfoStudent() {
     setshowedProjNameTh(projNameTh);
     axios
       .put(
-        `${path}Info/editProjectNameTh `,
+        `${path}Info/edit${path}NameTh `,
         {
           projectNameTh: projNameTh,
         },
@@ -135,48 +131,65 @@ export default function ProjectInfoStudent() {
 
   return (
     <div>
-      <Stack alignItems="center" spacing={32} sx={{mb:48}}>
-        <Paper sx={{ width: 1000, p: 32 }}>
-          <Stack>
-            {Object.entries(data).map(([key, value], index) => {
-              if (value == null || key == "id") {
-                // Skip null and undefined values
-                return null;
-              } else if (key == "projectNameTh") {
+      <Stack alignItems="center" spacing={32} sx={{ mb: 48 }}>
+        {data ? (
+          <Paper sx={{ width: 1000, p: 32 }}>
+            <Stack>
+              {Object.entries(data).map(([key, value], index) => {
+                if (value == null || key == "id") {
+                  // Skip null and undefined values
+                  return null;
+                } else if (key == "projectNameTh") {
+                  return (
+                    <Stack direction="row" spacing={8} key={index}>
+                      <Typography variant="subtitle2">
+                        {keyMap[key]}:
+                      </Typography>
+                      <Typography variant="body2">
+                        {showedProjNameTh}
+                      </Typography>
+                    </Stack>
+                  );
+                } else if (key == "projectNameEn") {
+                  return (
+                    <Stack direction="row" spacing={8} key={index}>
+                      <Typography variant="subtitle2">
+                        {keyMap[key]}:
+                      </Typography>
+                      <Typography variant="body2">
+                        {showedProjNameEn}
+                      </Typography>
+                    </Stack>
+                  );
+                }
                 return (
                   <Stack direction="row" spacing={8} key={index}>
                     <Typography variant="subtitle2">{keyMap[key]}:</Typography>
-                    <Typography variant="body2">{showedProjNameTh}</Typography>
+                    <Typography variant="body2">{value}</Typography>
                   </Stack>
                 );
-              } else if (key == "projectNameEn") {
-                return (
-                  <Stack direction="row" spacing={8} key={index}>
-                    <Typography variant="subtitle2">{keyMap[key]}:</Typography>
-                    <Typography variant="body2">{showedProjNameEn}</Typography>
-                  </Stack>
-                );
-              }
-              return (
-                <Stack direction="row" spacing={8} key={index}>
-                  <Typography variant="subtitle2">{keyMap[key]}:</Typography>
-                  <Typography variant="body2">{value}</Typography>
-                </Stack>
-              );
-            })}
-          </Stack>
-          <Stack direction="row" spacing={8} justifyContent="end">
-            <Button
-              variant="contained"
-              onClick={() => setOpenEditThModal(true)}
-            >
-              แก้ไขชื่อโครงงานภาษาไทย
-            </Button>
-            <Button variant="outlined" onClick={() => setOpenEditEnModal(true)}>
-              แก้ไขชื่อโครงงานภาษาอังกฤษ
-            </Button>
-          </Stack>
-        </Paper>
+              })}
+            </Stack>
+            <Stack direction="row" spacing={8} justifyContent="end">
+              <Button
+                variant="contained"
+                onClick={() => setOpenEditThModal(true)}
+              >
+                แก้ไขชื่อโครงงานภาษาไทย
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => setOpenEditEnModal(true)}
+              >
+                แก้ไขชื่อโครงงานภาษาอังกฤษ
+              </Button>
+            </Stack>
+          </Paper>
+        ) : (
+          <Typography variant="subtitle1" color="red">
+            ไม่พบข้อมูล
+          </Typography>
+        )}
         <StudentUploadTable />
       </Stack>
       {/* Edit Th Project Name Modal */}

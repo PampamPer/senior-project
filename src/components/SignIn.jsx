@@ -47,10 +47,10 @@ function App() {
       .then((response) => {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("role", response.data.role);
-        // localStorage.setItem(
-        //   "username",
-        //   response.data.firstname + " " + response.data.lastname
-        // );
+        localStorage.setItem(
+          "username",
+          response.data.firstname + " " + response.data.lastname
+        );
         setIsLogged(true);
         navigate("/main");
       })
@@ -73,7 +73,7 @@ function App() {
       {/* {toggle} */}
       
       <Stack alignItems="center">
-      <Paper elevation={4} sx={{opacity:0.75, p:48, width: 360, borderRadius:3}}>
+      <Paper elevation={4} sx={{opacity:0.75, p:48, width: 400, borderRadius:3}}>
       <Stack maxWidth="360px" m="auto" spacing={16}>
         <TextField
           variant="outlined"

@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../App";
 import CustomizedTables, { preprocess } from "./Table";
 import CustomTable from "./CustomTable";
@@ -41,6 +41,8 @@ export default function ProjectInfoLecturer() {
   const [selectFile, setSelectFile] = useState();
   const [uploadFileID, setUploadFileID] = useState();
   const [gradingFileID, setGradingFileID] = useState();
+  const uploadTableRef = useRef(null);
+  const gradingTableRef = useRef(null);
 
   useEffect(() => {
     axios
@@ -218,6 +220,9 @@ export default function ProjectInfoLecturer() {
               ["submitDate"]
             )
           );
+          uploadTableRef.current.scrollIntoView({
+            behavior: "smooth",
+          });
         } else {
           setData([]);
         }
@@ -244,6 +249,9 @@ export default function ProjectInfoLecturer() {
         setLoading(false);
         setIsLogged(true);
         setGradingData(res.data);
+        gradingTableRef.current.scrollIntoView({
+          behavior: "smooth",
+        });
       })
       .catch((err) => {
         setError(err);
@@ -254,10 +262,10 @@ export default function ProjectInfoLecturer() {
   const uploadGrading = (event) => {
     const newGradingFile = event.target.files[0];
     setSelectFile(newGradingFile);
-    formData.append("file", newGradingFile);
   };
 
   const submitGrading = () => {
+    formData.append("file", selectFile);
     setOpenGradingUpload(false);
     axios
       .put(`/${path}Uploads?${path}Id=${gradingFileID}`, formData, {
@@ -271,7 +279,6 @@ export default function ProjectInfoLecturer() {
         setLoading(false);
         setIsLogged(true);
         alert("Upload Grading file success!");
-        setGradingData(res.data);
       })
       .catch((err) => {
         setError(err);
@@ -323,10 +330,18 @@ export default function ProjectInfoLecturer() {
         />
         <Stack alignItems="center" spacing={56}>
           {showUploadTable && (
-            <Stack alignItems="center" spacing={32}>
+            <Stack ref={uploadTableRef} alignItems="center" spacing={32}>
               <Typography variant="h5" color="#2D95E1">
                 ประวัติการส่งงาน
               </Typography>
+              <Stack direction="row" spacing={32}>
+                <Typography variant="subtitle1" sx={{ minWidth: 104 }}>
+                  โครงงานที่เลือก
+                </Typography>
+                <Typography variant="body1">
+                  {projectNames.get(uploadFileID)}
+                </Typography>
+              </Stack>
               <CustomizedTables
                 data={uploadData}
                 columns={uploadColumns}
@@ -337,7 +352,7 @@ export default function ProjectInfoLecturer() {
           )}
 
           {showGradingTable && (
-            <Stack alignItems="center" spacing={32}>
+            <Stack ref={gradingTableRef} alignItems="center" spacing={32}>
               <Typography variant="h5" color="#2D95E1">
                 ใบรายงานผลสอบ
               </Typography>
@@ -345,45 +360,44 @@ export default function ProjectInfoLecturer() {
                 <Stack alignItems="start" spacing={12}>
                   <Stack direction="row" spacing={128}>
                     <Stack direction="row" spacing={32}>
-                      <Typography variant="subtitle1" sx={{minWidth:104}}>
+                      <Typography variant="subtitle1" sx={{ minWidth: 104 }}>
                         โครงงานที่เลือก
                       </Typography>
                       <Typography variant="body1">
                         {projectNames.get(gradingFileID)}
                       </Typography>
                     </Stack>
-                    {/* คลิกปุ่มแล้วเรียก Modal เพื่ออัพโหลดไฟล์ */}
+                    {/* คลิกปุ่มแล้วเรียก Modal เพื่ออัปโหลดไฟล์ */}
                     <Button
                       variant="contained"
                       onClick={() => setOpenGradingUpload(true)}
                     >
-                      อัพโหลดใบรายงานผลสอบ
+                      อัปโหลดใบรายงานผลสอบ
                     </Button>
                   </Stack>
                   <Stack direction="row" spacing={32}>
-                      <Typography variant="subtitle1" sx={{minWidth:104}}>
-                          ใบรายงานผลสอบ
-                      </Typography>
-                      <Link
-                    href={gradingData.url}
-                    underline="hover"
-                    color="#0075FF"
-                  >
-                    {gradingData.fileName}
-                  </Link>
-                    </Stack>
-                  
+                    <Typography variant="subtitle1" sx={{ minWidth: 104 }}>
+                      ใบรายงานผลสอบ
+                    </Typography>
+                    <Link
+                      href={gradingData.url}
+                      underline="hover"
+                      color="#0075FF"
+                    >
+                      {gradingData.fileName}
+                    </Link>
+                  </Stack>
                 </Stack>
               </Paper>
             </Stack>
           )}
         </Stack>
       </Stack>
-      {/* Modal อัพโหลดใบรายงานผลสอบ */}
+      {/* Modal อัปโหลดใบรายงานผลสอบ */}
       <UploadModal
         open={openGradingUpload}
         handleClose={handleClose}
-        ModalHeader={"อัพโหลดใบรายงานผลสอบ"}
+        ModalHeader={"อัปโหลดใบรายงานผลสอบ"}
         selectOption={[]}
         setSubmit={submitGrading}
         uploadFile={true}

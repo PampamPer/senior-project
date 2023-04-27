@@ -56,7 +56,7 @@ export default function UploadModal(props) {
             {uploadFile ? (
               <Stack alignItems="center" spacing={12}>
                 <Button variant="outlined" component="label">
-                  อัพโหลดเอกสาร
+                  อัปโหลดเอกสาร
                   <input
                     hidden
                     accept=".pdf, .jpg, .jpeg, .png"
@@ -109,7 +109,7 @@ export default function UploadModal(props) {
                 {isStudentUpload && (
                   <Stack alignItems="center" spacing={8}> 
                     <Button variant="outlined" component="label">
-                      อัพโหลดเอกสาร
+                      อัปโหลดเอกสาร
                       <input
                         hidden
                         accept=".pdf, .jpg, .jpeg, .png"

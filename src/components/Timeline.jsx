@@ -3,7 +3,7 @@ import TimelineItem, { timelineItemClasses } from "@mui/lab/TimelineItem";
 import TimelineSeparator from "@mui/lab/TimelineSeparator";
 import TimelineConnector from "@mui/lab/TimelineConnector";
 import TimelineDot from "@mui/lab/TimelineDot";
-import { Paper } from "@mui/material";
+import { Paper, TableBody, TableCell } from "@mui/material";
 import { useState } from "react";
 import TimelineContent from "@mui/lab/TimelineContent";
 
@@ -65,12 +65,22 @@ export default function CustomizedTimeline(props) {
             </Paper>
           </TimelineItem>
         ))}
-        {emptyRows > 0 && (
+        {/* {emptyRows > 0 && (
           <TableRow style={{ height: 53 * emptyRows }}>
             <TableCell colSpan={6} />
           </TableRow>
-        )}
-      </Timeline>
+        )} */}
+      </Timeline><TableContainer>
+        <Table>
+          <TableBody>
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <TableContainer>
         <Table>
           <TableFooter>

@@ -94,15 +94,17 @@ export default function StudentUploadTable() {
   const uploadFile = (event) => {
     const newFile = event.target.files[0];
     setSelectedFile(newFile);
-    formData.append("file", newFile);
   };
 
   const submitUpload = (asmName) => {
     setOpenModal(false);
     const asmId = assignmentName.get(asmName);
-    console.log(asmId);
+    formData.append("file", selectedFile);
     axios
-      .post(`/${path}Uploads?$assignmentId=${asmId}`, formData, {
+      .post(
+        `/${path}Uploads?assignmentId=${asmId}`, 
+        formData, 
+        {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: "Bearer " + token,
@@ -123,33 +125,37 @@ export default function StudentUploadTable() {
 
   return (
     <div>
-      {assignmentData.map((assignment) => {
-        assignmentName.set(assignment.assignmentName, assignment.id);
-      })}
+      {assignmentData && (
+        <div>
+          {assignmentData.map((assignment) => {
+            assignmentName.set(assignment.assignmentName, assignment.id);
+          })}
 
-      <Stack alignItems="center" spacing={24}>
-        <Typography variant="h5" color="#2D95E1">
-          ประวัติการส่งงาน
-        </Typography>
-        <Stack spacing={16}>
-          <Stack alignItems="end">
-            <Button variant="contained" onClick={() => setOpenModal(true)}>
-              อัพโหลดเอกสาร
-            </Button>
+          <Stack alignItems="center" spacing={24}>
+            <Typography variant="h5" color="#2D95E1">
+              ประวัติการส่งงาน
+            </Typography>
+            <Stack spacing={16}>
+              <Stack alignItems="end">
+                <Button variant="contained" onClick={() => setOpenModal(true)}>
+                  อัปโหลดเอกสาร
+                </Button>
+              </Stack>
+              <Table
+                data={data}
+                columns={columns}
+                linkcolumns={linkColumns}
+                linkname={linkName}
+              />
+            </Stack>
           </Stack>
-          <Table
-            data={data}
-            columns={columns}
-            linkcolumns={linkColumns}
-            linkname={linkName}
-          />
-        </Stack>
-      </Stack>
+        </div>
+      )}
 
       <UploadModal
         open={openModal}
         handleClose={handleClose}
-        ModalHeader={"อัพโหลดเอกสาร"}
+        ModalHeader={"อัปโหลดเอกสาร"}
         selectOption={assignmentName}
         setSubmit={submitUpload}
         uploadFile={false}

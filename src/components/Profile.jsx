@@ -41,6 +41,10 @@ export default function Profile() {
     setOpenEditPW(false);
     setOpenEditPhoneNO(false);
     setOpenEditAddress(false);
+    setPhoneNo(data.phoneNumber);
+    setOldPassword(data.password);
+    setNewPassword(data.password);
+    setAddress(data.address);
   };
 
   const setDefault = (resData) => {
@@ -51,6 +55,7 @@ export default function Profile() {
     setPicture(resData.profilePicture);
     setShowedAddress(resData.address);
     setShowedPhoneNo(resData.phoneNumber);
+    console.log(resData.profilePicture)
   };
 
   useEffect(() => {
@@ -66,16 +71,13 @@ export default function Profile() {
         }
       )
       .then((res) => {
-        console.log(res.data);
         setLoading(false);
         if (res.data) {
-          console.log("get data");
           setData(res.data);
           setDefault(res.data);
           setIsLogged(true);
         } else {
           setData([]);
-          console.log("dont get data");
         }
       })
       .catch((err) => {
@@ -102,7 +104,6 @@ export default function Profile() {
         }
       )
       .then((res) => {
-        console.log(res.data);
         setLoading(false);
         alert("Change password Success!");
         setOpenEditPW(false);
@@ -129,7 +130,6 @@ export default function Profile() {
         }
       )
       .then((res) => {
-        console.log(res.data);
         setLoading(false);
         alert("edit phone number Success!");
         setOpenEditPhoneNO(false);
@@ -156,7 +156,6 @@ export default function Profile() {
         }
       )
       .then((res) => {
-        console.log(res.data);
         setLoading(false);
         alert("edit address Success!");
         setOpenEditAddress(false);
@@ -178,7 +177,6 @@ export default function Profile() {
     axios
       .put(
         `/personalinfo/${role}/editpicture`,
-        // "/proposalinfo/student?semesterid=1",
         formData,
         {
           headers: {
@@ -188,7 +186,6 @@ export default function Profile() {
           },
         }
       )
-      // .get('/proposaltimelines?semesterid=1')
       .then((res) => {
         setLoading(false);
         alert("Upload Profile pic Success!");
@@ -231,7 +228,8 @@ export default function Profile() {
             >
               <Container sx={{ position: "relative" }}>
                 <Avatar
-                  src={picture == null ? "srcassetsmclogo.svg" : picture}
+                  // src={picture == null ? "srcassetsmclogo.svg" : picture}
+                  src={picture}
                   sx={{ backgroundColor: "grey", height: 160, width: 160 }}
                 />
                 <IconButton
@@ -350,7 +348,7 @@ export default function Profile() {
 
               {role == "student" && (
                 <TextField
-                  //onChange={editPassword}
+                  multiline
                   sx={{ width: 255 }}
                   value={showedAddress == null ? "address" : showedAddress}
                   InputProps={{

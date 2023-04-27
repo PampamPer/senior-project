@@ -151,7 +151,7 @@ export default function NavBar() {
                               handleClose;
                               navigate("/profile");
                             }}
-                            autoFocus="true"
+                            autoFocus={true}
                           >
                             ข้อมูลผู้ใช้งาน
                           </MenuItem>
@@ -162,7 +162,7 @@ export default function NavBar() {
                               navigate("/main");
                               localStorage.setItem("token", "");
                             }}
-                            autoFocus="true"
+                            autoFocus={true}
                           >
                             ออกจากระบบ
                           </MenuItem>

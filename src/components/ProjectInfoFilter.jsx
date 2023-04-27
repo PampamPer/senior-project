@@ -24,7 +24,6 @@ export default function ProjectInfoFilter(props) {
 
   const handleOnChange = (event) => {
     let val = event.target.value;
-    console.log(val);
     setFilter(val);
     setIsChecked(val);
   }
