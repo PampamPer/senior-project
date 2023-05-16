@@ -26,14 +26,11 @@ export default function FAQ() {
     axios
       .get("/faqs")
       .then((res) => {
-        console.log(res.data);
         setLoading(false);
         if (res.data) {
-          console.log("get data");
           setData(res.data);
         } else {
           setData([]);
-          console.log("dont get data");
         }
       })
       .catch((err) => {

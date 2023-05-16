@@ -55,8 +55,6 @@ export default function CustomizedModal(props) {
     setIsOldPWNotEditted(true);
     setIsNewPWNotEditted(true);
     setIsRenewPWNotEditted(true);
-    console.log("default value", defaultValue)
-    console.log(" value", val)
     handleClose();
   }
 

@@ -20,10 +20,8 @@ export default function DownloadFiles() {
       .get(`/${path}summary?semesterid=${semesterId}`)
       // .get('/proposaltimelines?semesterid=1')
       .then((res) => {
-        // console.log("this is res.data", res.data);
         setLoading(false);
         if (res.data) {
-          // console.log("get data");
           setData(
             preprocess(
               res.data,
@@ -72,10 +70,8 @@ export default function DownloadFiles() {
               ["latestSubmitDate"]
             )
           );
-          // console.log("this is data", data);
         } else {
           setData([]);
-          // console.log("dont get data");
         }
       })
       .catch((err) => {

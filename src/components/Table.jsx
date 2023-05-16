@@ -53,7 +53,6 @@ export function preprocess(data, columns, dateColumns, datetimeColumns) {
     let second = date.getSeconds().toString().padStart(2, "0");
     return `${numOfDay} ${month} ${year} `;
   };
-  // console.log("before", data); // DEBUG
   var processedData = [];
   for (const [index, row] of data.entries()) {
     let newRow = {};
@@ -61,8 +60,6 @@ export function preprocess(data, columns, dateColumns, datetimeColumns) {
     Object.keys(row).forEach((key) => {
       if (columns.includes(key)) {
         if (datetimeColumns.includes(key)) {
-          // console.log(row[key]); // DEBUG
-          // console.log(toThaiDateTimeString(new Date(row[key]))); // DEBUG
           if (row[key] == null) {
             newRow[key] = "-";
           }
@@ -70,8 +67,6 @@ export function preprocess(data, columns, dateColumns, datetimeColumns) {
             newRow[key] = toThaiDateTimeString(new Date(row[key]));
           }
         } else if (dateColumns.includes(key)) {
-          // console.log(row[key]); // DEBUG
-          // console.log(toThaiDateString(new Date(row[key]))); // DEBUG
           if (row[key] == null) {
             newRow[key] = "-";
           } else {
@@ -84,7 +79,6 @@ export function preprocess(data, columns, dateColumns, datetimeColumns) {
     });
     processedData.push(newRow);
   }
-  // console.log("after", processedData); // DEBUG
   return processedData;
 }
 
@@ -104,9 +98,6 @@ export default function CustomizedTables(props) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  // console.log("this is data", data); // DEBUG
-  // console.log("this is columns", columns); // DEBUG
-  // console.log("this is linkcolumns", linkcolumns); // DEBUG
 
   return (
     <TableContainer component={Paper} sx={{ maxHeight: 650 }}>
@@ -130,8 +121,6 @@ export default function CustomizedTables(props) {
                 .filter((key) => key != "tableId" && key != linkname)
                 .map((key) => (
                   <TableCell key={key}>
-                    {/* {console.log("datarow = ", datarow, "key= ", key)}
-                    {console.log("is it true? ", key == linkname)} */}
                     {linkcolumns.includes(key) ? (
                       <Link
                         href={datarow[key]}

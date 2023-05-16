@@ -51,7 +51,6 @@ export default function TableFilter(props) {
   };
 
   const onFilter = (event) => {
-    console.log(event.target.value);
     setDefaultText(event.target.value);
     let defaultText = event.target.value;
     const filteredData = data.filter((keyword) => {

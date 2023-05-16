@@ -25,11 +25,9 @@ export default function Main() {
       .then((res) => {
         setLoading(false);
         if (res.data) {
-          // console.log("get data");
           setData(preprocess(res.data, ["deadline", "todo"], ["deadline"], []));
         } else {
           setData([]);
-          // console.log("dont get data");
         }
       })
       .catch((err) => {
@@ -40,7 +38,6 @@ export default function Main() {
       axios
       .get(`/linegroups/${path}`)
       .then((res) => {
-        // console.log(res.data);
         setLoading(false);
         setQR(res.data);
       })
@@ -54,7 +51,6 @@ export default function Main() {
   //   axios
   //     .get(`/linegroups/${path}`)
   //     .then((res) => {
-  //       // console.log(res.data);
   //       setLoading(false);
   //       setQR(res.data);
   //     })

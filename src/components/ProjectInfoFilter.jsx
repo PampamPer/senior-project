@@ -50,7 +50,6 @@ export default function ProjectInfoFilter(props) {
                 label="กรรมการ"
               />
             </FormGroup>
-            {/* {console.log("this is default txt from select", defaultText)} */}
           </Stack>
         </Paper>
       </Popper>

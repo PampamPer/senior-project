@@ -32,12 +32,33 @@ export default function UploadModal(props) {
   const [val, setVal] = useState("");
   const arrSelectOption = [...selectOption];
   const [isNotSelected, setIsNotSelected] = useState(true);
+  const [projSelected, setProjSelected] = useState(false);
+  const [filedSelected, setFileSelected] = useState(false);
 
   const setOnChange = (event) => {
     const selectedVal = event?.target?.value || "";
     setVal(selectedVal);
-    setIsNotSelected(false);
+    if(isStudentUpload){
+      if(filedSelected){
+        setIsNotSelected(false);
+      }
+      else{
+        setProjSelected(true);
+      }
+    }
+    else{
+      setIsNotSelected(false);
+    }
   };
+
+  const handleUploadOnChange = (event) => {
+    uploadFunction(event);
+    setIsNotSelected(false);
+    if(!projSelected){
+      setIsNotSelected(true);
+      setFileSelected(true);
+    }
+  }
 
   return (
     <Modal open={open} onClose={handleClose}>
@@ -114,10 +135,7 @@ export default function UploadModal(props) {
                         hidden
                         accept=".pdf, .jpg, .jpeg, .png"
                         type="file"
-                        onChange={(event) => {
-                          uploadFunction(event);
-                          setIsNotSelected(false);
-                        }}
+                        onChange={handleUploadOnChange}
                       />
                     </Button>
                     {selectFile && (

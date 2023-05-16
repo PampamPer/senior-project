@@ -28,7 +28,6 @@ export default function TableFilter(props) {
     const filteredData = data.filter((keyword) => {
       let isTrue = false;
       for (const value of Object.values(keyword)) {
-        console.log("this is val", defaultText);
         if (String(value).includes(defaultText)) {
           isTrue = true;
           break;

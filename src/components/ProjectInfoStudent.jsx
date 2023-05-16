@@ -107,7 +107,7 @@ export default function ProjectInfoStudent() {
     setshowedProjNameEn(projNameEn);
     axios
       .put(
-        `${path}Info/editProjectNameEn `,
+        `${path}Info/edit${path}NameEn `,
         {
           projectNameEn: projNameEn,
         },
