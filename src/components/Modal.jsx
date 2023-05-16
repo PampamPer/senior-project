@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PWTextField from "./PasswordTextField";
 
 export default function CustomizedModal(props) {
@@ -27,9 +27,46 @@ export default function CustomizedModal(props) {
     setRenewPassword,
     setEditOnClick,
   } = props;
+  const [isNotEditted, setIsNotEditted] = useState(true);
+  const [isOldPWNotEditted, setIsOldPWNotEditted] = useState(true);
+  const [isNewPWNotEditted, setIsNewPWNotEditted] = useState(true);
+  const [isRenewPWNotEditted, setIsRenewPWNotEditted] = useState(true);
+  const [val, setVal] = useState(defaultValue);
+
+  const setOldPW = (password) => {
+    setOldPassword(password);
+    setIsOldPWNotEditted(false);
+  }
+  const setNewPW = (password) => {
+    setNewPassword(password);
+    setIsNewPWNotEditted(false);
+  }
+  const setRenewPW = (password) => {
+    setRenewPassword(password);
+    setIsRenewPWNotEditted(false);
+  }
+
+  useEffect(() => {
+    setIsNotEditted(isOldPWNotEditted || isNewPWNotEditted || isRenewPWNotEditted);
+  }, [isOldPWNotEditted, isNewPWNotEditted, isRenewPWNotEditted]);
+
+  const handleCloseToDisable = () => {
+    setIsNotEditted(true);
+    setIsOldPWNotEditted(true);
+    setIsNewPWNotEditted(true);
+    setIsRenewPWNotEditted(true);
+    console.log("default value", defaultValue)
+    console.log(" value", val)
+    handleClose();
+  }
+
+  const handleSubmit = () => {
+    setIsNotEditted(false);
+    setEditOnClick();
+  }
 
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={open} onClose={handleCloseToDisable}>
       <Stack alignItems="center" sx={{ position: "relative", top: "30%" }}>
         <Paper sx={{ width: 450 }}>
           <Stack spacing={16} sx={{ px: 16, py: 16 }}>
@@ -41,7 +78,7 @@ export default function CustomizedModal(props) {
               <Typography variant="subtitle1" sx={{ mt: 8, ml: 8 }}>
                 {ModalHeader}
               </Typography>
-              <IconButton onClick={handleClose}>
+              <IconButton onClick={handleCloseToDisable}>
                 <ClearRounded />
               </IconButton>
             </Stack>
@@ -49,17 +86,17 @@ export default function CustomizedModal(props) {
             {isPassword ? (
               <Stack spacing={16}>
                 <PWTextField
-                  setPassword={setOldPassword}
+                  setPassword={setOldPW}
                   label={"รหัสผ่านปัจจุบัน"}
                   placeholder={"รหัสผ่านปัจจุบัน"}
                 />
                 <PWTextField
-                  setPassword={setNewPassword}
+                  setPassword={setNewPW}
                   label={"รหัสผ่านใหม่"}
                   placeholder={"รหัสผ่านใหม่"}
                 />
                 <PWTextField
-                  setPassword={setRenewPassword}
+                  setPassword={setRenewPW}
                   label={"ยืนยันรหัสผ่าน"}
                   placeholder={"ยืนยันรหัสผ่าน"}
                 />
@@ -76,11 +113,11 @@ export default function CustomizedModal(props) {
                 <TextField
                   multiline
                   label={newLabel}
-                  onChange={(event) => setOnChange(event.target.value)}
+                  onChange={(event) => {setOnChange(event.target.value); setIsNotEditted(false);}}
                 />
               </Stack>
             )}
-            <Button variant="contained" onClick={setEditOnClick}>
+            <Button variant="contained" onClick={setEditOnClick} disabled={isNotEditted}>
               ยืนยัน
             </Button>
           </Stack>

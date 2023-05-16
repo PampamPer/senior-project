@@ -8,7 +8,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 export default function PWTextField(props) {
-  const { setPassword, label, placeholder } = props
+  const { setPassword, label, placeholder, handleKeyPress } = props
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -17,7 +17,8 @@ export default function PWTextField(props) {
         <TextField
           placeholder={placeholder}
           label={label}
-          onChange={(event) => setPassword(event.target.value)}
+          onChange={(event) => {setPassword(event.target.value);}}
+          onKeyPress={handleKeyPress}
           type={showPassword ? "string" : "password"}
           InputProps={{
             startAdornment: (

@@ -27,7 +27,7 @@ export default function UploadModal(props) {
     uploadFunction,
     selectFile,
     isStudentUpload,
-    studentUpload,
+    inputLabel
   } = props;
   const [val, setVal] = useState("");
   const arrSelectOption = [...selectOption];
@@ -74,9 +74,9 @@ export default function UploadModal(props) {
             ) : (
               <Stack alignItems="center" spacing={16}>
                 <FormControl fullWidth>
-                  <InputLabel>เลือกโครงงาน</InputLabel>
+                  <InputLabel>{inputLabel}</InputLabel>
                   <Select
-                    label="เลือกโครงงาน"
+                    label={inputLabel}
                     value={val}
                     sx={{ width: 300, p: 0 }}
                     onChange={(event) => {

@@ -16,6 +16,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import SnackBar from "./SnackBar";
 
 export default function ProjectInfoLecturer() {
   const [data, setData] = useState([]);
@@ -43,6 +44,8 @@ export default function ProjectInfoLecturer() {
   const [gradingFileID, setGradingFileID] = useState();
   const uploadTableRef = useRef(null);
   const gradingTableRef = useRef(null);
+  const [uploadFileSuccess, setUploadFileSuccess] = useState(false);
+  const [uploadFileFailed, setUploadFileFailed] = useState(false);
 
   useEffect(() => {
     axios
@@ -59,7 +62,9 @@ export default function ProjectInfoLecturer() {
       .then((res) => {
         setLoading(false);
         setIsLogged(true);
-        setArrId(res.data);
+        if (filter == "relevance") {
+          setArrId(res.data);
+        }
         if (res.data) {
           setData(
             preprocess(
@@ -77,9 +82,6 @@ export default function ProjectInfoLecturer() {
                 "student1",
                 "student2",
                 "student3",
-                "gradeStudent1",
-                "gradeStudent2",
-                "gradeStudent3",
               ],
               [],
               []
@@ -101,9 +103,6 @@ export default function ProjectInfoLecturer() {
                 "student1",
                 "student2",
                 "student3",
-                "gradeStudent1",
-                "gradeStudent2",
-                "gradeStudent3",
               ],
               [],
               []
@@ -152,21 +151,6 @@ export default function ProjectInfoLecturer() {
     { id: "student1", label: "สมาชิกโครงงาน 1", sx: { minWidth: 250 } },
     { id: "student2", label: "สมาชิกโครงงาน 2", sx: { minWidth: 250 } },
     { id: "student3", label: "สมาชิกโครงงาน 3", sx: { minWidth: 250 } },
-    {
-      id: "gradeStudent1",
-      label: "ผลการศึกษาสมาชิกคนที่ 1",
-      sx: { minWidth: 125 },
-    },
-    {
-      id: "gradeStudent2",
-      label: "ผลการศึกษาสมาชิกคนที่ 2",
-      sx: { minWidth: 125 },
-    },
-    {
-      id: "gradeStudent3",
-      label: "ผลการศึกษาสมาชิกคนที่ 3",
-      sx: { minWidth: 125 },
-    },
   ];
 
   const childToParent = (childdata) => {
@@ -177,6 +161,15 @@ export default function ProjectInfoLecturer() {
     setOpenGradingHistory(false);
     setOpenUploadHistory(false);
     setOpenGradingUpload(false);
+  };
+
+  const handleCloseSuccessSnackBar = () => {
+    setUploadFileSuccess(true);
+    window.location.reload();
+  };
+
+  const handleCloseFailedSnackBar = () => {
+    setUploadFileFailed(true);
   };
 
   const uploadColumns = [
@@ -302,6 +295,7 @@ export default function ProjectInfoLecturer() {
         selectOption={selectName}
         setSubmit={getUploading}
         uploadFile={false}
+        inputLabel={"เลือกโครงงาน"}
       />
 
       {/* Modal ใบรายงานผลสอบ */}
@@ -312,6 +306,7 @@ export default function ProjectInfoLecturer() {
         selectOption={selectName}
         setSubmit={getGrading}
         uploadFile={false}
+        inputLabel={"เลือกโครงงาน"}
       />
 
       <Stack spacing={56} mb={48}>
@@ -403,6 +398,21 @@ export default function ProjectInfoLecturer() {
         uploadFile={true}
         uploadFunction={uploadGrading}
         selectFile={selectFile}
+        inputLabel={"เลือกโครงงาน"}
+      />
+
+      <SnackBar
+        open={uploadFileSuccess}
+        message="อัปโหลดไฟล์สำเร็จ"
+        severity="success"
+        handleClose={handleCloseSuccessSnackBar}
+      />
+
+      <SnackBar
+        open={uploadFileFailed}
+        message="เกิดข้อผิดพลาด กรุณาลองใหม่"
+        severity="error"
+        handleClose={handleCloseFailedSnackBar}
       />
     </div>
   );

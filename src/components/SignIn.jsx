@@ -67,6 +67,12 @@ function App() {
       });
   };
 
+  const handleKeyPress = (event)=> {
+    if(event.key === "Enter") {
+      Login();
+    }
+  }
+
   return (
       <Stack gap={120} className="content">
       <NavBar />
@@ -88,11 +94,13 @@ function App() {
             ),
           }}
           onChange={(event) => setUserId(event.target.value)}
+          onKeyPress={handleKeyPress}
         />
         <PWTextField
           setPassword={setPassword}
           label={"รหัสผ่าน"}
           placeholder={"รหัสผ่าน"}
+          handleKeyPress={handleKeyPress}
         />
 
         <Button variant="contained" onClick={Login}>

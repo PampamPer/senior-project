@@ -160,9 +160,9 @@ export default function StudentUploadTable() {
         setSubmit={submitUpload}
         uploadFile={false}
         isStudentUpload={true}
-        studentUpload={uploadFile}
         uploadFunction={uploadFile}
         selectFile={selectedFile}
+        inputLabel={"เลือกประเภทงาน"}
       />
     </div>
   );

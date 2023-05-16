@@ -15,6 +15,7 @@ import {
 import { EditRounded, PhotoCamera } from "@mui/icons-material";
 import CustomizedModal from "./Modal";
 import { AppContext } from "../App";
+import SnackBar from "./SnackBar";
 
 export default function Profile() {
   const [data, setData] = useState();
@@ -33,6 +34,14 @@ export default function Profile() {
   const [phoneNo, setPhoneNo] = useState("");
   const [address, setAddress] = useState("");
   const [picture, setPicture] = useState("");
+  const [editPWSuccess, setEditPWSuccess] = useState(false);
+  const [editPWFailed, setEditPWFailed] = useState(false);
+  const [editPhoneNOSuccess, setEditPhoneNOSuccess] = useState(false);
+  const [editPhoneNOFailed, setEditPhoneNOFailed] = useState(false);
+  const [editAddressSuccess, setEditAddressSuccess] = useState(false);
+  const [editAddressFailed, setEditAddressFailed] = useState(false);
+  const [editProfileSuccess, setEditProfileSuccess] = useState(false);
+  const [editProfileFailed, setEditProfileFailed] = useState(false);
 
   const [showedPhoneNo, setShowedPhoneNo] = useState();
   const [showedAddress, setShowedAddress] = useState();
@@ -47,6 +56,22 @@ export default function Profile() {
     setAddress(data.address);
   };
 
+  const handleCloseSuccessSnackBar = () => {
+    setEditAddressSuccess(false);
+    setEditPWSuccess(false);
+    setEditPhoneNOSuccess(false);
+    setEditProfileSuccess(false);
+
+    window.location.reload();
+  };
+
+  const handleCloseFailedSnackBar = () => {
+    setEditAddressFailed(false);
+    setEditPWFailed(false);
+    setEditPhoneNOFailed(false);
+    setEditProfileFailed(false);
+  };
+
   const setDefault = (resData) => {
     setPhoneNo(resData.phoneNumber);
     setOldPassword(resData.password);
@@ -55,7 +80,6 @@ export default function Profile() {
     setPicture(resData.profilePicture);
     setShowedAddress(resData.address);
     setShowedPhoneNo(resData.phoneNumber);
-    console.log(resData.profilePicture)
   };
 
   useEffect(() => {
@@ -105,12 +129,16 @@ export default function Profile() {
       )
       .then((res) => {
         setLoading(false);
-        alert("Change password Success!");
         setOpenEditPW(false);
+        setEditPWSuccess(true);
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       })
       .catch((err) => {
-        setError(err);
         setLoading(false);
+        setEditPWFailed(true);
       });
   };
 
@@ -131,12 +159,16 @@ export default function Profile() {
       )
       .then((res) => {
         setLoading(false);
-        alert("edit phone number Success!");
         setOpenEditPhoneNO(false);
+        setEditPhoneNOSuccess(true);
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       })
       .catch((err) => {
-        setError(err);
         setLoading(false);
+        setEditPhoneNOFailed(true);
       });
   };
 
@@ -157,12 +189,16 @@ export default function Profile() {
       )
       .then((res) => {
         setLoading(false);
-        alert("edit address Success!");
         setOpenEditAddress(false);
+        setEditAddressSuccess(true);
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       })
       .catch((err) => {
-        setError(err);
         setLoading(false);
+        setEditAddressFailed(true);
       });
   };
 
@@ -175,25 +211,25 @@ export default function Profile() {
 
   const editPicture = () => {
     axios
-      .put(
-        `/personalinfo/${role}/editpicture`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: "Bearer " + token,
-            timeout: 5 * 1000,
-          },
-        }
-      )
+      .put(`/personalinfo/${role}/editpicture`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: "Bearer " + token,
+          timeout: 5 * 1000,
+        },
+      })
       .then((res) => {
         setLoading(false);
-        alert("Upload Profile pic Success!");
         setOpenEditPW(false);
+        setEditProfileSuccess(true);
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       })
       .catch((err) => {
-        setError(err);
         setLoading(false);
+        setEditProfileFailed(true);
       });
   };
 
@@ -315,7 +351,7 @@ export default function Profile() {
                 sx={{ width: 255 }}
                 value={
                   // data.phoneNumber == null ? "phone number" : data.phoneNumber
-                  showedPhoneNo == null ? "phone number" : showedPhoneNo
+                  showedPhoneNo == null ? "-" : showedPhoneNo
                 }
                 InputProps={{
                   readOnly: true,
@@ -337,20 +373,22 @@ export default function Profile() {
                 handleClose={handleClose}
                 oldLabel="เบอร์โทรศัพท์เดิม"
                 newLabel="เบอร์โทรศัพท์ใหม่"
-                defaultValue={phoneNo == null ? "phone number" : phoneNo}
+                defaultValue={phoneNo == null ? "-" : phoneNo}
                 setOnChange={setPhoneNo}
                 setOldPassword=""
                 setNewPassword=""
                 setEditOnClick={editPhoneNumber}
               />
 
-              {role == "student" &&<Typography variant="subtitle2">ที่อยู่</Typography>}
+              {role == "student" && (
+                <Typography variant="subtitle2">ที่อยู่</Typography>
+              )}
 
               {role == "student" && (
                 <TextField
                   multiline
                   sx={{ width: 255 }}
-                  value={showedAddress == null ? "address" : showedAddress}
+                  value={showedAddress == null ? "-" : showedAddress}
                   InputProps={{
                     readOnly: true,
                     endAdornment: (
@@ -371,11 +409,45 @@ export default function Profile() {
                 handleClose={handleClose}
                 oldLabel="ที่อยู่ปัจจุบัน"
                 newLabel="ที่อยู่ใหม่"
-                defaultValue={address == null ? "address" : address}
+                defaultValue={address == null ? "-" : address}
                 setOnChange={setAddress}
                 setOldPassword=""
                 setNewPassword=""
                 setEditOnClick={editAddress}
+              />
+
+              {/* SnackBar success */}
+              <SnackBar
+                open={editPWSuccess}
+                message="แก้ไขรหัสผ่านสำเร็จ"
+                severity="success"
+                handleClose={handleCloseSuccessSnackBar}
+              />
+              <SnackBar
+                open={editPhoneNOSuccess}
+                message="แก้ไขเบอร์โทรศัพท์สำเร็จ"
+                severity="success"
+                handleClose={handleCloseSuccessSnackBar}
+              />
+              <SnackBar
+                open={editAddressSuccess}
+                message="แก้ไขที่อยู่สำเร็จ"
+                severity="success"
+                handleClose={handleCloseSuccessSnackBar}
+              />
+              <SnackBar
+                open={editProfileSuccess}
+                message="แก้ไขรูปโปรไฟล์สำเร็จ"
+                severity="success"
+                handleClose={handleCloseSuccessSnackBar}
+              />
+
+              {/* SnackBar Failed */}
+              <SnackBar
+                open={editPWFailed | editAddressFailed | editPhoneNOFailed | editProfileFailed}
+                message="เกิดข้อผิดพลาด กรุณาลองใหม่"
+                severity="error"
+                handleClose={handleCloseFailedSnackBar}
               />
             </Stack>
           </Stack>
