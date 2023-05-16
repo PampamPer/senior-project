@@ -23,6 +23,7 @@ export default function StudentUploadTable() {
 
   const handleClose = () => {
     setOpenModal(false);
+    setSelectedFile();
   };
 
   useEffect(() => {

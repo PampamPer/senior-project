@@ -89,7 +89,7 @@ export default function UploadModal(props) {
                   />
                 </Button>
                 {selectFile && (
-                  <Typography variant="body2">{selectFile.name}</Typography>
+                  <Typography variant="body2" sx={{ maxWidth: 300, textAlign: "center" }}>{selectFile.name}</Typography>
                 )}
               </Stack>
             ) : (
