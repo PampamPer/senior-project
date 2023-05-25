@@ -12,7 +12,7 @@ export default function SnackBar(props) {
   }
   return (
     <Snackbar
-      open={open}
+      open={Boolean(open)}
       autoHideDuration={1500}
       TransitionComponent={SlideTransition}
       onClose={handleClose}

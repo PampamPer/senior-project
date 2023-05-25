@@ -8,8 +8,6 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LockIcon from "@mui/icons-material/Lock";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import { useCookies } from "react-cookie";
@@ -18,9 +16,9 @@ import { AppContext } from "../App";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import PWTextField from "./PasswordTextField";
 
-function App() {
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
+export default function ForgetPassword() {
+  const [email, setEmail] = useState("");
+  const [hint, setHint] = useState("");
   const [cookies, setCookie] = useCookies(["toggle", "role", "token"]);
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -37,9 +35,26 @@ function App() {
     }
   }, []);
 
-  const Login = () => {
+  const checkHint = () => {
     axios
-      .post("/tokens", { userId: userId, password: password })
+      .get("/PersonalInfo/getHint")
+      .then((res) => {
+        setLoading(false);
+        setHint(res.data);
+        console.log(res.data)
+        // if (res.data == "") {
+        //   forgetPW();
+        // }
+      })
+      .catch((err) => {
+        setError(true);
+        setLoading(false);
+      });
+  };
+
+  const forgetPW = () => {
+    axios
+      .put("/PersonalInfo/forgetPassword", { email: email })
       .then((response) => {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("role", response.data.role);
@@ -47,8 +62,7 @@ function App() {
           "username",
           response.data.firstname + " " + response.data.lastname
         );
-        setIsLogged(true);
-        navigate("/main");
+        navigate("/verify-member");
       })
       .catch((error) => {
         if (error.code === "ECONNABORTED") {
@@ -65,7 +79,7 @@ function App() {
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      Login();
+      checkHint();
     }
   };
 
@@ -81,13 +95,12 @@ function App() {
         >
           <Stack maxWidth="360px" m="auto" spacing={16}>
             <Stack alignItems="center">
-              <Typography variant="h3">เข้าสู่ระบบ</Typography>
+              <Typography variant="h3">ลืมรหัสผ่าน</Typography>
             </Stack>
             <TextField
               variant="outlined"
-              placeholder="อีเมล"
-              label="อีเมล"
-              //onChange={(event) => setPassword(event.target.value)}
+              placeholder="อีเมลที่ใช้ลงทะเบียน"
+              label="อีเมลที่ใช้ลงทะเบียน"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -95,23 +108,34 @@ function App() {
                   </InputAdornment>
                 ),
               }}
-              onChange={(event) => setUserId(event.target.value)}
+              onChange={(event) => setEmail(event.target.value)}
               onKeyPress={handleKeyPress}
             />
-            <PWTextField
-              setPassword={setPassword}
-              label={"รหัสผ่าน"}
-              placeholder={"รหัสผ่าน"}
-              handleKeyPress={handleKeyPress}
+            <TextField
+              variant="outlined"
+              placeholder="คีย์เวิร์ดยืนยันตัวตน"
+              label="คีย์เวิร์ดยืนยันตัวตน"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockIcon />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={(event) => setEmail(event.target.value)}
+              onKeyPress={handleKeyPress}
             />
-            <Stack alignItems="end">
-              <Button variant="text" onClick={()=>navigate("/forget-password")}>
-                ลืมรหัสผ่าน?
-              </Button>
-            </Stack>
-            <Button variant="contained" onClick={Login}>
-              login
+
+            <Button variant="contained" onClick={checkHint}>
+              ขอรหัสผ่านทางอีเมล
             </Button>
+            <Stack alignItems="center">
+              {hint != "" && (
+                <Typography variant="body2" color="red">
+                  คำใบ้: {hint}
+                </Typography>
+              )}
+            </Stack>
             <Snackbar
               open={open}
               autoHideDuration={5000}
@@ -127,5 +151,3 @@ function App() {
     </Stack>
   );
 }
-
-export default App;

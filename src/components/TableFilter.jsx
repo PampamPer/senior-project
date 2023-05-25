@@ -35,6 +35,9 @@ export default function TableFilter(props) {
   const [newData, setNewData] = useState();
   let option = {};
   const filterOption = (data) => {
+    if(data.length == 0){
+      return
+    }
     Object.keys(data[0]).forEach((column) => {
       option[column] = getUniqueOptions(data, column);
     });

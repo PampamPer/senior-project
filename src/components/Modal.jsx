@@ -31,23 +31,36 @@ export default function CustomizedModal(props) {
   const [isOldPWNotEditted, setIsOldPWNotEditted] = useState(true);
   const [isNewPWNotEditted, setIsNewPWNotEditted] = useState(true);
   const [isRenewPWNotEditted, setIsRenewPWNotEditted] = useState(true);
-  const [val, setVal] = useState(defaultValue);
 
   const setOldPW = (password) => {
-    setOldPassword(password);
-    setIsOldPWNotEditted(false);
-  }
+    if (password == "") {
+      setIsOldPWNotEditted(true);
+    } else {
+      setOldPassword(password);
+      setIsOldPWNotEditted(false);
+    }
+  };
   const setNewPW = (password) => {
-    setNewPassword(password);
-    setIsNewPWNotEditted(false);
-  }
+    if (password == "") {
+      setIsNewPWNotEditted(true);
+    } else {
+      setNewPassword(password);
+      setIsNewPWNotEditted(false);
+    }
+  };
   const setRenewPW = (password) => {
-    setRenewPassword(password);
-    setIsRenewPWNotEditted(false);
-  }
+    if (password == "") {
+      setIsRenewPWNotEditted(true);
+    } else {
+      setRenewPassword(password);
+      setIsRenewPWNotEditted(false);
+    }
+  };
 
   useEffect(() => {
-    setIsNotEditted(isOldPWNotEditted || isNewPWNotEditted || isRenewPWNotEditted);
+    setIsNotEditted(
+      isOldPWNotEditted || isNewPWNotEditted || isRenewPWNotEditted
+    );
   }, [isOldPWNotEditted, isNewPWNotEditted, isRenewPWNotEditted]);
 
   const handleCloseToDisable = () => {
@@ -56,12 +69,22 @@ export default function CustomizedModal(props) {
     setIsNewPWNotEditted(true);
     setIsRenewPWNotEditted(true);
     handleClose();
-  }
+  };
 
   const handleSubmit = () => {
     setIsNotEditted(false);
     setEditOnClick();
-  }
+  };
+
+  const handleOnChange = (event) => {
+    let newData = event.target.value;
+    if (newData == "") {
+      setIsNotEditted(true);
+    } else {
+      setOnChange(newData);
+      setIsNotEditted(false);
+    }
+  };
 
   return (
     <Modal open={open} onClose={handleCloseToDisable}>
@@ -111,11 +134,15 @@ export default function CustomizedModal(props) {
                 <TextField
                   multiline
                   label={newLabel}
-                  onChange={(event) => {setOnChange(event.target.value); setIsNotEditted(false);}}
+                  onChange={handleOnChange}
                 />
               </Stack>
             )}
-            <Button variant="contained" onClick={setEditOnClick} disabled={isNotEditted}>
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              disabled={isNotEditted}
+            >
               ยืนยัน
             </Button>
           </Stack>

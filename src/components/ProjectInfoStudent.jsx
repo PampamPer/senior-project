@@ -4,6 +4,7 @@ import { AppContext } from "../App";
 import { Button, Paper, Stack, Typography } from "@mui/material";
 import CustomizedModal from "./Modal";
 import StudentUploadTable from "./StudentUploadTable";
+import SnackBar from "./SnackBar";
 
 export default function ProjectInfoStudent() {
   const [data, setData] = useState([]);
@@ -12,13 +13,16 @@ export default function ProjectInfoStudent() {
   const { setIsLogged } = useContext(AppContext);
   const { toggle, semesterId } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [projNameTh, setProjNameTh] = useState();
   const [projNameEn, setProjNameEn] = useState();
   const [showedProjNameTh, setshowedProjNameTh] = useState();
   const [showedProjNameEn, setshowedProjNameEn] = useState();
   const [openEditThModal, setOpenEditThModal] = useState(false);
   const [openEditEnModal, setOpenEditEnModal] = useState(false);
+  const [editProjNameSuccess, setEditProjNameSuccess] = useState(false);
+  const [editProjNameFailed, setEditProjNameFailed] = useState(false);
+
   const keyMap = {
     no: "หมายเลขโครงงาน",
     major: "ภาควิชา",
@@ -40,6 +44,22 @@ export default function ProjectInfoStudent() {
   const handleClose = () => {
     setOpenEditEnModal(false);
     setOpenEditThModal(false);
+
+    setProjNameTh(data.projectNameTh);
+    setProjNameEn(data.projectNameEn);
+  };
+
+  const handleCloseError = () => {
+    setError(true);
+  }
+
+  const handleCloseSuccessSnackBar = () => {
+    setEditProjNameSuccess(false);
+    window.location.reload();
+  };
+
+  const handleCloseFailedSnackBar = () => {
+    setEditProjNameFailed(false);
   };
 
   useEffect(() => {
@@ -64,7 +84,7 @@ export default function ProjectInfoStudent() {
         setData(res.data);
       })
       .catch((err) => {
-        setError(err);
+        setError(true);
         setLoading(false);
       });
   }, [toggle, semesterId]);
@@ -73,9 +93,9 @@ export default function ProjectInfoStudent() {
     return <p>loading...</p>;
   }
 
-  if (error) {
-    return <p>Err: {error.message} </p>;
-  }
+  // if (error) {
+  //   return <p>Err: {error.message} </p>;
+  // }
 
   const editProjectThName = () => {
     setshowedProjNameTh(projNameTh);
@@ -94,11 +114,11 @@ export default function ProjectInfoStudent() {
       )
       .then((res) => {
         setLoading(false);
-        alert("edit th project name Success!");
+        setEditProjNameSuccess(true);
         setOpenEditThModal(false);
       })
       .catch((err) => {
-        setError(err);
+        setEditProjNameFailed(true);
         setLoading(false);
       });
   };
@@ -120,17 +140,23 @@ export default function ProjectInfoStudent() {
       )
       .then((res) => {
         setLoading(false);
-        alert("edit en project name Success!");
+        setEditProjNameSuccess(true);
         setOpenEditEnModal(false);
       })
       .catch((err) => {
-        setError(err);
+        setEditProjNameFailed(true);
         setLoading(false);
       });
   };
 
   return (
     <div>
+      <SnackBar
+        open={error}
+        message="เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
+        severity="error"
+        handleClose={handleCloseError}
+      />
       <Stack alignItems="center" spacing={32} sx={{ mb: 48 }}>
         {data ? (
           <Paper sx={{ width: 1000, p: 32 }}>
@@ -220,6 +246,20 @@ export default function ProjectInfoStudent() {
         setOldPassword=""
         setNewPassword=""
         setEditOnClick={editProjectEnName}
+      />
+
+      <SnackBar
+        open={editProjNameSuccess}
+        message="แก้ไขชื่อโครงงานสำเร็จ"
+        severity="success"
+        handleClose={handleCloseSuccessSnackBar}
+      />
+
+      <SnackBar
+        open={editProjNameFailed}
+        message="เกิดข้อผิดพลาด กรุณาลองใหม่"
+        severity="error"
+        handleClose={handleCloseFailedSnackBar}
       />
     </div>
   );

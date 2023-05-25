@@ -12,8 +12,12 @@ export default function DownloadFiles() {
   const path = localStorage.getItem("projectPath") || "project";
   const { toggle, semesterId } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [filteredData, setFilteredData] = useState();
+
+  const handleClose = () => {
+    setError(false);
+  }
 
   useEffect(() => {
     axios
@@ -75,7 +79,7 @@ export default function DownloadFiles() {
         }
       })
       .catch((err) => {
-        setError(err);
+        setError(true);
         setLoading(false);
       });
   }, [toggle, semesterId]);
@@ -84,9 +88,9 @@ export default function DownloadFiles() {
     return <p>loading...</p>;
   }
 
-  if (error) {
-    return <p>Err: {error.message} </p>;
-  }
+  // if (error) {
+  //   return <p>Err: {error.message} </p>;
+  // }
 
 
   const columns = [
@@ -116,6 +120,12 @@ export default function DownloadFiles() {
   return (
     <div>
       <NavBar />
+      <SnackBar
+        open={error}
+        message="เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
+        severity="error"
+        handleClose={handleClose}
+      />
       <Stack alignItems="center" sx={{ mt: 24 }}>
         <Typography variant="h4">
           ตารางสรุป

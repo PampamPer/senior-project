@@ -28,7 +28,7 @@ export default function ProjectInfoLecturer() {
   const { setIsLogged } = useContext(AppContext);
   const { toggle, semesterId } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [openUploadHistory, setOpenUploadHistory] = useState(false);
   const [openGradingHistory, setOpenGradingHistory] = useState(false);
   const [openGradingUpload, setOpenGradingUpload] = useState(false);
@@ -113,7 +113,7 @@ export default function ProjectInfoLecturer() {
         }
       })
       .catch((err) => {
-        setError(err);
+        setError(true);
         setLoading(false);
       });
   }, [toggle, semesterId, filter]);
@@ -122,9 +122,9 @@ export default function ProjectInfoLecturer() {
     return <p>loading...</p>;
   }
 
-  if (error) {
-    return <p>Err: {error.message} </p>;
-  }
+  // if (error) {
+  //   return <p>Err: {error.message} </p>;
+  // }
 
   const columns = [
     { id: "no", label: "หมายเลขโครงงาน", sx: { minWidth: 150 } },
@@ -161,15 +161,20 @@ export default function ProjectInfoLecturer() {
     setOpenGradingHistory(false);
     setOpenUploadHistory(false);
     setOpenGradingUpload(false);
+    setSelectFile();
   };
 
+  const handleCloseError = () => {
+    setError(false);
+  }
+
   const handleCloseSuccessSnackBar = () => {
-    setUploadFileSuccess(true);
+    setUploadFileSuccess(false);
     window.location.reload();
   };
 
   const handleCloseFailedSnackBar = () => {
-    setUploadFileFailed(true);
+    setUploadFileFailed(false);
   };
 
   const uploadColumns = [
@@ -221,7 +226,7 @@ export default function ProjectInfoLecturer() {
         }
       })
       .catch((err) => {
-        setError(err);
+        setError(true);
         setLoading(false);
       });
   };
@@ -247,7 +252,7 @@ export default function ProjectInfoLecturer() {
         });
       })
       .catch((err) => {
-        setError(err);
+        setError(true);
         setLoading(false);
       });
   };
@@ -271,10 +276,11 @@ export default function ProjectInfoLecturer() {
       .then((res) => {
         setLoading(false);
         setIsLogged(true);
-        alert("Upload Grading file success!");
+        // alert("Upload Grading file success!");
+        setUploadFileSuccess(true);
       })
       .catch((err) => {
-        setError(err);
+        setError(true);
         setLoading(false);
       });
   };
@@ -282,6 +288,12 @@ export default function ProjectInfoLecturer() {
   return (
     // const dict = {id: "", id2: ""}
     <div>
+      <SnackBar
+        open={error}
+        message="เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
+        severity="error"
+        handleClose={handleCloseError}
+      />
       {arrId.map((proj) => {
         selectName.set(proj.no + " - " + proj.projectNameTh, proj.id);
         projectNames.set(proj.id, proj.no + " - " + proj.projectNameTh);
@@ -351,7 +363,7 @@ export default function ProjectInfoLecturer() {
               <Typography variant="h5" color="#2D95E1">
                 ใบรายงานผลสอบ
               </Typography>
-              <Paper sx={{ p: 24, width: 850 }}>
+              <Paper sx={{ p: 24, pr:198, width: 850, position: "relative" }}>
                 <Stack alignItems="start" spacing={12}>
                   <Stack direction="row" spacing={128}>
                     <Stack direction="row" spacing={32}>
@@ -366,8 +378,9 @@ export default function ProjectInfoLecturer() {
                     <Button
                       variant="contained"
                       onClick={() => setOpenGradingUpload(true)}
+                      sx={{position:"absolute", top:24, right: 24, maxWidth:150}}
                     >
-                      อัปโหลดใบรายงานผลสอบ
+                      อัปโหลด<br/>ใบรายงานผลสอบ
                     </Button>
                   </Stack>
                   <Stack direction="row" spacing={32}>

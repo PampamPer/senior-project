@@ -12,7 +12,7 @@ import Paper from "@mui/material/Paper";
 import TablePaginationActions from "./TablePagination";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
-import { Link } from "@mui/material";
+import { Link, Stack, Typography } from "@mui/material";
 
 export function preprocess(data, columns, dateColumns, datetimeColumns) {
   const monthNames = [
@@ -62,8 +62,7 @@ export function preprocess(data, columns, dateColumns, datetimeColumns) {
         if (datetimeColumns.includes(key)) {
           if (row[key] == null) {
             newRow[key] = "-";
-          }
-          else {
+          } else {
             newRow[key] = toThaiDateTimeString(new Date(row[key]));
           }
         } else if (dateColumns.includes(key)) {
@@ -100,71 +99,88 @@ export default function CustomizedTables(props) {
   };
 
   return (
-    <TableContainer component={Paper} sx={{ maxHeight: 650 }}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table" {...props}>
-        <TableHead>
-          <TableRow>
-            {columns.map((column) => (
-              <TableCell key={column.id} sx={column.sx}>
-                {column.label}
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {(rowsPerPage > 0
-            ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : data
-          ).map((datarow) => (
-            <TableRow key={datarow.tableId}>
-              {Object.keys(datarow)
-                .filter((key) => key != "tableId" && key != linkname)
-                .map((key) => (
-                  <TableCell key={key}>
-                    {linkcolumns.includes(key) ? (
-                      <Link
-                        href={datarow[key]}
-                        underline="hover"
-                        color="secondary"
-                      >
-                        {datarow[linkname]}
-                      </Link>
-                    ) : (
-                      datarow[key]
-                    )}
+    <div>
+      {data.length == 0 ? (
+        <Stack alignItems="center" spacing={32} sx={{ mb: 48 }}>
+          <Typography variant="subtitle1" color="red">
+            ไม่พบข้อมูล
+          </Typography>
+        </Stack>
+      ) : (
+        <TableContainer component={Paper} sx={{ maxHeight: 650 }}>
+          <Table
+            sx={{ minWidth: 700 }}
+            aria-label="customized table"
+            {...props}
+          >
+            <TableHead>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell key={column.id} sx={column.sx}>
+                    {column.label}
                   </TableCell>
                 ))}
-            </TableRow>
-          ))}
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
-            </TableRow>
-          )}
-        </TableBody>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {(rowsPerPage > 0
+                ? data.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : data
+              ).map((datarow) => (
+                <TableRow key={datarow.tableId}>
+                  {Object.keys(datarow)
+                    .filter((key) => key != "tableId" && key != linkname)
+                    .map((key) => (
+                      <TableCell key={key}>
+                        {linkcolumns.includes(key) ? (
+                          <Link
+                            href={datarow[key]}
+                            underline="hover"
+                            color="secondary"
+                          >
+                            {datarow[linkname]}
+                          </Link>
+                        ) : (
+                          datarow[key]
+                        )}
+                      </TableCell>
+                    ))}
+                </TableRow>
+              ))}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
 
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-              colSpan={3}
-              count={data.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: {
-                  "aria-label": "rows per page",
-                },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                  colSpan={3}
+                  count={data.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: {
+                      "aria-label": "rows per page",
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
+      )}
+    </div>
   );
 }
 

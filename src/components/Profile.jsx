@@ -24,7 +24,7 @@ export default function Profile() {
   const { setIsLogged } = useContext(AppContext);
   const formData = new FormData();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [openEditPW, setOpenEditPW] = useState(false);
   const [openEditPhoneNO, setOpenEditPhoneNO] = useState(false);
   const [openEditAddress, setOpenEditAddress] = useState(false);
@@ -55,6 +55,10 @@ export default function Profile() {
     setNewPassword(data.password);
     setAddress(data.address);
   };
+
+  const handleErrorClose = () => {
+    setError(false);
+  }
 
   const handleCloseSuccessSnackBar = () => {
     setEditAddressSuccess(false);
@@ -105,7 +109,7 @@ export default function Profile() {
         }
       })
       .catch((err) => {
-        setError(err);
+        setError(true);
         setLoading(false);
       });
   }, []);
@@ -237,13 +241,19 @@ export default function Profile() {
     return <p>loading...</p>;
   }
 
-  if (error) {
-    return <p>Err: {error.message} </p>;
-  }
+  // if (error) {
+  //   return <p>Err: {error.message} </p>;
+  // }
 
   return (
     <Stack className="content" gap={60}>
       <NavBar />
+      <SnackBar
+        open={error}
+        message="เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
+        severity="error"
+        handleClose={handleErrorClose}
+      />
       <Stack alignItems="center">
         <Paper
           elevation={4}

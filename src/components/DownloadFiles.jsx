@@ -8,15 +8,20 @@ import TableSearch from "./TableSearch";
 import TableFilter from "./TableFilter";
 import CustomTable from "./CustomTable";
 import { Stack, Typography } from "@mui/material";
+import SnackBar from "./SnackBar";
 
 export default function DownloadFiles() {
   const [data, setData] = useState([]);
   const path = localStorage.getItem("projectPath") || "project";
   const { toggle } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
+  // const [error, setError] = useState(null);
   const [filteredData, setFilteredData] = useState();
+  const [fetchError, setFetchError] = useState(false);
+
+  const handleClose = () => {
+    setFetchError(false);
+  }
 
   useEffect(() => {
     axios
@@ -45,7 +50,7 @@ export default function DownloadFiles() {
         }
       })
       .catch((err) => {
-        setError(err);
+        setFetchError(true);
         setLoading(false);
       });
   }, [toggle]);
@@ -54,9 +59,9 @@ export default function DownloadFiles() {
     return <p>loading...</p>;
   }
 
-  if (error) {
-    return <p>Err: {error.message} </p>;
-  }
+  // if (error) {
+  //   return <p>Err: {error.message} </p>;
+  // }
 
   const columns = [
     // {
@@ -88,10 +93,14 @@ export default function DownloadFiles() {
   return (
     <div>
       <NavBar />
+      <SnackBar
+        open={fetchError}
+        message="เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
+        severity="error"
+        handleClose={handleClose}
+      />
       <Stack alignItems="center" sx={{ mt: 24 }}>
-        <Typography variant="h4">
-          เอกสารสำหรับดาวน์โหลด
-        </Typography>
+        <Typography variant="h4">เอกสารสำหรับดาวน์โหลด</Typography>
       </Stack>
       <CustomTable
         data={data}

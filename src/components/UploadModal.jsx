@@ -60,8 +60,16 @@ export default function UploadModal(props) {
     }
   }
 
+  const handleCloseModal = () => {
+    handleClose();
+    setVal("");
+    setProjSelected(false);
+    setFileSelected(false);
+    setIsNotSelected(true);
+  }
+
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={open} onClose={handleCloseModal}>
       <Stack alignItems="center" sx={{ position: "relative", top: "30%" }}>
         <Paper sx={{ width: 332 }}>
           <Stack spacing={16} sx={{ p: 16 }}>
@@ -69,7 +77,7 @@ export default function UploadModal(props) {
               <Typography variant="subtitle1" sx={{ mt: 8, ml: 8 }}>
                 {ModalHeader}
               </Typography>
-              <IconButton onClick={handleClose}>
+              <IconButton onClick={handleCloseModal}>
                 <ClearRounded />
               </IconButton>
             </Stack>

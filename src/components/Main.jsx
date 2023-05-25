@@ -7,6 +7,7 @@ import { AppContext } from "../App";
 import Footer from "./Footer";
 import { Stack } from "@mui/system";
 import CustomizedTimeline from "./Timeline";
+import SnackBar from "./SnackBar";
 
 export default function Main() {
   const [data, setData] = useState([]);
@@ -14,9 +15,11 @@ export default function Main() {
   const path = localStorage.getItem("projectPath") || "project";
   const { toggle, semesterId } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
 
-  
+  const handleClose = () => {
+    setError(false);
+  }
 
 
   useEffect(() => {
@@ -31,7 +34,7 @@ export default function Main() {
         }
       })
       .catch((err) => {
-        setError(err);
+        setError(true);
         setLoading(false);
       });
 
@@ -42,7 +45,7 @@ export default function Main() {
         setQR(res.data);
       })
       .catch((err) => {
-        setError(err);
+        setError(true);
         setLoading(false);
       });
   }, [toggle, semesterId]);
@@ -64,9 +67,9 @@ export default function Main() {
     return <p>loading...</p>;
   }
 
-  if (error) {
-    return <p>Err: {error.message} </p>;
-  }
+  // if (error) {
+  //   return <p>Err: {error.message} </p>;
+  // }
 
   const columns = [
     { id: "deadline", label: "กำหนดการ", sx: { width: "20%" } },
@@ -77,6 +80,12 @@ export default function Main() {
   return (
     <div className="content">
       <NavBar />
+      <SnackBar
+        open={error}
+        message="เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
+        severity="error"
+        handleClose={handleClose}
+      />
       <Paper elevation={4} sx={{opacity:0.75, m:120}}>
       <Stack
         label="default-screen-welcome"

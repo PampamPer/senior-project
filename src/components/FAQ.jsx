@@ -11,16 +11,16 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Footer from "./Footer";
 import NavBar from "./NavBar";
+import SnackBar from "./SnackBar";
 
 export default function FAQ() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [open, setOpen] = useState(false);
+  const [error, setError] = useState(false);
 
-  const handleClick = () => {
-    setOpen(!open);
-  };
+  const handleClose = () => {
+    setError(false);
+  }
 
   useEffect(() => {
     axios
@@ -34,7 +34,7 @@ export default function FAQ() {
         }
       })
       .catch((err) => {
-        setError(err);
+        setError(true);
         setLoading(false);
       });
   }, []);
@@ -43,9 +43,9 @@ export default function FAQ() {
     return <p>loading...</p>;
   }
 
-  if (error) {
-    return <p>Err: {error.message} </p>;
-  }
+  // if (error) {
+  //   return <p>Err: {error.message} </p>;
+  // }
 
   return (
     <div className="content">
@@ -58,6 +58,12 @@ export default function FAQ() {
           </ListItemButton>
         ))}
       </List> */}
+      <SnackBar
+        open={error}
+        message="เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
+        severity="error"
+        handleClose={handleClose}
+      />
       <Stack sx={{ mx: 32, mb:24}}>
         <Stack alignItems="center" sx={{my:24}}>
           <Typography variant="h4">
@@ -65,7 +71,7 @@ export default function FAQ() {
           </Typography>
         </Stack>
         {data.map((obj) => (
-          <Accordion>
+          <Accordion key={obj.id}>
             <AccordionSummary expandIcon={<ExpandMore />} sx={{px:12}}>
               {obj.question}
             </AccordionSummary>

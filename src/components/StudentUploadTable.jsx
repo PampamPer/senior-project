@@ -6,6 +6,7 @@ import { AppContext } from "../App";
 import axios from "axios";
 import { Button, Stack, Typography } from "@mui/material";
 import UploadModal from "./UploadModal";
+import SnackBar from "./SnackBar";
 
 export default function StudentUploadTable() {
   const [data, setData] = useState([]);
@@ -15,15 +16,30 @@ export default function StudentUploadTable() {
   const path = localStorage.getItem("projectPath") || "project";
   const { toggle, semesterId } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const assignmentName = new Map();
   const formData = new FormData();
   const [selectedFile, setSelectedFile] = useState();
+  const [uploadFileSuccess, setUploadFileSuccess] = useState(false);
+  const [uploadFileFailed, setUploadFileFailed] = useState(false);
 
   const handleClose = () => {
     setOpenModal(false);
     setSelectedFile();
+  };
+
+  const handleCloseError = () => {
+    setError(false);
+  }
+
+  const handleCloseSuccessSnackBar = () => {
+    setUploadFileSuccess(false);
+    window.location.reload();
+  };
+
+  const handleCloseFailedSnackBar = () => {
+    setUploadFileFailed(false);
   };
 
   useEffect(() => {
@@ -51,7 +67,7 @@ export default function StudentUploadTable() {
         }
       })
       .catch((err) => {
-        setError(err);
+        setError(true);
         setLoading(false);
       });
 
@@ -63,7 +79,7 @@ export default function StudentUploadTable() {
         setAssignmentData(res.data);
       })
       .catch((err) => {
-        setError(err);
+        setError(true);
         setLoading(false);
       });
   }, [toggle, semesterId]);
@@ -72,9 +88,9 @@ export default function StudentUploadTable() {
     return <p>loading...</p>;
   }
 
-  if (error) {
-    return <p>Err: {error.message} </p>;
-  }
+  // if (error) {
+  //   return <p>Err: {error.message} </p>;
+  // }
 
   const columns = [
     {
@@ -102,10 +118,7 @@ export default function StudentUploadTable() {
     const asmId = assignmentName.get(asmName);
     formData.append("file", selectedFile);
     axios
-      .post(
-        `/${path}Uploads?assignmentId=${asmId}`, 
-        formData, 
-        {
+      .post(`/${path}Uploads?assignmentId=${asmId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: "Bearer " + token,
@@ -115,17 +128,22 @@ export default function StudentUploadTable() {
       .then((res) => {
         setLoading(false);
         setIsLogged(true);
-        alert("Upload file success!");
-        window.location.reload();
+        setUploadFileSuccess(true);
       })
       .catch((err) => {
-        setError(err);
+        setUploadFileFailed(true);
         setLoading(false);
       });
   };
 
   return (
     <div>
+      <SnackBar
+        open={error}
+        message="เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
+        severity="error"
+        handleClose={handleCloseError}
+      />
       {assignmentData && (
         <div>
           {assignmentData.map((assignment) => {
@@ -164,6 +182,20 @@ export default function StudentUploadTable() {
         uploadFunction={uploadFile}
         selectFile={selectedFile}
         inputLabel={"เลือกประเภทงาน"}
+      />
+
+      <SnackBar
+        open={uploadFileSuccess}
+        message="อัปโหลดไฟล์สำเร็จ"
+        severity="success"
+        handleClose={handleCloseSuccessSnackBar}
+      />
+
+      <SnackBar
+        open={uploadFileFailed}
+        message="เกิดข้อผิดพลาด กรุณาลองใหม่"
+        severity="error"
+        handleClose={handleCloseFailedSnackBar}
       />
     </div>
   );
