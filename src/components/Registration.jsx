@@ -25,15 +25,8 @@ export default function ForgetPassword() {
   const [level, setLevel] = useState("info");
   const [mesg, setMesg] = useState("");
   const [open, setOpen] = useState(false);
-  const { isLogged, setIsLogged } = useContext(AppContext);
 
   let navigate = useNavigate();
-
-  useEffect(() => {
-    if (isLogged) {
-      navigate("/main");
-    }
-  }, []);
 
   const checkHint = () => {
     axios

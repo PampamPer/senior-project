@@ -5,12 +5,12 @@ import { Button, Paper, Stack, Typography } from "@mui/material";
 import CustomizedModal from "./Modal";
 import StudentUploadTable from "./StudentUploadTable";
 import SnackBar from "./SnackBar";
+import { clearStorage, getStatus } from "../middleware/Auth";
 
 export default function ProjectInfoStudent() {
   const [data, setData] = useState([]);
   const path = localStorage.getItem("projectPath") || "project";
   const token = localStorage.getItem("token");
-  const { setIsLogged } = useContext(AppContext);
   const { toggle, semesterId } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -76,7 +76,6 @@ export default function ProjectInfoStudent() {
       )
       .then((res) => {
         setLoading(false);
-        setIsLogged(true);
         setProjNameEn(res.data.projectNameEn);
         setProjNameTh(res.data.projectNameTh);
         setshowedProjNameEn(res.data.projectNameEn);
@@ -84,6 +83,9 @@ export default function ProjectInfoStudent() {
         setData(res.data);
       })
       .catch((err) => {
+        if(getStatus(err)=="401") {
+          clearStorage();
+        }
         setError(true);
         setLoading(false);
       });
@@ -118,6 +120,9 @@ export default function ProjectInfoStudent() {
         setOpenEditThModal(false);
       })
       .catch((err) => {
+        if(getStatus(err)=="401") {
+          clearStorage();
+        }
         setEditProjNameFailed(true);
         setLoading(false);
       });
@@ -144,6 +149,9 @@ export default function ProjectInfoStudent() {
         setOpenEditEnModal(false);
       })
       .catch((err) => {
+        if(getStatus(err)=="401") {
+          clearStorage();
+        }
         setEditProjNameFailed(true);
         setLoading(false);
       });

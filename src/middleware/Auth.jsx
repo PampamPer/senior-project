@@ -1,39 +1,20 @@
 import { Navigate } from "react-router-dom";
 import React from "react";
 
-async function checkIfLogged() {
-  const role = localStorage.getItem("role");
-  const token = localStorage.getItem("token");
-  // const { setIsLogged } = useContext(AppContext);
-  if (token) {
-    const isExpired = isTokenExpired(token);
-
-    if (role != null && !isExpired) {
-      const login = await axios.get(`/personalinfo/${role}`, {
-        headers: {
-          Authorization: "Bearer " + token,
-          // timeout: 5 * 1000,
-        },
-      });
-      // setIsLogged();
-      return login?.status == "200";
-    }
-  } else {
-    return false;
-  }
+export function clearStorage() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("username");
+  localStorage.removeItem("role");
 }
 
-function isTokenExpired(token) {
-  const decodedToken = JSON.parse(atob(token.split(".")[1]));
-  const expirationTime = decodedToken.exp * 1000; // convert expiration time to milliseconds
-  const currentTime = Date.now();
-  return currentTime > expirationTime;
+export function getStatus(error) {
+  return error.response.status;
 }
 
 export default function Auth(props) {
+    const token = localStorage.getItem("token")
   
-    const isLogin = checkIfLogged();
-    if (!isLogin) {
+    if (!token) {
       return <Navigate to={"/"} replace={true}></Navigate>
     }
   

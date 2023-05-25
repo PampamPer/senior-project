@@ -7,12 +7,12 @@ import axios from "axios";
 import { Button, Stack, Typography } from "@mui/material";
 import UploadModal from "./UploadModal";
 import SnackBar from "./SnackBar";
+import { clearStorage, getStatus } from "../middleware/Auth";
 
 export default function StudentUploadTable() {
   const [data, setData] = useState([]);
   const [assignmentData, setAssignmentData] = useState(data);
   const token = localStorage.getItem("token");
-  const { setIsLogged } = useContext(AppContext);
   const path = localStorage.getItem("projectPath") || "project";
   const { toggle, semesterId } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
@@ -52,7 +52,6 @@ export default function StudentUploadTable() {
       })
       .then((res) => {
         setLoading(false);
-        setIsLogged(true);
         if (res.data) {
           setData(
             preprocess(
@@ -67,6 +66,9 @@ export default function StudentUploadTable() {
         }
       })
       .catch((err) => {
+        if(getStatus(err)=="401") {
+          clearStorage();
+        }
         setError(true);
         setLoading(false);
       });
@@ -75,7 +77,6 @@ export default function StudentUploadTable() {
       .get(`/${path}assignments?semesterId=${semesterId}`)
       .then((res) => {
         setLoading(false);
-        setIsLogged(true);
         setAssignmentData(res.data);
       })
       .catch((err) => {
@@ -127,10 +128,12 @@ export default function StudentUploadTable() {
       })
       .then((res) => {
         setLoading(false);
-        setIsLogged(true);
         setUploadFileSuccess(true);
       })
       .catch((err) => {
+        if(getStatus(err)=="401") {
+          clearStorage();
+        }
         setUploadFileFailed(true);
         setLoading(false);
       });

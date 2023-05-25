@@ -27,15 +27,8 @@ function App() {
   const [level, setLevel] = useState("info");
   const [mesg, setMesg] = useState("");
   const [open, setOpen] = useState(false);
-  const { isLogged, setIsLogged } = useContext(AppContext);
 
   let navigate = useNavigate();
-
-  useEffect(() => {
-    if (isLogged) {
-      navigate("/main");
-    }
-  }, []);
 
   const Login = () => {
     axios
@@ -47,7 +40,6 @@ function App() {
           "username",
           response.data.firstname + " " + response.data.lastname
         );
-        setIsLogged(true);
         navigate("/main");
       })
       .catch((error) => {

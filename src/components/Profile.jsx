@@ -16,12 +16,12 @@ import { EditRounded, PhotoCamera } from "@mui/icons-material";
 import CustomizedModal from "./Modal";
 import { AppContext } from "../App";
 import SnackBar from "./SnackBar";
+import { clearStorage, getStatus } from "../middleware/Auth";
 
 export default function Profile() {
   const [data, setData] = useState();
   const role = localStorage.getItem("role");
   const token = localStorage.getItem("token");
-  const { setIsLogged } = useContext(AppContext);
   const formData = new FormData();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -103,12 +103,14 @@ export default function Profile() {
         if (res.data) {
           setData(res.data);
           setDefault(res.data);
-          setIsLogged(true);
         } else {
           setData([]);
         }
       })
       .catch((err) => {
+        if(getStatus(err)=="401") {
+          clearStorage();
+        }
         setError(true);
         setLoading(false);
       });
@@ -141,6 +143,9 @@ export default function Profile() {
         }, 1000);
       })
       .catch((err) => {
+        if(getStatus(err)=="401") {
+          clearStorage();
+        }
         setLoading(false);
         setEditPWFailed(true);
       });
@@ -171,6 +176,9 @@ export default function Profile() {
         }, 1000);
       })
       .catch((err) => {
+        if(getStatus(err)=="401") {
+          clearStorage();
+        }
         setLoading(false);
         setEditPhoneNOFailed(true);
       });
@@ -201,6 +209,9 @@ export default function Profile() {
         }, 1000);
       })
       .catch((err) => {
+        if(getStatus(err)=="401") {
+          clearStorage();
+        }
         setLoading(false);
         setEditAddressFailed(true);
       });
@@ -232,6 +243,9 @@ export default function Profile() {
         }, 1000);
       })
       .catch((err) => {
+        if(getStatus(err)=="401") {
+          clearStorage();
+        }
         setLoading(false);
         setEditProfileFailed(true);
       });

@@ -2,8 +2,7 @@ import { useState, useEffect, createContext, useContext } from "react";
 import "./App.css";
 import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material";
-import Button from "@mui/material/Button";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import SignIn from "./components/SignIn";
 import Main from "./components/Main";
 import Faq from "./components/FAQ";
@@ -11,47 +10,10 @@ import DownloadFiles from "./components/DownloadFiles";
 import ProjectInfo from "./components/ProjectInfo";
 import Profile from "./components/Profile";
 import SummaryTable from "./components/SummaryTable";
+import Auth from "./middleware/Auth";
+import ForgetPassword from "./components/ForgetPassword";
 
 export const AppContext = createContext();
-
-async function checkIfLogged() {
-  const role = localStorage.getItem("role");
-  const token = localStorage.getItem("token");
-  // const { setIsLogged } = useContext(AppContext);
-  if (token) {
-    const isExpired = isTokenExpired(token);
-
-    if (role != null && !isExpired) {
-      const login = await axios.get(`/personalinfo/${role}`, {
-        headers: {
-          Authorization: "Bearer " + token,
-          // timeout: 5 * 1000,
-        },
-      });
-      // setIsLogged();
-      return login?.status == "200";
-
-      // .then((res) => {
-      //   setIsLogged(true);
-      // })
-      // .catch((err) => {
-      //   // alert(err);
-      //   setIsLogged(false);
-      //   navigate("/");
-      // });
-    }
-  } else {
-    // setIsLogged(false);
-    return false;
-  }
-}
-
-function isTokenExpired(token) {
-  const decodedToken = JSON.parse(atob(token.split(".")[1]));
-  const expirationTime = decodedToken.exp * 1000; // convert expiration time to milliseconds
-  const currentTime = Date.now();
-  return currentTime > expirationTime;
-}
 
 function App() {
   axios.defaults.baseURL = "https://cache111.com/seniorprojectapi";
@@ -63,10 +25,6 @@ function App() {
   const [semesterId, setSemesterId] = useState(
     localStorage.getItem("semesterId") || 2
   );
-
-  const [isLogged, setIsLogged] = useState();
-  const role = localStorage.getItem("role");
-  let navigate = useNavigate();
 
   const theme = createTheme({
     components: {
@@ -199,18 +157,6 @@ function App() {
     spacing: 1,
   });
 
-  const checkLogin = async () => {
-    const isLogin = await checkIfLogged();
-    setIsLogged(isLogin);
-    if (!isLogin) {
-      navigate("/");
-    }
-  };
-
-  useEffect(() => {
-    checkLogin();
-  }, []);
-
   return (
     <ThemeProvider theme={theme}>
       <AppContext.Provider
@@ -219,8 +165,6 @@ function App() {
           setToggle,
           semesterId,
           setSemesterId,
-          isLogged,
-          setIsLogged,
         }}
       >
         <Routes>
@@ -229,9 +173,24 @@ function App() {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/download-files" element={<DownloadFiles />} />
-          <Route path="/project-info" element={<ProjectInfo />} />
-          <Route path="/profile" element={<Profile />} />{" "}
+          <Route
+            path="/project-info"
+            element={
+              <Auth>
+                <ProjectInfo />
+              </Auth>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <Auth>
+                <Profile />
+              </Auth>
+            }
+          />
           <Route path="/summary-table" element={<SummaryTable />} />
+          <Route path="/forget-password" element={<ForgetPassword />} />
         </Routes>
       </AppContext.Provider>
     </ThemeProvider>

@@ -17,6 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import SnackBar from "./SnackBar";
+import { clearStorage, getStatus } from "../middleware/Auth";
 
 export default function ProjectInfoLecturer() {
   const [data, setData] = useState([]);
@@ -25,7 +26,6 @@ export default function ProjectInfoLecturer() {
   const [filter, setFilter] = useState("relevance");
   const path = localStorage.getItem("projectPath") || "project";
   const token = localStorage.getItem("token");
-  const { setIsLogged } = useContext(AppContext);
   const { toggle, semesterId } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -61,7 +61,6 @@ export default function ProjectInfoLecturer() {
       )
       .then((res) => {
         setLoading(false);
-        setIsLogged(true);
         if (filter == "relevance") {
           setArrId(res.data);
         }
@@ -113,6 +112,9 @@ export default function ProjectInfoLecturer() {
         }
       })
       .catch((err) => {
+        if(getStatus(err)=="401") {
+          clearStorage();
+        }
         setError(true);
         setLoading(false);
       });
@@ -208,7 +210,6 @@ export default function ProjectInfoLecturer() {
       })
       .then((res) => {
         setLoading(false);
-        setIsLogged(true);
         if (res.data) {
           setUploadData(
             preprocess(
@@ -226,6 +227,9 @@ export default function ProjectInfoLecturer() {
         }
       })
       .catch((err) => {
+        if(getStatus(err)=="401") {
+          clearStorage();
+        }
         setError(true);
         setLoading(false);
       });
@@ -245,13 +249,15 @@ export default function ProjectInfoLecturer() {
       })
       .then((res) => {
         setLoading(false);
-        setIsLogged(true);
         setGradingData(res.data);
         gradingTableRef.current.scrollIntoView({
           behavior: "smooth",
         });
       })
       .catch((err) => {
+        if(getStatus(err)=="401") {
+          clearStorage();
+        }
         setError(true);
         setLoading(false);
       });
@@ -275,11 +281,13 @@ export default function ProjectInfoLecturer() {
       })
       .then((res) => {
         setLoading(false);
-        setIsLogged(true);
         // alert("Upload Grading file success!");
         setUploadFileSuccess(true);
       })
       .catch((err) => {
+        if(getStatus(err)=="401") {
+          clearStorage();
+        }
         setError(true);
         setLoading(false);
       });

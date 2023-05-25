@@ -6,6 +6,7 @@ import { AppContext } from "../App";
 import axios from "axios";
 import { Stack, Typography } from "@mui/material";
 import CustomTable from "./CustomTable";
+import SnackBar from "./SnackBar";
 
 export default function DownloadFiles() {
   const [data, setData] = useState([]);

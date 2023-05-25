@@ -12,7 +12,6 @@ import NavBar from "./NavBar";
 import Footer from "./Footer";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import { AppContext } from "../App";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import PWTextField from "./PasswordTextField";
 
@@ -25,15 +24,9 @@ export default function ForgetPassword() {
   const [level, setLevel] = useState("info");
   const [mesg, setMesg] = useState("");
   const [open, setOpen] = useState(false);
-  const { isLogged, setIsLogged } = useContext(AppContext);
 
   let navigate = useNavigate();
 
-  useEffect(() => {
-    if (isLogged) {
-      navigate("/main");
-    }
-  }, []);
 
   const checkHint = () => {
     axios

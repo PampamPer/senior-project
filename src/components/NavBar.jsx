@@ -19,9 +19,11 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { AppContext } from "../App";
+import { clearStorage } from "../middleware/Auth";
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
+  const token = localStorage.getItem("token");
   const anchorRef = useRef(null);
 
   const handleToggle = () => {
@@ -60,8 +62,6 @@ export default function NavBar() {
     setToggle,
     semesterId,
     setSemesterId,
-    isLogged,
-    setIsLogged,
   } = useContext(AppContext);
 
   const handleOnChangeToggle = (event) => {
@@ -77,6 +77,12 @@ export default function NavBar() {
   };
 
   let navigate = useNavigate();
+
+  const signOut = () => {
+    handleClose;
+    navigate("/main");
+    clearStorage();
+  };
 
   return (
     <AppBar position="sticky">
@@ -113,7 +119,7 @@ export default function NavBar() {
             <Button variant="text" onClick={() => navigate("/main")}>
               หน้าแรก
             </Button>
-            {isLogged && (
+            {token && (
               <Button variant="text" onClick={() => navigate("/project-info")}>
                 ข้อมูลโครงงาน
               </Button>
@@ -125,12 +131,12 @@ export default function NavBar() {
               เอกสารสำหรับดาวน์โหลด
             </Button>
           </div>
-          {!isLogged && (
+          
+          {!token? (
             <Button variant="contained" onClick={() => navigate("/sign-in")}>
               เข้าสู่ระบบ
             </Button>
-          )}
-          {isLogged && (
+          ):(
             <div>
               <Button
                 ref={anchorRef}
@@ -180,12 +186,7 @@ export default function NavBar() {
                             ข้อมูลผู้ใช้งาน
                           </MenuItem>
                           <MenuItem
-                            onClick={() => {
-                              handleClose;
-                              setIsLogged(false);
-                              navigate("/main");
-                              localStorage.setItem("token", "");
-                            }}
+                            onClick={signOut}
                             autoFocus={true}
                           >
                             ออกจากระบบ
