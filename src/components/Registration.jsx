@@ -15,68 +15,41 @@ import { useNavigate } from "react-router-dom";
 import { AppContext } from "../App";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import PWTextField from "./PasswordTextField";
+import { toast } from "react-hot-toast";
 
-export default function ForgetPassword() {
+export default function Registration() {
   const [email, setEmail] = useState("");
-  const [hint, setHint] = useState("");
-  const [cookies, setCookie] = useCookies(["toggle", "role", "token"]);
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const [level, setLevel] = useState("info");
-  const [mesg, setMesg] = useState("");
-  const [open, setOpen] = useState(false);
 
   let navigate = useNavigate();
 
-  const checkHint = () => {
-    axios
-      .get("/PersonalInfo/getHint")
-      .then((res) => {
-        setLoading(false);
-        setHint(res.data);
-        if (res.data == "") {
-          forgetPW();
-        }
-      })
-      .catch((err) => {
-        setError(true);
-        setLoading(false);
-      });
+  const handleOnChange = (event) => {
+    let email = event.target.value;
+    setEmail(email);
+    localStorage.setItem("email", email);
   };
 
-  const forgetPW = () => {
-    axios
-      .put("/PersonalInfo/forgetPassword", { email: email })
-      .then((response) => {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("role", response.data.role);
-        localStorage.setItem(
-          "username",
-          response.data.firstname + " " + response.data.lastname
-        );
-        navigate("/sign-in");
-      })
-      .catch((error) => {
-        if (error.code === "ECONNABORTED") {
-          setLevel("error");
-          setMesg("Timeout");
-          setOpen(true);
-        } else {
-          setLevel("warning");
-          setMesg(error.response.status + " " + error.response.statusText);
-          setOpen(true);
-        }
-      });
+  const handleSubmit = () => {
+    localStorage.setItem("previousPage", "registration");
+    navigate("/verify-member");
+    // axios
+    //   .post("/NewMember/sendmail", { studentEmail: email })
+    //   .then((res) => {
+    //     localStorage.setItem("previousPage", "registration");
+    //     navigate("/verify-member");
+    //   })
+    //   .catch((err) => {
+    //     toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
+    //   });
   };
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      forgetPW();
+      handleSubmit();
     }
   };
 
   return (
-    <Stack gap={120} className="content">
+    <Stack gap={96} className="content">
       <NavBar />
       {/* {toggle} */}
 
@@ -87,12 +60,12 @@ export default function ForgetPassword() {
         >
           <Stack maxWidth="360px" m="auto" spacing={16}>
             <Stack alignItems="center">
-              <Typography variant="h3">เข้าสู่ระบบครั้งแรก</Typography>
+              <Typography variant="h3">สมัครสมาชิก</Typography>
             </Stack>
             <TextField
               variant="outlined"
-              placeholder="อีเมลที่ใช้ลงทะเบียน"
-              label="อีเมลที่ใช้ลงทะเบียน"
+              placeholder="อีเมลจุฬาลงกรณ์มหาวิทยาลัย"
+              label="อีเมลจุฬาลงกรณ์มหาวิทยาลัย"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -100,20 +73,15 @@ export default function ForgetPassword() {
                   </InputAdornment>
                 ),
               }}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={handleOnChange}
               onKeyPress={handleKeyPress}
             />
-            <Button variant="contained" onClick={forgetPW}>
+            <Button variant="contained" onClick={handleSubmit}>
               ดำเนินการต่อ
             </Button>
-            <Snackbar
-              open={open}
-              autoHideDuration={5000}
-              onClose={() => setOpen(false)}
-              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            >
-              <Alert severity={level}>{mesg}</Alert>
-            </Snackbar>
+            <Button variant="text" onClick={() => navigate("/sign-in")}>
+              มีบัญชีแล้วใช่หรือไม่
+            </Button>
           </Stack>
         </Paper>
       </Stack>

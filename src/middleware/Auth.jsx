@@ -5,6 +5,9 @@ export function clearStorage() {
   localStorage.removeItem("token");
   localStorage.removeItem("username");
   localStorage.removeItem("role");
+  localStorage.removeItem("previousPage")
+  localStorage.removeItem("studentId")
+  localStorage.removeItem("email")
 }
 
 export function getStatus(error) {

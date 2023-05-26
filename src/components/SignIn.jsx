@@ -7,23 +7,14 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import LockIcon from "@mui/icons-material/Lock";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
-import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import { AppContext } from "../App";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import PWTextField from "./PasswordTextField";
 
 function App() {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
-  const [cookies, setCookie] = useCookies(["toggle", "role", "token"]);
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
   const [level, setLevel] = useState("info");
   const [mesg, setMesg] = useState("");
   const [open, setOpen] = useState(false);
@@ -62,7 +53,7 @@ function App() {
   };
 
   return (
-    <Stack gap={120} className="content">
+    <Stack gap={96} className="content">
       <NavBar />
       {/* {toggle} */}
 
@@ -97,12 +88,18 @@ function App() {
               handleKeyPress={handleKeyPress}
             />
             <Stack alignItems="end">
-              <Button variant="text" onClick={()=>navigate("/forget-password")}>
+              <Button
+                variant="text"
+                onClick={() => navigate("/forget-password")}
+              >
                 ลืมรหัสผ่าน?
               </Button>
             </Stack>
             <Button variant="contained" onClick={Login}>
               login
+            </Button>
+            <Button variant="text" onClick={() => navigate("/registration")}>
+              ยังไม่มีบัญชีใช่หรือไม่
             </Button>
             <Snackbar
               open={open}

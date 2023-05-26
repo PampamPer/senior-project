@@ -260,7 +260,7 @@ export default function Profile() {
   // }
 
   return (
-    <Stack className="content" gap={60}>
+    <Stack className="content" gap={96}>
       <NavBar />
       <SnackBar
         open={error}

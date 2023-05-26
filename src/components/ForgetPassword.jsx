@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import "../App.css";
 import axios from "axios";
-import { Typography, Paper, Snackbar, Stack } from "@mui/material";
-import Alert from "@mui/material/Alert";
+import { Typography, Paper, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -10,64 +9,60 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LockIcon from "@mui/icons-material/Lock";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
-import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import PWTextField from "./PasswordTextField";
+import { toast } from "react-hot-toast";
 
 export default function ForgetPassword() {
   const [email, setEmail] = useState("");
   const [hint, setHint] = useState("");
-  const [cookies, setCookie] = useCookies(["toggle", "role", "token"]);
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const [level, setLevel] = useState("info");
-  const [mesg, setMesg] = useState("");
-  const [open, setOpen] = useState(false);
+  const [keyword, setKeyword] = useState("");
 
   let navigate = useNavigate();
 
+  const handleOnChange = (event) => {
+    let email = event.target.value;
+    setEmail(email);
+    localStorage.setItem("email", email);
+  };
+
+  const handleClick = () => {
+    localStorage.setItem("previousPage", "forget-password");
+    navigate("/verify-member");
+  };
 
   const checkHint = () => {
-    axios
-      .get("/PersonalInfo/getHint")
-      .then((res) => {
-        setLoading(false);
-        setHint(res.data);
-        console.log(res.data)
-        // if (res.data == "") {
-        //   forgetPW();
-        // }
-      })
-      .catch((err) => {
-        setError(true);
-        setLoading(false);
-      });
+    if (email == "" || keyword == "") {
+      toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+    } else {
+      axios
+        .post("/PersonalInfo/getHint", { email: email, keyword: keyword })
+        .then((res) => {
+          let hint = res.data.hint;
+          if (hint == "" || hint == null) {
+            forgetPW();
+          } else {
+            setHint(hint);
+            toast.error("คีย์เวิร์ดไม่ถูกต้อง กรุณาลองใหม่");
+          }
+        })
+        .catch((err) => {
+          toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
+        });
+    }
   };
 
   const forgetPW = () => {
-    axios
-      .put("/PersonalInfo/forgetPassword", { email: email })
-      .then((response) => {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("role", response.data.role);
-        localStorage.setItem(
-          "username",
-          response.data.firstname + " " + response.data.lastname
-        );
+    toast.promise(axios.put("/PersonalInfo/forgetPassword", { email: email }), {
+      loading: "กำลังดำเนินการ...",
+      success: () => {
+        localStorage.setItem("previousPage", "forget-password");
         navigate("/verify-member");
-      })
-      .catch((error) => {
-        if (error.code === "ECONNABORTED") {
-          setLevel("error");
-          setMesg("Timeout");
-          setOpen(true);
-        } else {
-          setLevel("warning");
-          setMesg(error.response.status + " " + error.response.statusText);
-          setOpen(true);
-        }
-      });
+        return "ส่งรหัสผ่านไปยังอีเมลสำเร็จ";
+      },
+      error: () => {
+        return "เกิดข้อผิดพลาด กรุณาลองใหม่";
+      },
+    });
   };
 
   const handleKeyPress = (event) => {
@@ -75,9 +70,14 @@ export default function ForgetPassword() {
       checkHint();
     }
   };
+  
+
+  // if (loading) {
+  //   return <p>loading...</p>;
+  // }
 
   return (
-    <Stack gap={120} className="content">
+    <Stack gap={96} className="content">
       <NavBar />
       {/* {toggle} */}
 
@@ -101,7 +101,7 @@ export default function ForgetPassword() {
                   </InputAdornment>
                 ),
               }}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(event) => handleOnChange(event)}
               onKeyPress={handleKeyPress}
             />
             <TextField
@@ -115,7 +115,7 @@ export default function ForgetPassword() {
                   </InputAdornment>
                 ),
               }}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(event) => setKeyword(event.target.value)}
               onKeyPress={handleKeyPress}
             />
 
@@ -129,14 +129,6 @@ export default function ForgetPassword() {
                 </Typography>
               )}
             </Stack>
-            <Snackbar
-              open={open}
-              autoHideDuration={5000}
-              onClose={() => setOpen(false)}
-              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            >
-              <Alert severity={level}>{mesg}</Alert>
-            </Snackbar>
           </Stack>
         </Paper>
       </Stack>

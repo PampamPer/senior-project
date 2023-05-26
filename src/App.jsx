@@ -12,6 +12,12 @@ import Profile from "./components/Profile";
 import SummaryTable from "./components/SummaryTable";
 import Auth from "./middleware/Auth";
 import ForgetPassword from "./components/ForgetPassword";
+import VerifyMember from "./components/VerifyMember";
+import Registration from "./components/Registration";
+import { Toaster } from "react-hot-toast";
+import PersonalInfo from "./components/PersonalInfo";
+import CreateProject from "./components/CreateProject";
+import CreateProject2 from "./components/CreateProject2";
 
 export const AppContext = createContext();
 
@@ -25,6 +31,8 @@ function App() {
   const [semesterId, setSemesterId] = useState(
     localStorage.getItem("semesterId") || 2
   );
+
+  localStorage.setItem("previousPage", "");
 
   const theme = createTheme({
     components: {
@@ -167,6 +175,7 @@ function App() {
           setSemesterId,
         }}
       >
+        <Toaster position="bottom-center" reverseOrder={false}/>
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/main" element={<Main />} />
@@ -191,6 +200,12 @@ function App() {
           />
           <Route path="/summary-table" element={<SummaryTable />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/verify-member" element={<VerifyMember />} />
+          <Route path="/registration" element={<Registration />} />
+          <Route path="/personal-info" element={<PersonalInfo />} />
+          <Route path="/create-project" element={<CreateProject />} />
+          <Route path="/create-project2" element={<CreateProject2 />} />
+          <Route path="/verify-project" element={<VerifyProject />} />
         </Routes>
       </AppContext.Provider>
     </ThemeProvider>
