@@ -8,6 +8,8 @@ export function clearStorage() {
   localStorage.removeItem("previousPage")
   localStorage.removeItem("studentId")
   localStorage.removeItem("email")
+  localStorage.removeItem("advisor1")
+  localStorage.removeItem("advisor2")
 }
 
 export function getStatus(error) {

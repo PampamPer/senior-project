@@ -9,16 +9,11 @@ import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../App";
 import { toast } from "react-hot-toast";
+import CreateProject2 from "./CreateProject2";
 
 export default function CreateProject() {
-  const studentId = localStorage.getItem("studentId");
   const email = localStorage.getItem("email");
-  const username = localStorage.getItem("username");
   const hasProject = localStorage.getItem("advisor1") != null;
-  const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
-  const [hint, setHint] = useState("");
-  const [keyword, setKeyword] = useState("");
   const { semesterId } = useContext(AppContext);
 
   const [projectNameEn, setProjectNameEn] = useState("");
@@ -37,146 +32,138 @@ export default function CreateProject() {
     setStudent1(data.student1);
     setStudent2(data.student2);
     setStudent3(data.student3);
-  }
-
+  };
 
   let navigate = useNavigate();
 
-  const handleSubmit = () => {
-    if (address == "" || phone == "" || keyword == "" || hint == "") {
-      toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
-    } else {
-      navigate("/create-project");
-      //   axios
-      //     .post(`/NewMember/addPersonalInfo?semesterid=${semesterId}`, {
-      //       email: email,
-      //       address: address,
-      //       keyword: keyword,
-      //       hint: hint,
-      //       phone: phone,
-      //     })
-      //     .then((res) => {
-      //       navigate("/create-project");
-      //     })
-      //     .catch((err) => {
-      //       toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
-      //     });
-    }
-  };
-
-  if(hasProject) {
+  if (hasProject) {
+    console.log(hasProject)
     axios
       .post(`/NewMember/newProject?semesterid=${semesterId}`, {
         studentEmail: email,
       })
       .then((res) => {
-        setDataIfHasProject(res.data)
+        setDataIfHasProject(res.data);
       })
       .catch((err) => {
         toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
       });
-  } else {
-    navigate("/create-project2")
   }
 
   return (
     <Stack gap={96} className="content">
       <NavBar />
-      {/* {toggle} */}
+      {hasProject ? (
+        <Stack alignItems="center">
+          <Paper
+            elevation={4}
+            sx={{ opacity: 0.75, p: 48, width: 500, borderRadius: 3 }}
+          >
+            <Stack maxWidth="360px" m="auto" spacing={24}>
+              <Stack alignItems="center">
+                <Typography variant="h3">ข้อมูลโครงงาน</Typography>
+              </Stack>
+              <Stack spacing={16}>
+                <Typography variant="subtitle2">ชื่อโครงงาน</Typography>
+                <TextField
+                  multiline
+                  label="ชื่อโครงงานภาษาอังกฤษ"
+                  value={projectNameEn}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+                <TextField
+                  multiline
+                  label="ชื่อโครงงานภาษาไทย"
+                  value={projectNameTh}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Stack>
+              <Stack spacing={16}>
+                <Typography variant="subtitle2">
+                  อาจารย์ที่ปรึกษาโครงงาน
+                </Typography>
+                <TextField
+                  label="อาจารย์ที่ปรึกษา 1"
+                  value={advisor1}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+                <div>
+                  {advisor2 != null || (
+                    <TextField
+                      label="อาจารย์ที่ปรึกษา 2"
+                      value={advisor2}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  )}
+                </div>
+              </Stack>
+              <Stack spacing={16}>
+                <Typography variant="subtitle2">สมาชิกโครงงาน</Typography>
+                <TextField
+                  label="สมาชิกโครงงาน 1"
+                  value={student1}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+                <div>
+                  {student2 != null || (
+                    <TextField
+                      label="สมาชิกโครงงาน 2"
+                      value={student2}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  )}
+                </div>
+                <div>
+                  {student3 != null || (
+                    <TextField
+                      label="สมาชิกโครงงาน 3"
+                      value={student3}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  )}
+                </div>
+              </Stack>
 
-      <Stack alignItems="center">
-        <Paper
-          elevation={4}
-          sx={{ opacity: 0.75, p: 48, width: 500, borderRadius: 3 }}
-        >
-          <Stack maxWidth="360px" m="auto" spacing={24}>
-            <Stack alignItems="center">
-              <Typography variant="h3">ข้อมูลโครงงาน</Typography>
-            </Stack>
-            <Stack spacing={16}>
+              {/* <Stack spacing={16}>
               <Typography variant="subtitle2">ชื่อโครงงาน</Typography>
-              <TextField
-                multiline
-                label="ชื่อโครงงานภาษาอังกฤษ"
-                value={projectNameEn}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-              <TextField
-                multiline
-                label="ชื่อโครงงานภาษาไทย"
-                value={projectNameTh}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
+              <TextField value={projectNameEn} InputProps={{readOnly:true}}/>
+            </Stack> */}
+              <Stack direction="row" justifyContent="space-between">
+                <Button
+                  variant="outlined"
+                  sx={{ width: 85 }}
+                  onClick={() => navigate("/personal-info")}
+                >
+                  ย้อนกลับ
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{ width: 85 }}
+                  onClick={() => navigate("/sign-in")}
+                >
+                  ยืนยัน
+                </Button>
+              </Stack>
             </Stack>
-            <Stack spacing={16}>
-              <Typography variant="subtitle2">
-                อาจารย์ที่ปรึกษาโครงงาน
-              </Typography>
-              <TextField
-                value={advisor1}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-              {advisor2 != null || (
-                <TextField
-                  value={advisor2}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                />
-              )}
-            </Stack>
-            <Stack spacing={16}>
-              <Typography variant="subtitle2">
-                  สมาชิกโครงงาน
-              </Typography>
-              <TextField
-                value={student1}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-              {student2 != null || (
-                <TextField
-                  value={student2}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                />
-              )}
-              {student3 != null || (
-                <TextField
-                  value={student3}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                />
-              )}
-            </Stack>
-            <Stack direction="row" justifyContent="space-between">
-              <Button
-                variant="outlined"
-                sx={{ width: 85 }}
-                onClick={()=>navigate("/personal-info")}
-              >
-                ย้อนกลับ
-              </Button>
-              <Button
-                variant="contained"
-                sx={{ width: 85 }}
-                onClick={handleSubmit}
-              >
-                ยืนยัน
-              </Button>
-            </Stack>
-          </Stack>
-        </Paper>
-      </Stack>
+          </Paper>
+        </Stack>
+      ) : (
+        <CreateProject2 />
+      )}
       <Footer />
     </Stack>
   );

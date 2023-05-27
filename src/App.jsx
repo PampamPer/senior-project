@@ -17,7 +17,7 @@ import Registration from "./components/Registration";
 import { Toaster } from "react-hot-toast";
 import PersonalInfo from "./components/PersonalInfo";
 import CreateProject from "./components/CreateProject";
-import CreateProject2 from "./components/CreateProject2";
+import VerifyProject from "./components/VerifyProject";
 
 export const AppContext = createContext();
 
@@ -175,7 +175,7 @@ function App() {
           setSemesterId,
         }}
       >
-        <Toaster position="bottom-center" reverseOrder={false}/>
+        <Toaster position="top-center" reverseOrder={false}/>
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/main" element={<Main />} />
@@ -204,7 +204,6 @@ function App() {
           <Route path="/registration" element={<Registration />} />
           <Route path="/personal-info" element={<PersonalInfo />} />
           <Route path="/create-project" element={<CreateProject />} />
-          <Route path="/create-project2" element={<CreateProject2 />} />
           <Route path="/verify-project" element={<VerifyProject />} />
         </Routes>
       </AppContext.Provider>
