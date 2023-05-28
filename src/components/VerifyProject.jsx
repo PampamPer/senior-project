@@ -49,21 +49,15 @@ export default function VerifyProject() {
   //   // );
   // };
 
-  const resendEmail = () => {
-    toast.promise(
-      axios.put("/NewMember/sendMailAgain", { studentEmail: email }),
-      {
-        loading: "กำลังดำเนินการ...",
-        success: () => {
-          setTimer(60000);
-          return "ส่งรหัสผ่านใหม่ไปยังอีเมลสำเร็จ";
-        },
-        error: () => {
-          return "ไม่สามารถขอรหัสผ่านใหม่ได้";
-        },
-      }
-    );
-  };
+  const handleClick = () => {
+    localStorage.removeItem("address")
+    localStorage.removeItem("keyword")
+    localStorage.removeItem("hint")
+    localStorage.removeItem("phone")
+
+    navigate("/main")
+  }
+
 
   return (
     <Stack gap={96} className="content">
@@ -107,7 +101,7 @@ export default function VerifyProject() {
               <Button
                 variant="contained"
                 sx={{ width: 85 }}
-                onClick={()=>navigate("/main")}
+                onClick={handleClick}
               >
                 ยืนยัน
               </Button>

@@ -21,12 +21,31 @@ export default function PersonalInfo() {
   const [keyword, setKeyword] = useState("");
   const { semesterId } = useContext(AppContext);
   const regProcess = localStorage.getItem("regProcess")
+  let navigate = useNavigate();  
 
-  let navigate = useNavigate();
+  const storeData = () => {
+    localStorage.setItem("address", address)
+    localStorage.setItem("keyword", keyword)
+    localStorage.setItem("hint", hint)
+    localStorage.setItem("phone", phone)
+  }
 
   if(!regProcess){
     clearStorage()
+  } else if (localStorage.getItem("address")) {
+    let address = localStorage.getItem("address")
+    let keyword = localStorage.getItem("keyword")
+    let hint = localStorage.getItem("hint")
+    let phone = localStorage.getItem("phone")
+
+    setAddress(address);
+    setKeyword(keyword);
+    setHint(hint);
+    setPhone(phone);
   }
+
+  
+
 
   const handleSubmit = () => {
     if (address == "" || phone == "" || keyword == "" || hint == "") {
