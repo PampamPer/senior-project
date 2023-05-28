@@ -11,6 +11,8 @@ import NavBar from "./NavBar";
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
 import PWTextField from "./PasswordTextField";
+import { toast } from "react-hot-toast";
+import { getStatus } from "../middleware/Auth";
 
 function App() {
   const [userId, setUserId] = useState("");
@@ -22,28 +24,35 @@ function App() {
   let navigate = useNavigate();
 
   const Login = () => {
-    axios
-      .post("/tokens", { userId: userId, password: password })
-      .then((response) => {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("role", response.data.role);
-        localStorage.setItem(
-          "username",
-          response.data.firstname + " " + response.data.lastname
-        );
-        navigate("/main");
-      })
-      .catch((error) => {
-        if (error.code === "ECONNABORTED") {
-          setLevel("error");
-          setMesg("Timeout");
-          setOpen(true);
-        } else {
-          setLevel("warning");
-          setMesg(error.response.status + " " + error.response.statusText);
-          setOpen(true);
+    if (userId == "" || password == "") {
+      toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+    } else {
+      toast.promise(
+        axios.post("/tokens", { userId: userId, password: password }),
+        {
+          loading: "กำลังเข้าสู่ระบบ...",
+          success: (response) => {
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("role", response.data.role);
+            localStorage.setItem(
+              "username",
+              response.data.firstname + " " + response.data.lastname
+            );
+            navigate("/main");
+            return "เข้าสู่ระบบสำเร็จ";
+          },
+          error: (err) => {
+            if (getStatus(err) == "401") {
+              return "อีเมลหรือรหัสผ่านไม่ถูกต้อง";
+            } else if (getStatus(err) == "403") {
+              return "ไม่พบบัญชีนี้ในระบบ";
+            }else {
+              return "เกิดข้อผิดพลาด กรุณาลองใหม่";
+            }
+          },
         }
-      });
+      );
+    }
   };
 
   const handleKeyPress = (event) => {

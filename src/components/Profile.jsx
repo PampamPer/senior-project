@@ -15,8 +15,8 @@ import {
 import { EditRounded, PhotoCamera } from "@mui/icons-material";
 import CustomizedModal from "./Modal";
 import { AppContext } from "../App";
-import SnackBar from "./SnackBar";
 import { clearStorage, getStatus } from "../middleware/Auth";
+import { toast } from "react-hot-toast";
 
 export default function Profile() {
   const [data, setData] = useState();
@@ -24,7 +24,6 @@ export default function Profile() {
   const token = localStorage.getItem("token");
   const formData = new FormData();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const [openEditPW, setOpenEditPW] = useState(false);
   const [openEditPhoneNO, setOpenEditPhoneNO] = useState(false);
   const [openEditAddress, setOpenEditAddress] = useState(false);
@@ -34,14 +33,6 @@ export default function Profile() {
   const [phoneNo, setPhoneNo] = useState("");
   const [address, setAddress] = useState("");
   const [picture, setPicture] = useState("");
-  const [editPWSuccess, setEditPWSuccess] = useState(false);
-  const [editPWFailed, setEditPWFailed] = useState(false);
-  const [editPhoneNOSuccess, setEditPhoneNOSuccess] = useState(false);
-  const [editPhoneNOFailed, setEditPhoneNOFailed] = useState(false);
-  const [editAddressSuccess, setEditAddressSuccess] = useState(false);
-  const [editAddressFailed, setEditAddressFailed] = useState(false);
-  const [editProfileSuccess, setEditProfileSuccess] = useState(false);
-  const [editProfileFailed, setEditProfileFailed] = useState(false);
 
   const [showedPhoneNo, setShowedPhoneNo] = useState();
   const [showedAddress, setShowedAddress] = useState();
@@ -54,26 +45,6 @@ export default function Profile() {
     setOldPassword(data.password);
     setNewPassword(data.password);
     setAddress(data.address);
-  };
-
-  const handleErrorClose = () => {
-    setError(false);
-  }
-
-  const handleCloseSuccessSnackBar = () => {
-    setEditAddressSuccess(false);
-    setEditPWSuccess(false);
-    setEditPhoneNOSuccess(false);
-    setEditProfileSuccess(false);
-
-    window.location.reload();
-  };
-
-  const handleCloseFailedSnackBar = () => {
-    setEditAddressFailed(false);
-    setEditPWFailed(false);
-    setEditPhoneNOFailed(false);
-    setEditProfileFailed(false);
   };
 
   const setDefault = (resData) => {
@@ -108,53 +79,86 @@ export default function Profile() {
         }
       })
       .catch((err) => {
-        if(getStatus(err)=="401") {
+        if (getStatus(err) == "401") {
           clearStorage();
+        } else {
+          toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
+          setLoading(false);
         }
-        setError(true);
-        setLoading(false);
       });
   }, []);
 
+  const hasLowerCaseLetters = (inputValue) => {
+    const regex = /[a-z]/;
+    return regex.test(inputValue);
+  };
+
+  const hasUpperCaseLetters = (inputValue) => {
+    const regex = /[A-Z]/;
+    return regex.test(inputValue);
+  };
+
+  const hasNumericLetters = (inputValue) => {
+    const regex = /[0-9]/;
+    return regex.test(inputValue);
+  };
+
+  const hasSpecialCharacters = (inputValue) => {
+    const regex = /[-+_!@#$%^&*., ?]/;
+    return regex.test(inputValue);
+  };
+
   const editPassword = () => {
     setOldPassword(newPassword);
-    axios
-      .put(
-        `/personalinfo/${role}/editpassword`,
+    if (newPassword.length < 8) {
+      toast.error("ต้องมีความยาวตั้งแต่ 8 ตัวอักษรขึ้นไป");
+    } else if (!hasLowerCaseLetters(newPassword) || !hasUpperCaseLetters(newPassword) || !hasNumericLetters(newPassword)) {
+      toast.error("ต้องประกอบด้วย a-z. A-Z และ 0-9");
+    }
+    else if (!hasSpecialCharacters(newPassword)) {
+      toast.error("ต้องประกอบด้วยตัวอักษรพิเศษ");
+    }
+    else {
+      toast.promise(
+        axios.put(
+          `/personalinfo/${role}/editpassword`,
+          {
+            oldPassword: oldPassword,
+            newPassword: newPassword,
+            confirmNewPassword: renewPassword,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              timeout: 5 * 1000,
+            },
+          }
+        ),
         {
-          oldPassword: oldPassword,
-          newPassword: newPassword,
-          confirmNewPassword: renewPassword,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-            timeout: 5 * 1000,
+          loading: "กำลังดำเนินการ...",
+          success: (res) => {
+            setOpenEditPW(false);
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+            return "แก้ไขรหัสผ่านสำเร็จ";
+          },
+          error: (err) => {
+            if (getStatus(err) == "401") {
+              clearStorage();
+            } else {
+              return "ไม่สามารถแก้ไขรหัสผ่านได้";
+            }
           },
         }
-      )
-      .then((res) => {
-        setLoading(false);
-        setOpenEditPW(false);
-        setEditPWSuccess(true);
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      })
-      .catch((err) => {
-        if(getStatus(err)=="401") {
-          clearStorage();
-        }
-        setLoading(false);
-        setEditPWFailed(true);
-      });
+      );
+    }
   };
 
   const editPhoneNumber = () => {
     setShowedPhoneNo(phoneNo);
-    axios
-      .put(
+    toast.promise(
+      axios.put(
         `/personalinfo/${role}/editphone`,
         {
           phone: phoneNo,
@@ -165,29 +169,31 @@ export default function Profile() {
             timeout: 5 * 1000,
           },
         }
-      )
-      .then((res) => {
-        setLoading(false);
-        setOpenEditPhoneNO(false);
-        setEditPhoneNOSuccess(true);
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      })
-      .catch((err) => {
-        if(getStatus(err)=="401") {
-          clearStorage();
-        }
-        setLoading(false);
-        setEditPhoneNOFailed(true);
-      });
+      ),
+      {
+        loading: "กำลังดำเนินการ...",
+        success: (res) => {
+          setOpenEditPhoneNO(false);
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+          return "แก้ไขเบอร์โทรศัพท์สำเร็จ";
+        },
+        error: (err) => {
+          if (getStatus(err) == "401") {
+            clearStorage();
+          } else {
+            return "ไม่สามารถแก้ไขเบอร์โทรศัพท์ได้";
+          }
+        },
+      }
+    );
   };
 
   const editAddress = () => {
     setShowedAddress(address);
-    axios
-      .put(
+    toast.promise(
+      axios.put(
         `/personalinfo/${role}/editaddress`,
         {
           address: address,
@@ -198,23 +204,25 @@ export default function Profile() {
             timeout: 5 * 1000,
           },
         }
-      )
-      .then((res) => {
-        setLoading(false);
-        setOpenEditAddress(false);
-        setEditAddressSuccess(true);
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      })
-      .catch((err) => {
-        if(getStatus(err)=="401") {
-          clearStorage();
-        }
-        setLoading(false);
-        setEditAddressFailed(true);
-      });
+      ),
+      {
+        loading: "กำลังดำเนินการ...",
+        success: (res) => {
+          setOpenEditAddress(false);
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+          return "แก้ไขที่อยู่สำเร็จ";
+        },
+        error: (err) => {
+          if (getStatus(err) == "401") {
+            clearStorage();
+          } else {
+            return "ไม่สามารถแก้ไขที่อยู่ได้";
+          }
+        },
+      }
+    );
   };
 
   const uploadPicture = (event) => {
@@ -225,30 +233,33 @@ export default function Profile() {
   };
 
   const editPicture = () => {
-    axios
-      .put(`/personalinfo/${role}/editpicture`, formData, {
+    toast.promise(
+      axios.put(`/personalinfo/${role}/editpicture`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: "Bearer " + token,
           timeout: 5 * 1000,
         },
-      })
-      .then((res) => {
-        setLoading(false);
-        setOpenEditPW(false);
-        setEditProfileSuccess(true);
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      })
-      .catch((err) => {
-        if(getStatus(err)=="401") {
-          clearStorage();
-        }
-        setLoading(false);
-        setEditProfileFailed(true);
-      });
+      }),
+      {
+        loading: "กำลังดำเนินการ...",
+        success: (res) => {
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+          return "แก้ไขรูปโปรไฟล์สำเร็จ";
+        },
+        error: (err) => {
+          if (getStatus(err) == "401") {
+            clearStorage();
+          } else if (getStatus(err) == "413") {
+            return "ขนาดไฟล์ต้องมีขนาดไม่เกิน 10 mb";
+          } else {
+            return "ไม่สามารถแก้ไขรูปโปรไฟล์ได้";
+          }
+        },
+      }
+    );
   };
 
   if (loading) {
@@ -262,12 +273,6 @@ export default function Profile() {
   return (
     <Stack className="content" gap={96}>
       <NavBar />
-      <SnackBar
-        open={error}
-        message="เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
-        severity="error"
-        handleClose={handleErrorClose}
-      />
       <Stack alignItems="center">
         <Paper
           elevation={4}
@@ -438,40 +443,6 @@ export default function Profile() {
                 setOldPassword=""
                 setNewPassword=""
                 setEditOnClick={editAddress}
-              />
-
-              {/* SnackBar success */}
-              <SnackBar
-                open={editPWSuccess}
-                message="แก้ไขรหัสผ่านสำเร็จ"
-                severity="success"
-                handleClose={handleCloseSuccessSnackBar}
-              />
-              <SnackBar
-                open={editPhoneNOSuccess}
-                message="แก้ไขเบอร์โทรศัพท์สำเร็จ"
-                severity="success"
-                handleClose={handleCloseSuccessSnackBar}
-              />
-              <SnackBar
-                open={editAddressSuccess}
-                message="แก้ไขที่อยู่สำเร็จ"
-                severity="success"
-                handleClose={handleCloseSuccessSnackBar}
-              />
-              <SnackBar
-                open={editProfileSuccess}
-                message="แก้ไขรูปโปรไฟล์สำเร็จ"
-                severity="success"
-                handleClose={handleCloseSuccessSnackBar}
-              />
-
-              {/* SnackBar Failed */}
-              <SnackBar
-                open={editPWFailed | editAddressFailed | editPhoneNOFailed | editProfileFailed}
-                message="เกิดข้อผิดพลาด กรุณาลองใหม่"
-                severity="error"
-                handleClose={handleCloseFailedSnackBar}
               />
             </Stack>
           </Stack>

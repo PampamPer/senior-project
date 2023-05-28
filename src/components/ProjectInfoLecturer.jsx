@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import SnackBar from "./SnackBar";
 import { clearStorage, getStatus } from "../middleware/Auth";
+import { toast } from "react-hot-toast";
 
 export default function ProjectInfoLecturer() {
   const [data, setData] = useState([]);
@@ -209,7 +210,6 @@ export default function ProjectInfoLecturer() {
         },
       })
       .then((res) => {
-        setLoading(false);
         if (res.data) {
           setUploadData(
             preprocess(
@@ -230,8 +230,7 @@ export default function ProjectInfoLecturer() {
         if(getStatus(err)=="401") {
           clearStorage();
         }
-        setError(true);
-        setLoading(false);
+        toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่")
       });
   };
 
@@ -248,7 +247,6 @@ export default function ProjectInfoLecturer() {
         },
       })
       .then((res) => {
-        setLoading(false);
         setGradingData(res.data);
         gradingTableRef.current.scrollIntoView({
           behavior: "smooth",
@@ -258,8 +256,7 @@ export default function ProjectInfoLecturer() {
         if(getStatus(err)=="401") {
           clearStorage();
         }
-        setError(true);
-        setLoading(false);
+        toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่")
       });
   };
 
@@ -271,26 +268,54 @@ export default function ProjectInfoLecturer() {
   const submitGrading = () => {
     formData.append("file", selectFile);
     setOpenGradingUpload(false);
-    axios
-      .put(`/${path}Uploads?${path}Id=${gradingFileID}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: "Bearer " + token,
-          timeout: 5 * 1000,
-        },
-      })
-      .then((res) => {
-        setLoading(false);
-        // alert("Upload Grading file success!");
-        setUploadFileSuccess(true);
-      })
-      .catch((err) => {
-        if(getStatus(err)=="401") {
-          clearStorage();
+    // axios
+    //   .put(`/${path}Uploads?${path}Id=${gradingFileID}`, formData, {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //       Authorization: "Bearer " + token,
+    //       timeout: 5 * 1000,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     setLoading(false);
+    //     // alert("Upload Grading file success!");
+    //     setUploadFileSuccess(true);
+    //   })
+    //   .catch((err) => {
+    //     if(getStatus(err)=="401") {
+    //       clearStorage();
+    //     }
+    //     setError(true);
+    //     setLoading(false);
+    //   });
+
+      toast.promise(
+        axios.put(`/${path}Uploads?${path}Id=${gradingFileID}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: "Bearer " + token,
+            timeout: 5 * 1000,
+          },
+        }),
+        {
+          loading: "กำลังดำเนินการ...",
+          success: (res) => {
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+            return "อัปโหลดไฟล์สำเร็จ";
+          },
+          error: (err) => {
+            if (getStatus(err) == "401") {
+              clearStorage();
+            } else if (getStatus(err) == "413") {
+              return "ขนาดไฟล์ต้องมีขนาดไม่เกิน 10 mb";
+            } else {
+              return "เกิดข้อผิดพลาด กรุณาลองใหม่";
+            }
+          },
         }
-        setError(true);
-        setLoading(false);
-      });
+      );
   };
 
   return (

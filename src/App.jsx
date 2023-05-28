@@ -18,6 +18,7 @@ import { Toaster } from "react-hot-toast";
 import PersonalInfo from "./components/PersonalInfo";
 import CreateProject from "./components/CreateProject";
 import VerifyProject from "./components/VerifyProject";
+import RegProcess from "./middleware/RegProcess";
 
 export const AppContext = createContext();
 
@@ -175,7 +176,7 @@ function App() {
           setSemesterId,
         }}
       >
-        <Toaster position="top-center" reverseOrder={false}/>
+        <Toaster position="bottom-center" reverseOrder={false}/>
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/main" element={<Main />} />
@@ -202,9 +203,9 @@ function App() {
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/verify-member" element={<VerifyMember />} />
           <Route path="/registration" element={<Registration />} />
-          <Route path="/personal-info" element={<PersonalInfo />} />
-          <Route path="/create-project" element={<CreateProject />} />
-          <Route path="/verify-project" element={<VerifyProject />} />
+          <Route path="/personal-info" element={<RegProcess> <PersonalInfo /></RegProcess>} />
+          <Route path="/create-project" element={<RegProcess><CreateProject /></RegProcess>} />
+          <Route path="/verify-project" element={<RegProcess><VerifyProject /></RegProcess>} />
         </Routes>
       </AppContext.Provider>
     </ThemeProvider>

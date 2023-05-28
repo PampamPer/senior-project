@@ -9,6 +9,7 @@ import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../App";
 import { toast } from "react-hot-toast";
+import { clearStorage } from "../middleware/Auth";
 
 export default function PersonalInfo() {
   const studentId = localStorage.getItem("studentId");
@@ -19,28 +20,32 @@ export default function PersonalInfo() {
   const [hint, setHint] = useState("");
   const [keyword, setKeyword] = useState("");
   const { semesterId } = useContext(AppContext);
+  const regProcess = localStorage.getItem("regProcess")
 
   let navigate = useNavigate();
+
+  if(!regProcess){
+    clearStorage()
+  }
 
   const handleSubmit = () => {
     if (address == "" || phone == "" || keyword == "" || hint == "") {
       toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
     } else {
-      navigate("/create-project")
-    //   axios
-    //     .post(`/NewMember/addPersonalInfo?semesterid=${semesterId}`, {
-    //       email: email,
-    //       address: address,
-    //       keyword: keyword,
-    //       hint: hint,
-    //       phone: phone,
-    //     })
-    //     .then((res) => {
-    //       createNewProject();
-    //     })
-    //     .catch((err) => {
-    //       toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
-    //     });
+      axios
+        .put(`/NewMember/addPersonalInfo?semesterid=${semesterId}`, {
+          email: email,
+          address: address,
+          keyword: keyword,
+          hint: hint,
+          phone: phone,
+        })
+        .then((res) => {
+          createNewProject();
+        })
+        .catch((err) => {
+          toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
+        });
     }
   };
 

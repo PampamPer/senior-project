@@ -6,7 +6,6 @@ import { AppContext } from "../App";
 import axios from "axios";
 import { Stack, Typography } from "@mui/material";
 import CustomTable from "./CustomTable";
-import SnackBar from "./SnackBar";
 
 export default function DownloadFiles() {
   const [data, setData] = useState([]);
@@ -121,12 +120,6 @@ export default function DownloadFiles() {
   return (
     <div>
       <NavBar />
-      <SnackBar
-        open={error}
-        message="เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
-        severity="error"
-        handleClose={handleClose}
-      />
       <Stack alignItems="center" sx={{ mt: 24 }}>
         <Typography variant="h4">
           ตารางสรุป

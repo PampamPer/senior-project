@@ -11,7 +11,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Footer from "./Footer";
 import NavBar from "./NavBar";
-import SnackBar from "./SnackBar";
 
 export default function FAQ() {
   const [data, setData] = useState([]);
@@ -58,12 +57,6 @@ export default function FAQ() {
           </ListItemButton>
         ))}
       </List> */}
-      <SnackBar
-        open={error}
-        message="เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
-        severity="error"
-        handleClose={handleClose}
-      />
       <Stack sx={{ mx: 32, mb:24}}>
         <Stack alignItems="center" sx={{my:24}}>
           <Typography variant="h4">

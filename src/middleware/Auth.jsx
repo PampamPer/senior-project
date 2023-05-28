@@ -10,6 +10,7 @@ export function clearStorage() {
   localStorage.removeItem("email")
   localStorage.removeItem("advisor1")
   localStorage.removeItem("advisor2")
+  localStorage.removeItem("regProcess")
 }
 
 export function getStatus(error) {

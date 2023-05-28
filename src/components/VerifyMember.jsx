@@ -13,6 +13,7 @@ import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import Countdown from "react-countdown";
+import { getStatus } from "../middleware/Auth";
 
 export default function VerifyMember() {
   const [password, setPassword] = useState("");
@@ -50,10 +51,59 @@ export default function VerifyMember() {
   };
 
   const handleSubmit = () => {
-    localStorage.setItem("studentId", "6234471523");
-    localStorage.setItem("username", "อรุษา ธนโกไสย");
-    localStorage.removeItem("previousPage");
-    navigate(`/${nextPage}`);
+    if (previousPage == "forget-password") {
+      toast.promise(
+        axios.post("/tokens", { userId: email, password: password }),
+        {
+          loading: "กำลังดำเนินการ...",
+          success: (response) => {
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("role", response.data.role);
+            localStorage.setItem(
+              "username",
+              response.data.firstname + " " + response.data.lastname
+            );
+            navigate(`/${nextPage}`);
+            localStorage.removeItem("previousPage");
+            return "เปลี่ยนรหัสผ่านสำเร็จ";
+          },
+          error: (err) => {
+            if (getStatus(err) == "401") {
+              return "รหัสผ่านไม่ถูกต้อง";
+            } else {
+              return "เกิดข้อผิดพลาด กรุณาลองใหม่";
+            }
+          },
+        }
+      );
+    } else if (previousPage == "registration") {
+      toast.promise(
+        axios.post("/tokens", { userId: email, password: password }),
+        {
+          loading: "กำลังดำเนินการ...",
+          success: (response) => {
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("role", response.data.role);
+            localStorage.setItem("studentId", response.data.studentId);
+            localStorage.setItem(
+              "username",
+              response.data.firstname + " " + response.data.lastname
+            );
+            navigate(`/${nextPage}`);
+            localStorage.removeItem("previousPage");
+            return "สมัครสมาชิกสำเร็จ";
+          },
+          error: (err) => {
+            if (getStatus(err) == "401") {
+              console.log("got 401")
+              return "รหัสผ่านไม่ถูกต้อง";
+            } else {
+              return "เกิดข้อผิดพลาด กรุณาลองใหม่";
+            }
+          },
+        }
+      );
+    }
     // toast.promise(
     //   axios.post("/tokens", { userId: email, password: password }),
     //   {
@@ -65,9 +115,14 @@ export default function VerifyMember() {
     //         "username",
     //         response.data.firstname + " " + response.data.lastname
     //       );
-    //       localStorage.removeItem("previousPage");
     //       navigate(`/${nextPage}`);
-    //       return "เปลี่ยนรหัสผ่านสำเร็จ";
+    //       if (previousPage == "forget-password") {
+    //         localStorage.removeItem("previousPage");
+    //         return "เปลี่ยนรหัสผ่านสำเร็จ";
+    //       } else if (previousPage == "registration") {
+    //         localStorage.removeItem("previousPage");
+    //         return "สมัครสมาชิกสำเร็จ";
+    //       }
     //     },
     //     error: () => {
     //       return "เกิดข้อผิดพลาด กรุณาลองใหม่";
@@ -112,14 +167,16 @@ export default function VerifyMember() {
             </Stack>
             <Typography variant="body2">
               ทางระบบได้ส่งรหัสผ่าน 8 หลักไปยัง
-              <Typography variant="body2" color="#0099FF">
-                {email}
-              </Typography>
+            </Typography>
+            <Typography variant="body2" color="#0099FF">
+              {email}
+            </Typography>
+            <Typography variant="body2">
               กรุณากรอกรหัสผ่านดังกล่าว เพื่อยืนยันตัวตน
             </Typography>
-            <Stack alignItems="center">
+            {/* <Stack alignItems="center">
               <Countdown date={Date.now() + timer} renderer={renderer} />
-            </Stack>
+            </Stack> */}
 
             <Stack spacing={0}>
               <TextField

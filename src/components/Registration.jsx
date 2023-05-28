@@ -1,21 +1,16 @@
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import "../App.css";
 import axios from "axios";
 import { Typography, Paper, Snackbar, Stack } from "@mui/material";
-import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import LockIcon from "@mui/icons-material/Lock";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
-import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import { AppContext } from "../App";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import PWTextField from "./PasswordTextField";
 import { toast } from "react-hot-toast";
+import { getStatus } from "../middleware/Auth";
 
 export default function Registration() {
   const [email, setEmail] = useState("");
@@ -29,17 +24,24 @@ export default function Registration() {
   };
 
   const handleSubmit = () => {
-    localStorage.setItem("previousPage", "registration");
-    navigate("/verify-member");
-    // axios
-    //   .post("/NewMember/sendmail", { studentEmail: email })
-    //   .then((res) => {
-    //     localStorage.setItem("previousPage", "registration");
-    //     navigate("/verify-member");
-    //   })
-    //   .catch((err) => {
-    //     toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
-    //   });
+    if (email == "") {
+      toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+    } else {
+      axios
+        .post("/NewMember/sendmail", { studentEmail: email })
+        .then((res) => {
+          localStorage.setItem("previousPage", "registration");
+          localStorage.setItem("regProcess", true);
+          navigate("/verify-member");
+        })
+        .catch((err) => {
+          if (getStatus(err) == "403") {
+            toast.error("พบบัญชีนี้ในระบบ กรุณาลองบัญชีอื่น");
+          } else {
+            toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
+          }
+        });
+    }
   };
 
   const handleKeyPress = (event) => {

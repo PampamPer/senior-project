@@ -213,8 +213,10 @@ export default function NavBar() {
             <Select
               value={semesterId}
               onChange={handleOnChangeSemester}
-              sx={{}}
             >
+              <MenuItem value={6}>2566/3</MenuItem>
+              <MenuItem value={5}>2566/2</MenuItem>
+              <MenuItem value={4}>2566/1</MenuItem>
               <MenuItem value={2}>2565/2</MenuItem>
               <MenuItem value={1}>2565/1</MenuItem>
             </Select>

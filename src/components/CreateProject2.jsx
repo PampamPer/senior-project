@@ -7,33 +7,29 @@ import {
   Stack,
   FormControlLabel,
   Checkbox,
+  IconButton,
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../App";
 import { toast } from "react-hot-toast";
-import { Add } from "@mui/icons-material";
+import { Add, Close } from "@mui/icons-material";
 import CustomizedSelect from "./Select";
 
 export default function CreateProject2() {
   const studentId = localStorage.getItem("studentId");
   const email = localStorage.getItem("email");
   const username = localStorage.getItem("username");
-  const hasProject = localStorage.getItem("advisor1") != null;
   const [loading, setLoading] = useState(true);
-  const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
-  const [hint, setHint] = useState("");
-  const [keyword, setKeyword] = useState("");
   const { semesterId } = useContext(AppContext);
   const [major, setMajor] = useState("");
   const [projectNameEn, setProjectNameEn] = useState("");
   const [projectNameTh, setProjectNameTh] = useState("");
   const [advisor1, setAdvisor1] = useState("");
-  const [advisor2, setAdvisor2] = useState("");
-  const [student2, setStudent2] = useState("");
-  const [student3, setStudent3] = useState("");
+  const [advisor2, setAdvisor2] = useState();
+  const [student2, setStudent2] = useState();
+  const [student3, setStudent3] = useState();
 
   const [moreAdvisor, setMoreAdvisor] = useState(false);
   const [moreStudent2, setMoreStudent2] = useState(false);
@@ -47,7 +43,7 @@ export default function CreateProject2() {
   let navigate = useNavigate();
 
   const handleSubmit = () => {
-    if (address == "" || phone == "" || keyword == "" || hint == "") {
+    if (projectNameEn == "" || projectNameTh == "" || advisor1 == "" || major =="") {
       toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
     } else {
       axios
@@ -58,7 +54,8 @@ export default function CreateProject2() {
           projectNameEn: projectNameEn,
           advisorId1: advisor1,
           advisorId2: advisor2,
-          studentId1: studentId,
+          // studentId1: studentId,
+          studentId1: "6234471523",
           studentId2: student2,
           studentId3: student3,
         })
@@ -73,16 +70,21 @@ export default function CreateProject2() {
   };
 
   const sendMail = () => {
-    toast.promise(axios.put(`/NewMember/verifyProjectInfo?semesterid=${semesterId}`, { email: email }), {
-      loading: "กำลังดำเนินการ...",
-      success: () => {
-        navigate("/verify-project");
-        return "ส่งอีเมลยืนยันให้อาจารย์สำเร็จ";
-      },
-      error: () => {
-        return "เกิดข้อผิดพลาด กรุณาลองใหม่";
-      },
-    });
+    toast.promise(
+      axios.post(`/NewMember/verifyProjectInfo?SemesterId=${semesterId}`, {
+        studentEmail: email,
+      }),
+      {
+        loading: "กำลังดำเนินการ...",
+        success: () => {
+          navigate("/verify-project");
+          return "ส่งอีเมลยืนยันให้อาจารย์สำเร็จ";
+        },
+        error: () => {
+          return "เกิดข้อผิดพลาด กรุณาลองใหม่";
+        },
+      }
+    );
   };
 
   const setMoreStudent = () => {
@@ -114,13 +116,13 @@ export default function CreateProject2() {
   const getAdv1Id = (name) => {
     const id = lecturerList.get(name);
     setAdvisor1(id);
-    localStorage.setItem("advisor1", name)
+    localStorage.setItem("advisor1", name);
   };
 
   const getAdv2Id = (name) => {
     const id = lecturerList.get(name);
     setAdvisor2(id);
-    localStorage.setItem("advisor2", name)
+    localStorage.setItem("advisor2", name);
   };
 
   const getStd2Id = (name) => {
@@ -131,6 +133,22 @@ export default function CreateProject2() {
   const getStd3Id = (name) => {
     const id = studentList.get(name);
     setStudent3(id);
+  };
+
+  const clearAdvisor = () => {
+    setMoreAdvisor(false);
+    setAdvisor2();
+    localStorage.removeItem("advisor2");
+  };
+
+  const clearStudent2 = () => {
+    setMoreStudent2(false);
+    setStudent2();
+  };
+
+  const clearStudent3 = () => {
+    setMoreStudent3(false);
+    setStudent3();
   };
 
   useEffect(() => {
@@ -171,7 +189,7 @@ export default function CreateProject2() {
         >
           <Stack maxWidth="360px" m="auto" spacing={24}>
             <Stack alignItems="center">
-              <Typography variant="h3">ข้อมูลโครงงาน</Typography>
+              <Typography variant="h3">ข้อมูลโครงงาน2</Typography>
             </Stack>
             <Stack>
               <Typography variant="subtitle2">สาขา</Typography>
@@ -206,13 +224,13 @@ export default function CreateProject2() {
                 multiline
                 label="ชื่อโครงงานภาษาอังกฤษ"
                 value={projectNameEn}
-                onChange={(event)=>setProjectNameEn(event.target.value)}
+                onChange={(event) => setProjectNameEn(event.target.value)}
               />
               <TextField
                 multiline
                 label="ชื่อโครงงานภาษาไทย"
                 value={projectNameTh}
-                onChange={(event)=>setProjectNameTh(event.target.value)}
+                onChange={(event) => setProjectNameTh(event.target.value)}
               />
             </Stack>
             <Stack spacing={16}>
@@ -226,11 +244,17 @@ export default function CreateProject2() {
               />
               <div>
                 {moreAdvisor ? (
-                  <CustomizedSelect
-                    inputLabel="อาจารย์ที่ปรึกษาโครงงาน"
-                    selectOption={lecturerList}
-                    setValue={getAdv2Id}
-                  />
+                  <Stack direction="row" spacing={8}>
+                    <CustomizedSelect
+                      inputLabel="อาจารย์ที่ปรึกษาโครงงาน"
+                      selectOption={lecturerList}
+                      setValue={getAdv2Id}
+                    />
+
+                    <IconButton onClick={clearAdvisor} sx={{ width: 56 }}>
+                      <Close />
+                    </IconButton>
+                  </Stack>
                 ) : (
                   <Stack alignItems="center">
                     <Button
@@ -256,11 +280,16 @@ export default function CreateProject2() {
 
               <div>
                 {moreStudent2 ? (
-                  <CustomizedSelect
-                    inputLabel="สมาชิกโครงงาน 2"
-                    selectOption={studentList}
-                    setValue={getStd2Id}
-                  />
+                  <Stack direction="row" spacing={8}>
+                    <CustomizedSelect
+                      inputLabel="สมาชิกโครงงาน 2"
+                      selectOption={studentList}
+                      setValue={getStd2Id}
+                    />
+                    <IconButton onClick={clearStudent2} sx={{ width: 56 }} disabled={moreStudent3}>
+                      <Close />
+                    </IconButton>
+                  </Stack>
                 ) : (
                   <Stack alignItems="center">
                     <Button
@@ -276,11 +305,16 @@ export default function CreateProject2() {
 
               <div>
                 {moreStudent3 ? (
-                  <CustomizedSelect
-                    inputLabel="สมาชิกโครงงาน 3"
-                    selectOption={studentList}
-                    setValue={getStd3Id}
-                  />
+                  <Stack direction="row" spacing={8}>
+                    <CustomizedSelect
+                      inputLabel="สมาชิกโครงงาน 3"
+                      selectOption={studentList}
+                      setValue={getStd3Id}
+                    />
+                    <IconButton onClick={clearStudent3} sx={{ width: 56 }}>
+                      <Close />
+                    </IconButton>
+                  </Stack>
                 ) : (
                   <div>
                     {moreStudent2 && (

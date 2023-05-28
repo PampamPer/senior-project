@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import "../App.css";
 import axios from "axios";
-import { Typography, Paper, Snackbar, Stack } from "@mui/material";
+import { Typography, Paper, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import NavBar from "./NavBar";
@@ -10,10 +10,11 @@ import { useNavigate } from "react-router-dom";
 import { AppContext } from "../App";
 import { toast } from "react-hot-toast";
 import CreateProject2 from "./CreateProject2";
+import { clearStorage } from "../middleware/Auth";
 
 export default function CreateProject() {
   const email = localStorage.getItem("email");
-  const hasProject = localStorage.getItem("advisor1") != null;
+  const hasProject = localStorage.getItem("advisor") != null;
   const { semesterId } = useContext(AppContext);
 
   const [projectNameEn, setProjectNameEn] = useState("");
@@ -23,6 +24,7 @@ export default function CreateProject() {
   const [student1, setStudent1] = useState("");
   const [student2, setStudent2] = useState("");
   const [student3, setStudent3] = useState("");
+  const regProcess = localStorage.getItem("regProcess");
 
   const setDataIfHasProject = (data) => {
     setProjectNameEn(data.projectNameEn);
@@ -36,8 +38,9 @@ export default function CreateProject() {
 
   let navigate = useNavigate();
 
-  if (hasProject) {
-    console.log(hasProject)
+  if (!regProcess) {
+    clearStorage();
+  } else if (hasProject) {
     axios
       .post(`/NewMember/newProject?semesterid=${semesterId}`, {
         studentEmail: email,
@@ -61,7 +64,7 @@ export default function CreateProject() {
           >
             <Stack maxWidth="360px" m="auto" spacing={24}>
               <Stack alignItems="center">
-                <Typography variant="h3">ข้อมูลโครงงาน</Typography>
+                <Typography variant="h3">ข้อมูลโครงงาน1</Typography>
               </Stack>
               <Stack spacing={16}>
                 <Typography variant="subtitle2">ชื่อโครงงาน</Typography>
@@ -93,17 +96,15 @@ export default function CreateProject() {
                     readOnly: true,
                   }}
                 />
-                <div>
-                  {advisor2 != null || (
-                    <TextField
-                      label="อาจารย์ที่ปรึกษา 2"
-                      value={advisor2}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                  )}
-                </div>
+                {advisor2 != null && (
+                  <TextField
+                    label="อาจารย์ที่ปรึกษา 2"
+                    value={advisor2}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                )}
               </Stack>
               <Stack spacing={16}>
                 <Typography variant="subtitle2">สมาชิกโครงงาน</Typography>
@@ -114,28 +115,25 @@ export default function CreateProject() {
                     readOnly: true,
                   }}
                 />
-                <div>
-                  {student2 != null || (
-                    <TextField
-                      label="สมาชิกโครงงาน 2"
-                      value={student2}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                  )}
-                </div>
-                <div>
-                  {student3 != null || (
-                    <TextField
-                      label="สมาชิกโครงงาน 3"
-                      value={student3}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                  )}
-                </div>
+                {student2 != null && (
+                  <TextField
+                    label="สมาชิกโครงงาน 2"
+                    value={student2}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                )}
+
+                {student3 != null && (
+                  <TextField
+                    label="สมาชิกโครงงาน 3"
+                    value={student3}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
+                )}
               </Stack>
 
               {/* <Stack spacing={16}>
@@ -153,7 +151,7 @@ export default function CreateProject() {
                 <Button
                   variant="contained"
                   sx={{ width: 85 }}
-                  onClick={() => navigate("/sign-in")}
+                  onClick={() => navigate("/main")}
                 >
                   ยืนยัน
                 </Button>

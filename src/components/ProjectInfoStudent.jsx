@@ -6,6 +6,7 @@ import CustomizedModal from "./Modal";
 import StudentUploadTable from "./StudentUploadTable";
 import SnackBar from "./SnackBar";
 import { clearStorage, getStatus } from "../middleware/Auth";
+import { toast } from "react-hot-toast";
 
 export default function ProjectInfoStudent() {
   const [data, setData] = useState([]);
@@ -13,7 +14,6 @@ export default function ProjectInfoStudent() {
   const token = localStorage.getItem("token");
   const { toggle, semesterId } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const [projNameTh, setProjNameTh] = useState();
   const [projNameEn, setProjNameEn] = useState();
   const [showedProjNameTh, setshowedProjNameTh] = useState();
@@ -49,19 +49,6 @@ export default function ProjectInfoStudent() {
     setProjNameEn(data.projectNameEn);
   };
 
-  const handleCloseError = () => {
-    setError(true);
-  }
-
-  const handleCloseSuccessSnackBar = () => {
-    setEditProjNameSuccess(false);
-    window.location.reload();
-  };
-
-  const handleCloseFailedSnackBar = () => {
-    setEditProjNameFailed(false);
-  };
-
   useEffect(() => {
     axios
       .get(
@@ -83,10 +70,9 @@ export default function ProjectInfoStudent() {
         setData(res.data);
       })
       .catch((err) => {
-        if(getStatus(err)=="401") {
+        if (getStatus(err) == "401") {
           clearStorage();
         }
-        setError(true);
         setLoading(false);
       });
   }, [toggle, semesterId]);
@@ -101,70 +87,84 @@ export default function ProjectInfoStudent() {
 
   const editProjectThName = () => {
     setshowedProjNameTh(projNameTh);
-    axios
-      .put(
-        `${path}Info/edit${path}NameTh `,
+    if (projNameTh == "") {
+      toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+    } else {
+      toast.promise(
+        axios.put(
+          `${path}Info/edit${path}NameTh `,
+          {
+            projectNameTh: projNameTh,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              timeout: 5 * 1000,
+            },
+          }
+        ),
         {
-          projectNameTh: projNameTh,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-            timeout: 5 * 1000,
+          loading: "กำลังดำเนินการ...",
+          success: (res) => {
+            setOpenEditThModal(false);
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+            return "แก้ไขชื่อโครงงานสำเร็จ";
+          },
+          error: (err) => {
+            if (getStatus(err) == "401") {
+              clearStorage();
+            } else {
+              return "ไม่สามารถแก้ไขชื่อโครงงานได้";
+            }
           },
         }
-      )
-      .then((res) => {
-        setLoading(false);
-        setEditProjNameSuccess(true);
-        setOpenEditThModal(false);
-      })
-      .catch((err) => {
-        if(getStatus(err)=="401") {
-          clearStorage();
-        }
-        setEditProjNameFailed(true);
-        setLoading(false);
-      });
+      );
+    }
   };
 
   const editProjectEnName = () => {
     setshowedProjNameEn(projNameEn);
-    axios
-      .put(
-        `${path}Info/edit${path}NameEn `,
+    if (projNameEn == "") {
+      toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+    } else {
+      toast.promise(
+        axios.put(
+          `${path}Info/edit${path}NameEn `,
+          {
+            projectNameEn: projNameEn,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              timeout: 5 * 1000,
+            },
+          }
+        ),
         {
-          projectNameEn: projNameEn,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-            timeout: 5 * 1000,
+          loading: "กำลังดำเนินการ...",
+          success: (res) => {
+            setOpenEditEnModal(false);
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+            return "แก้ไขชื่อโครงงานสำเร็จ";
+          },
+          error: (err) => {
+            if (getStatus(err) == "401") {
+              clearStorage();
+            } else {
+              return "ไม่สามารถแก้ไขชื่อโครงงานได้";
+            }
           },
         }
-      )
-      .then((res) => {
-        setLoading(false);
-        setEditProjNameSuccess(true);
-        setOpenEditEnModal(false);
-      })
-      .catch((err) => {
-        if(getStatus(err)=="401") {
-          clearStorage();
-        }
-        setEditProjNameFailed(true);
-        setLoading(false);
-      });
+      );
+    }
   };
 
   return (
     <div>
-      <SnackBar
-        open={error}
-        message="เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
-        severity="error"
-        handleClose={handleCloseError}
-      />
       <Stack alignItems="center" spacing={32} sx={{ mb: 48 }}>
         {data ? (
           <Paper sx={{ width: 1000, p: 32 }}>
@@ -254,20 +254,6 @@ export default function ProjectInfoStudent() {
         setOldPassword=""
         setNewPassword=""
         setEditOnClick={editProjectEnName}
-      />
-
-      <SnackBar
-        open={editProjNameSuccess}
-        message="แก้ไขชื่อโครงงานสำเร็จ"
-        severity="success"
-        handleClose={handleCloseSuccessSnackBar}
-      />
-
-      <SnackBar
-        open={editProjNameFailed}
-        message="เกิดข้อผิดพลาด กรุณาลองใหม่"
-        severity="error"
-        handleClose={handleCloseFailedSnackBar}
       />
     </div>
   );

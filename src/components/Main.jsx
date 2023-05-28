@@ -7,7 +7,6 @@ import { AppContext } from "../App";
 import Footer from "./Footer";
 import { Stack } from "@mui/system";
 import CustomizedTimeline from "./Timeline";
-import SnackBar from "./SnackBar";
 
 export default function Main() {
   const [data, setData] = useState([]);
@@ -80,12 +79,6 @@ export default function Main() {
   return (
     <div className="content">
       <NavBar />
-      <SnackBar
-        open={error}
-        message="เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
-        severity="error"
-        handleClose={handleClose}
-      />
       <Paper elevation={4} sx={{opacity:0.75, m:120}}>
       <Stack
         label="default-screen-welcome"

@@ -8,6 +8,7 @@ import { Button, Stack, Typography } from "@mui/material";
 import UploadModal from "./UploadModal";
 import SnackBar from "./SnackBar";
 import { clearStorage, getStatus } from "../middleware/Auth";
+import { toast } from "react-hot-toast";
 
 export default function StudentUploadTable() {
   const [data, setData] = useState([]);
@@ -27,19 +28,6 @@ export default function StudentUploadTable() {
   const handleClose = () => {
     setOpenModal(false);
     setSelectedFile();
-  };
-
-  const handleCloseError = () => {
-    setError(false);
-  }
-
-  const handleCloseSuccessSnackBar = () => {
-    setUploadFileSuccess(false);
-    window.location.reload();
-  };
-
-  const handleCloseFailedSnackBar = () => {
-    setUploadFileFailed(false);
   };
 
   useEffect(() => {
@@ -66,7 +54,7 @@ export default function StudentUploadTable() {
         }
       })
       .catch((err) => {
-        if(getStatus(err)=="401") {
+        if (getStatus(err) == "401") {
           clearStorage();
         }
         setError(true);
@@ -118,35 +106,57 @@ export default function StudentUploadTable() {
     setOpenModal(false);
     const asmId = assignmentName.get(asmName);
     formData.append("file", selectedFile);
-    axios
-      .post(`/${path}Uploads?assignmentId=${asmId}`, formData, {
+    // axios
+    //   .post(`/${path}Uploads?assignmentId=${asmId}`, formData, {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //       Authorization: "Bearer " + token,
+    //       timeout: 5 * 1000,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     setLoading(false);
+    //     setUploadFileSuccess(true);
+    //   })
+    //   .catch((err) => {
+    //     if(getStatus(err)=="401") {
+    //       clearStorage();
+    //     }
+    //     setUploadFileFailed(true);
+    //     setLoading(false);
+    //   });
+
+    toast.promise(
+      axios.post(`/${path}Uploads?assignmentId=${asmId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: "Bearer " + token,
           timeout: 5 * 1000,
         },
-      })
-      .then((res) => {
-        setLoading(false);
-        setUploadFileSuccess(true);
-      })
-      .catch((err) => {
-        if(getStatus(err)=="401") {
-          clearStorage();
-        }
-        setUploadFileFailed(true);
-        setLoading(false);
-      });
+      }),
+      {
+        loading: "กำลังดำเนินการ...",
+        success: (res) => {
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+          return "อัปโหลดไฟล์สำเร็จ";
+        },
+        error: (err) => {
+          if (getStatus(err) == "401") {
+            clearStorage();
+          } else if (getStatus(err) == "413") {
+            return "ขนาดไฟล์ต้องมีขนาดไม่เกิน 10 mb";
+          } else {
+            return "เกิดข้อผิดพลาด กรุณาลองใหม่";
+          }
+        },
+      }
+    );
   };
 
   return (
     <div>
-      <SnackBar
-        open={error}
-        message="เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
-        severity="error"
-        handleClose={handleCloseError}
-      />
       {assignmentData && (
         <div>
           {assignmentData.map((assignment) => {
@@ -185,20 +195,6 @@ export default function StudentUploadTable() {
         uploadFunction={uploadFile}
         selectFile={selectedFile}
         inputLabel={"เลือกประเภทงาน"}
-      />
-
-      <SnackBar
-        open={uploadFileSuccess}
-        message="อัปโหลดไฟล์สำเร็จ"
-        severity="success"
-        handleClose={handleCloseSuccessSnackBar}
-      />
-
-      <SnackBar
-        open={uploadFileFailed}
-        message="เกิดข้อผิดพลาด กรุณาลองใหม่"
-        severity="error"
-        handleClose={handleCloseFailedSnackBar}
       />
     </div>
   );

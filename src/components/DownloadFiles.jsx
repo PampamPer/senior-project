@@ -8,7 +8,6 @@ import TableSearch from "./TableSearch";
 import TableFilter from "./TableFilter";
 import CustomTable from "./CustomTable";
 import { Stack, Typography } from "@mui/material";
-import SnackBar from "./SnackBar";
 
 export default function DownloadFiles() {
   const [data, setData] = useState([]);
@@ -93,12 +92,6 @@ export default function DownloadFiles() {
   return (
     <div>
       <NavBar />
-      <SnackBar
-        open={fetchError}
-        message="เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
-        severity="error"
-        handleClose={handleClose}
-      />
       <Stack alignItems="center" sx={{ mt: 24 }}>
         <Typography variant="h4">เอกสารสำหรับดาวน์โหลด</Typography>
       </Stack>

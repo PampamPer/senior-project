@@ -12,47 +12,42 @@ import NavBar from "./NavBar";
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import Countdown from "react-countdown";
+import { clearStorage } from "../middleware/Auth";
 
 export default function VerifyProject() {
-  const [password, setPassword] = useState("");
   const email = localStorage.getItem("email");
-  const [timer, setTimer] = useState(60000);
-  const renderer = ({ minutes, seconds }) => {
-    const formattedMinutes = minutes.toString().padStart(2, "0");
-    const formattedSeconds = seconds.toString().padStart(2, "0");
-
-    return (
-      <span style={{ color: "#4caf50" }}>
-        {formattedMinutes}:{formattedSeconds}
-      </span>
-    );
-  };
+  const advisor1 = localStorage.getItem("advisor1");
+  const advisor2 = localStorage.getItem("advisor2");
+  const regProcess = localStorage.getItem("regProcess")
 
   let navigate = useNavigate();
 
-  const handleSubmit = () => {
-    // toast.promise(
-    //   axios.post("/tokens", { userId: email, password: password }),
-    //   {
-    //     loading: "กำลังดำเนินการ...",
-    //     success: () => {
-    //       localStorage.setItem("token", response.data.token);
-    //       localStorage.setItem("studentId", response.data.studentId);
-    //       localStorage.setItem(
-    //         "username",
-    //         response.data.firstname + " " + response.data.lastname
-    //       );
-    //       localStorage.removeItem("previousPage");
-    //       navigate(`/${nextPage}`);
-    //       return "เปลี่ยนรหัสผ่านสำเร็จ";
-    //     },
-    //     error: () => {
-    //       return "เกิดข้อผิดพลาด กรุณาลองใหม่";
-    //     },
-    //   }
-    // );
-  };
+  if(!regProcess){
+    clearStorage()
+  }
+
+  // const handleSubmit = () => {
+  //   // toast.promise(
+  //   //   axios.post("/tokens", { userId: email, password: password }),
+  //   //   {
+  //   //     loading: "กำลังดำเนินการ...",
+  //   //     success: () => {
+  //   //       localStorage.setItem("token", response.data.token);
+  //   //       localStorage.setItem("studentId", response.data.studentId);
+  //   //       localStorage.setItem(
+  //   //         "username",
+  //   //         response.data.firstname + " " + response.data.lastname
+  //   //       );
+  //   //       localStorage.removeItem("previousPage");
+  //   //       navigate(`/${nextPage}`);
+  //   //       return "เปลี่ยนรหัสผ่านสำเร็จ";
+  //   //     },
+  //   //     error: () => {
+  //   //       return "เกิดข้อผิดพลาด กรุณาลองใหม่";
+  //   //     },
+  //   //   }
+  //   // );
+  // };
 
   const resendEmail = () => {
     toast.promise(
@@ -80,9 +75,12 @@ export default function VerifyProject() {
           elevation={4}
           sx={{ opacity: 0.75, p: 48, width: 500, borderRadius: 3 }}
         >
-          <Stack maxWidth="360px" m="auto" spacing={16}>
+          <Stack maxWidth="360px" m="auto" spacing={24}>
             <Stack alignItems="center" spacing={16}>
-              <Typography variant="h3">ยืนยันข้อมูลโครงงาน</Typography>
+              <Stack spacing={8} alignItems="center">
+                <Typography variant="h3">ยืนยัน</Typography>
+                <Typography variant="h3">ข้อมูลโครงงาน</Typography>
+              </Stack>
               <Avatar
                 src="../../dist/assets/Email.png"
                 sx={{ width: 150, height: 150 }}
@@ -90,50 +88,26 @@ export default function VerifyProject() {
             </Stack>
             <Typography variant="body2">
               ทางระบบได้ส่งการแจ้งเตือนไปยังอีเมลของ
-              <Typography variant="body2" color="#0099FF">
-                {advisor1}
-              </Typography>
+            </Typography>
+            <Typography variant="body2" color="#0099FF">
+              {advisor1}
+            </Typography>
+            <div>
               {advisor2 != null && (
                 <Typography variant="body2" color="#0099FF">
                   {advisor2}
                 </Typography>
               )}
-              เพื่อตรวจสอบความถูกต้องของข้อมูล กรุณาตรวจสอบผลลัพธ์อีกครั้งในภายหลัง
+            </div>
+            <Typography variant="body2">
+              เพื่อตรวจสอบความถูกต้องของข้อมูล
+              กรุณาตรวจสอบผลลัพธ์อีกครั้งในภายหลัง
             </Typography>
-            <Stack alignItems="center">
-              <Countdown date={Date.now() + timer} renderer={renderer} />
-            </Stack>
-
-            <Stack spacing={0}>
-              <TextField
-                variant="outlined"
-                placeholder="รหัสผ่านยืนยันตัวตน"
-                //   label="รหัสผ่านยืนยันตัวตน"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                onChange={(event) => setPassword(event.target.value)}
-              />
-              <Button variant="text" onClick={resendEmail}>
-                ต้องการขอรหัสผ่านใหม่?
-              </Button>
-            </Stack>
-            <Stack direction="row" justifyContent="space-between">
-              <Button
-                variant="outlined"
-                sx={{ width: 85 }}
-                onClick={handleClickPrevious}
-              >
-                ย้อนกลับ
-              </Button>
+            <Stack alignItems="end">
               <Button
                 variant="contained"
                 sx={{ width: 85 }}
-                onClick={handleSubmit}
+                onClick={()=>navigate("/main")}
               >
                 ยืนยัน
               </Button>
