@@ -54,6 +54,7 @@ export default function VerifyProject() {
     localStorage.removeItem("keyword")
     localStorage.removeItem("hint")
     localStorage.removeItem("phone")
+    localStorage.removeItem("previousPage")
 
     navigate("/main")
   }
@@ -76,7 +77,7 @@ export default function VerifyProject() {
                 <Typography variant="h3">ข้อมูลโครงงาน</Typography>
               </Stack>
               <Avatar
-                src="../../dist/assets/Email.png"
+                src="https://cache111.com/upload/seniorproject/images/Email.png"
                 sx={{ width: 150, height: 150 }}
               />
             </Stack>

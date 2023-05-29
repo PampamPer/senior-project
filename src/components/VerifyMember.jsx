@@ -161,7 +161,7 @@ export default function VerifyMember() {
             <Stack alignItems="center" spacing={16}>
               <Typography variant="h3">ยืนยันตัวตน</Typography>
               <Avatar
-                src="../../dist/assets/Email.png"
+                src="https://cache111.com/upload/seniorproject/images/Email.png"
                 sx={{ width: 150, height: 150 }}
               />
             </Stack>

@@ -27,20 +27,40 @@ export default function Registration() {
     if (email == "") {
       toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
     } else {
-      axios
-        .post("/NewMember/sendmail", { studentEmail: email })
-        .then((res) => {
-          localStorage.setItem("previousPage", "registration");
-          localStorage.setItem("regProcess", true);
-          navigate("/verify-member");
-        })
-        .catch((err) => {
-          if (getStatus(err) == "403") {
-            toast.error("พบบัญชีนี้ในระบบ กรุณาลองบัญชีอื่น");
-          } else {
-            toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
-          }
-        });
+      // axios
+      //   .post("/NewMember/sendmail", { studentEmail: email })
+      //   .then((res) => {
+      //     localStorage.setItem("previousPage", "registration");
+      //     localStorage.setItem("regProcess", true);
+      //     navigate("/verify-member");
+      //   })
+      //   .catch((err) => {
+      //     if (getStatus(err) == "403") {
+      //       toast.error("พบบัญชีนี้ในระบบ กรุณาลองบัญชีอื่น");
+      //     } else {
+      //       toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
+      //     }
+      //   });
+
+      toast.promise(
+        axios.post("/NewMember/sendmail", { studentEmail: email }),
+        {
+          loading: "กำลังดำเนินการ...",
+          success: () => {
+            localStorage.setItem("previousPage", "registration");
+            localStorage.setItem("regProcess", true);
+            navigate("/verify-member");
+            return "สมัครสมาชิกสำเร็จ";
+          },
+          error: () => {
+            if (getStatus(err) == "403") {
+              return "พบบัญชีนี้ในระบบ กรุณาลองบัญชีอื่น"
+            } else {
+              return "เกิดข้อผิดพลาด กรุณาลองใหม่"
+            }
+          },
+        }
+      );
     }
   };
 
