@@ -14,7 +14,7 @@ import Auth from "./middleware/Auth";
 import ForgetPassword from "./components/ForgetPassword";
 import VerifyMember from "./components/VerifyMember";
 import Registration from "./components/Registration";
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import PersonalInfo from "./components/PersonalInfo";
 import CreateProject from "./components/CreateProject";
 import VerifyProject from "./components/VerifyProject";
@@ -22,15 +22,26 @@ import RegProcess from "./middleware/RegProcess";
 
 export const AppContext = createContext();
 
+async function setDefault() {
+  const getDefault = await axios.get("/semesters/getCurrent");
+  return {
+    toggle: getDefault?.data.toggle,
+    semesterId: getDefault?.data.semesterId,
+    path: getDefault?.data.mode,
+  };
+}
+
 function App() {
-  axios.defaults.baseURL = "https://cache111.com/seniorprojectapi";
+  axios.defaults.baseURL = "https://acadproj1.sc.chula.ac.th/seniorprojectapi";
+  // axios.defaults.baseURL = "https://cache111.com/seniorprojectapi";
+
   const [toggle, setToggle] = useState(
     localStorage.getItem("projectPath")
       ? localStorage.getItem("projectPath") === "project"
-      : true
+      : false
   );
   const [semesterId, setSemesterId] = useState(
-    localStorage.getItem("semesterId") || 2
+    localStorage.getItem("semesterId") || 1
   );
 
   localStorage.setItem("previousPage", "");
@@ -166,6 +177,21 @@ function App() {
     spacing: 1,
   });
 
+  const setDefaultVal = async () => {
+    const defaultVal = await setDefault();
+    if(!localStorage.getItem("projectPath")){
+      setToggle(defaultVal.toggle)
+      localStorage.setItem("projectPath",defaultVal.path)
+    }
+    if(!localStorage.getItem("semesterId")){
+      setSemesterId(defaultVal.semesterId)
+    }
+  };
+
+  useEffect(() => {
+    setDefaultVal();
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <AppContext.Provider
@@ -176,7 +202,7 @@ function App() {
           setSemesterId,
         }}
       >
-        <Toaster position="bottom-center" reverseOrder={false}/>
+        <Toaster position="bottom-center" reverseOrder={false} />
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/main" element={<Main />} />
@@ -203,9 +229,31 @@ function App() {
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/verify-member" element={<VerifyMember />} />
           <Route path="/registration" element={<Registration />} />
-          <Route path="/personal-info" element={<RegProcess> <PersonalInfo /></RegProcess>} />
-          <Route path="/create-project" element={<RegProcess><CreateProject /></RegProcess>} />
-          <Route path="/verify-project" element={<RegProcess><VerifyProject /></RegProcess>} />
+          <Route
+            path="/personal-info"
+            element={
+              <RegProcess>
+                {" "}
+                <PersonalInfo />
+              </RegProcess>
+            }
+          />
+          <Route
+            path="/create-project"
+            element={
+              <RegProcess>
+                <CreateProject />
+              </RegProcess>
+            }
+          />
+          <Route
+            path="/verify-project"
+            element={
+              <RegProcess>
+                <VerifyProject />
+              </RegProcess>
+            }
+          />
         </Routes>
       </AppContext.Provider>
     </ThemeProvider>
