@@ -64,22 +64,22 @@ export default function CreateProject() {
           >
             <Stack maxWidth="360px" m="auto" spacing={24}>
               <Stack alignItems="center">
-                <Typography variant="h3">ข้อมูลโครงงาน1</Typography>
+                <Typography variant="h3">ข้อมูลโครงงาน</Typography>
               </Stack>
               <Stack spacing={16}>
                 <Typography variant="subtitle2">ชื่อโครงงาน</Typography>
                 <TextField
                   multiline
-                  label="ชื่อโครงงานภาษาอังกฤษ"
-                  value={projectNameEn}
+                  label="ชื่อโครงงานภาษาไทย"
+                  value={projectNameTh}
                   InputProps={{
                     readOnly: true,
                   }}
                 />
                 <TextField
                   multiline
-                  label="ชื่อโครงงานภาษาไทย"
-                  value={projectNameTh}
+                  label="ชื่อโครงงานภาษาอังกฤษ"
+                  value={projectNameEn}
                   InputProps={{
                     readOnly: true,
                   }}

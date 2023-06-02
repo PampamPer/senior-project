@@ -20,11 +20,14 @@ import { useCookies } from "react-cookie";
 import axios from "axios";
 import { AppContext } from "../App";
 import { clearStorage } from "../middleware/Auth";
+import { toast } from "react-hot-toast";
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
   const token = localStorage.getItem("token");
   const anchorRef = useRef(null);
+  const [semester, setSemester] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -83,6 +86,19 @@ export default function NavBar() {
     navigate("/main");
     clearStorage();
   };
+
+  useEffect(() => {
+    axios
+      .get("/semesters")
+      .then((res) => {
+        setLoading(false);
+        setSemester(res.data);
+      })
+      .catch((err) => {
+        toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <AppBar position="sticky">
@@ -214,11 +230,14 @@ export default function NavBar() {
               value={semesterId}
               onChange={handleOnChangeSemester}
             >
-              <MenuItem value={6}>2566/3</MenuItem>
+              {semester.map((sem)=> (
+                <MenuItem value={sem.id} key={sem.id}>{sem.fullSemester}</MenuItem>
+              ))}
+              {/* <MenuItem value={6}>2566/3</MenuItem>
               <MenuItem value={5}>2566/2</MenuItem>
               <MenuItem value={4}>2566/1</MenuItem>
               <MenuItem value={2}>2565/2</MenuItem>
-              <MenuItem value={1}>2565/1</MenuItem>
+              <MenuItem value={1}>2565/1</MenuItem> */}
             </Select>
             <Switch checked={toggle} onChange={handleOnChangeToggle} />
             {toggle ? "project" : "proposal"}

@@ -52,9 +52,14 @@ export default function Registration() {
             navigate("/verify-member");
             return "สมัครสมาชิกสำเร็จ";
           },
-          error: () => {
+          error: (err) => {
             if (getStatus(err) == "403") {
-              return "พบบัญชีนี้ในระบบ กรุณาลองบัญชีอื่น"
+              if(err.response.data == "Already registered!"){
+                return "พบบัญชีนี้ในระบบ กรุณาลองบัญชีอื่น"
+              }else {
+                return "กรุณาสมัครด้วยอีเมลมหาวิทยาลัย"
+              }
+              
             } else {
               return "เกิดข้อผิดพลาด กรุณาลองใหม่"
             }

@@ -43,7 +43,12 @@ export default function CreateProject2() {
   let navigate = useNavigate();
 
   const handleSubmit = () => {
-    if (projectNameEn == "" || projectNameTh == "" || advisor1 == "" || major =="") {
+    if (
+      projectNameEn == "" ||
+      projectNameTh == "" ||
+      advisor1 == "" ||
+      major == ""
+    ) {
       toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
     } else {
       axios
@@ -103,7 +108,8 @@ export default function CreateProject2() {
 
   const fetchStudentList = (major) => {
     axios
-      .get(`/NewMember/studentList?major=${major}&semesterid=${semesterId}`)
+      .get(`/NewMember/studentList?major=${major}&email=${email}`)
+      // .get(`/NewMember/studentList?major=${major}&semesterid=${semesterId}`)
       .then((res) => {
         setLoading(false);
         setStudentData(res.data);
@@ -189,7 +195,7 @@ export default function CreateProject2() {
         >
           <Stack maxWidth="360px" m="auto" spacing={24}>
             <Stack alignItems="center">
-              <Typography variant="h3">ข้อมูลโครงงาน2</Typography>
+              <Typography variant="h3">ข้อมูลโครงงาน</Typography>
             </Stack>
             <Stack>
               <Typography variant="subtitle2">สาขา</Typography>
@@ -222,15 +228,15 @@ export default function CreateProject2() {
               <Typography variant="subtitle2">ชื่อโครงงาน</Typography>
               <TextField
                 multiline
-                label="ชื่อโครงงานภาษาอังกฤษ"
-                value={projectNameEn}
-                onChange={(event) => setProjectNameEn(event.target.value)}
-              />
-              <TextField
-                multiline
                 label="ชื่อโครงงานภาษาไทย"
                 value={projectNameTh}
                 onChange={(event) => setProjectNameTh(event.target.value)}
+              />
+              <TextField
+                multiline
+                label="ชื่อโครงงานภาษาอังกฤษ"
+                value={projectNameEn}
+                onChange={(event) => setProjectNameEn(event.target.value)}
               />
             </Stack>
             <Stack spacing={16}>
@@ -286,7 +292,11 @@ export default function CreateProject2() {
                       selectOption={studentList}
                       setValue={getStd2Id}
                     />
-                    <IconButton onClick={clearStudent2} sx={{ width: 56 }} disabled={moreStudent3}>
+                    <IconButton
+                      onClick={clearStudent2}
+                      sx={{ width: 56 }}
+                      disabled={moreStudent3}
+                    >
                       <Close />
                     </IconButton>
                   </Stack>

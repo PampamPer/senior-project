@@ -95,7 +95,7 @@ export default function DownloadFiles() {
 
   const columns = [
     { id: "no", label: "หมายเลขโครงงาน", sx: { minWidth: 150 }, },
-    { id: "major", label: "ภาควิชา", sx: { minWidth: 80 }, },
+    { id: "major", label: "สาขาวิชา", sx: { minWidth: 80 }, },
     { id: "projectNameTh", label: "ชื่อโครงงานภาษาไทย", sx: { minWidth: 300 } },
     { id: "projectNameEn", label: "ชื่อโครงงานภาษาอังกฤษ", sx: { minWidth: 300 } },
     { id: "semester", label: "ภาคการศึกษา", sx: { minWidth: 120 } },
