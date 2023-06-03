@@ -42,6 +42,54 @@ export default function CreateProject2() {
 
   let navigate = useNavigate();
 
+  const storeData = () => {
+    localStorage.setItem("major", major);
+    localStorage.setItem("projTh", projectNameTh);
+    localStorage.setItem("projEn", projectNameEn);
+    localStorage.setItem("advisor1", advisor1);
+
+    if (moreAdvisor) {
+      localStorage.setItem("advisor2", advisor2);
+    }
+    if (moreStudent2) {
+      localStorage.setItem("student2", student2);
+    }
+    if (moreStudent3) {
+      localStorage.setItem("student3", student3);
+    }
+  };
+
+  const returnPage = () => {
+    navigate("/personal-info");
+    storeData();
+  };
+
+  useEffect(() => {
+    const major = localStorage.getItem("major");
+    const projTh = localStorage.getItem("projTh");
+    const projEn = localStorage.getItem("projEn");
+    const advisor1 = localStorage.getItem("advisor1");
+    const advisor2 = localStorage.getItem("advisor2");
+    const student2 = localStorage.getItem("student2");
+    const student3 = localStorage.getItem("student3");
+
+    if (advisor2) {
+      setAdvisor1(advisor2);
+    }
+    if (student2) {
+      setStudent2(student2);
+    }
+    if (student3) {
+      setStudent3(student3);
+    }
+    if (major || projEn || projTh) {
+      setMajor(major);
+      setProjectNameTh(projTh);
+      setProjectNameEn(projEn);
+      setAdvisor1(advisor1);
+    }
+  }, []);
+
   const handleSubmit = () => {
     if (
       projectNameEn == "" ||
@@ -50,6 +98,16 @@ export default function CreateProject2() {
       major == ""
     ) {
       toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+    }
+    if (moreStudent2 || moreStudent3) {
+      if (!student2) {
+        toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+      } else if (moreStudent3 && !student3) {
+        toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+      }
+    }
+    if (moreAdvisor) {
+      if (!advisor2) toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
     } else {
       axios
         .put(`NewMember/addProjectInfo?semesterid=${semesterId}`, {
@@ -59,8 +117,7 @@ export default function CreateProject2() {
           projectNameEn: projectNameEn,
           advisorId1: advisor1,
           advisorId2: advisor2,
-          // studentId1: studentId,
-          studentId1: "6234471523",
+          studentId1: studentId,
           studentId2: student2,
           studentId3: student3,
         })
@@ -351,7 +408,7 @@ export default function CreateProject2() {
               <Button
                 variant="outlined"
                 sx={{ width: 85 }}
-                onClick={() => navigate("/personal-info")}
+                onClick={returnPage}
               >
                 ย้อนกลับ
               </Button>

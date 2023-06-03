@@ -146,7 +146,7 @@ export default function StudentUploadTable() {
           if (getStatus(err) == "401") {
             clearStorage();
           } else if (getStatus(err) == "413") {
-            return "ขนาดไฟล์ต้องมีขนาดไม่เกิน 10 mb";
+            return "ขนาดไฟล์มีขนาดใหญ่เกินกำหนด";
           } else {
             return "เกิดข้อผิดพลาด กรุณาลองใหม่";
           }

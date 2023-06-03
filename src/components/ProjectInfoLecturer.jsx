@@ -113,7 +113,7 @@ export default function ProjectInfoLecturer() {
         }
       })
       .catch((err) => {
-        if(getStatus(err)=="401") {
+        if (getStatus(err) == "401") {
           clearStorage();
         }
         setError(true);
@@ -169,7 +169,7 @@ export default function ProjectInfoLecturer() {
 
   const handleCloseError = () => {
     setError(false);
-  }
+  };
 
   const handleCloseSuccessSnackBar = () => {
     setUploadFileSuccess(false);
@@ -227,10 +227,10 @@ export default function ProjectInfoLecturer() {
         }
       })
       .catch((err) => {
-        if(getStatus(err)=="401") {
+        if (getStatus(err) == "401") {
           clearStorage();
         }
-        toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่")
+        toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
       });
   };
 
@@ -253,10 +253,10 @@ export default function ProjectInfoLecturer() {
         });
       })
       .catch((err) => {
-        if(getStatus(err)=="401") {
+        if (getStatus(err) == "401") {
           clearStorage();
         }
-        toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่")
+        toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
       });
   };
 
@@ -289,33 +289,33 @@ export default function ProjectInfoLecturer() {
     //     setLoading(false);
     //   });
 
-      toast.promise(
-        axios.put(`/${path}Uploads?${path}Id=${gradingFileID}`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: "Bearer " + token,
-            timeout: 5 * 1000,
-          },
-        }),
-        {
-          loading: "กำลังดำเนินการ...",
-          success: (res) => {
-            setTimeout(() => {
-              window.location.reload();
-            }, 3000);
-            return "อัปโหลดไฟล์สำเร็จ";
-          },
-          error: (err) => {
-            if (getStatus(err) == "401") {
-              clearStorage();
-            } else if (getStatus(err) == "413") {
-              return "ขนาดไฟล์ต้องมีขนาดไม่เกิน 10 mb";
-            } else {
-              return "เกิดข้อผิดพลาด กรุณาลองใหม่";
-            }
-          },
-        }
-      );
+    toast.promise(
+      axios.put(`/${path}Uploads?${path}Id=${gradingFileID}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: "Bearer " + token,
+          timeout: 5 * 1000,
+        },
+      }),
+      {
+        loading: "กำลังดำเนินการ...",
+        success: (res) => {
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+          return "อัปโหลดไฟล์สำเร็จ";
+        },
+        error: (err) => {
+          if (getStatus(err) == "401") {
+            clearStorage();
+          } else if (getStatus(err) == "413") {
+            return "ขนาดไฟล์มีขนาดใหญ่เกินกำหนด";
+          } else {
+            return "เกิดข้อผิดพลาด กรุณาลองใหม่";
+          }
+        },
+      }
+    );
   };
 
   return (
@@ -369,6 +369,55 @@ export default function ProjectInfoLecturer() {
           openModal2={setOpenGradingHistory}
         />
         <Stack alignItems="center" spacing={56}>
+          {showGradingTable && (
+            <Stack ref={gradingTableRef} alignItems="center" spacing={32}>
+              <Typography variant="h5" color="#2D95E1">
+                ใบรายงานผลสอบ
+              </Typography>
+              <Paper sx={{ p: 24, pr: 198, width: 850, position: "relative" }}>
+                <Stack alignItems="start" spacing={12}>
+                  <Stack direction="row" spacing={128}>
+                    <Stack direction="row" spacing={32}>
+                      <Typography variant="subtitle1" sx={{ minWidth: 104 }}>
+                        โครงงานที่เลือก
+                      </Typography>
+                      <Typography variant="body1">
+                        {projectNames.get(gradingFileID)}
+                      </Typography>
+                    </Stack>
+                    {/* คลิกปุ่มแล้วเรียก Modal เพื่ออัปโหลดไฟล์ */}
+                    <Button
+                      variant="contained"
+                      onClick={() => setOpenGradingUpload(true)}
+                      sx={{
+                        position: "absolute",
+                        top: 24,
+                        right: 24,
+                        maxWidth: 150,
+                      }}
+                    >
+                      อัปโหลด
+                      <br />
+                      ใบรายงานผลสอบ
+                    </Button>
+                  </Stack>
+                  <Stack direction="row" spacing={32}>
+                    <Typography variant="subtitle1" sx={{ minWidth: 104 }}>
+                      ใบรายงานผลสอบ
+                    </Typography>
+                    <Link
+                      href={gradingData.url}
+                      underline="hover"
+                      color="#0075FF"
+                    >
+                      {gradingData.fileName}
+                    </Link>
+                  </Stack>
+                </Stack>
+              </Paper>
+            </Stack>
+          )}
+          
           {showUploadTable && (
             <Stack ref={uploadTableRef} alignItems="center" spacing={32}>
               <Typography variant="h5" color="#2D95E1">
@@ -388,48 +437,6 @@ export default function ProjectInfoLecturer() {
                 linkcolumns={uploadlinkColumns}
                 linkname={uploadlinkName}
               />
-            </Stack>
-          )}
-
-          {showGradingTable && (
-            <Stack ref={gradingTableRef} alignItems="center" spacing={32}>
-              <Typography variant="h5" color="#2D95E1">
-                ใบรายงานผลสอบ
-              </Typography>
-              <Paper sx={{ p: 24, pr:198, width: 850, position: "relative" }}>
-                <Stack alignItems="start" spacing={12}>
-                  <Stack direction="row" spacing={128}>
-                    <Stack direction="row" spacing={32}>
-                      <Typography variant="subtitle1" sx={{ minWidth: 104 }}>
-                        โครงงานที่เลือก
-                      </Typography>
-                      <Typography variant="body1">
-                        {projectNames.get(gradingFileID)}
-                      </Typography>
-                    </Stack>
-                    {/* คลิกปุ่มแล้วเรียก Modal เพื่ออัปโหลดไฟล์ */}
-                    <Button
-                      variant="contained"
-                      onClick={() => setOpenGradingUpload(true)}
-                      sx={{position:"absolute", top:24, right: 24, maxWidth:150}}
-                    >
-                      อัปโหลด<br/>ใบรายงานผลสอบ
-                    </Button>
-                  </Stack>
-                  <Stack direction="row" spacing={32}>
-                    <Typography variant="subtitle1" sx={{ minWidth: 104 }}>
-                      ใบรายงานผลสอบ
-                    </Typography>
-                    <Link
-                      href={gradingData.url}
-                      underline="hover"
-                      color="#0075FF"
-                    >
-                      {gradingData.fileName}
-                    </Link>
-                  </Stack>
-                </Stack>
-              </Paper>
             </Stack>
           )}
         </Stack>

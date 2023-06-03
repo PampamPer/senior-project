@@ -14,7 +14,7 @@ import { clearStorage } from "../middleware/Auth";
 
 export default function CreateProject() {
   const email = localStorage.getItem("email");
-  const hasProject = localStorage.getItem("advisor") != null;
+  const hasProject = localStorage.getItem("advisor1") != null;
   const { semesterId } = useContext(AppContext);
 
   const [projectNameEn, setProjectNameEn] = useState("");
@@ -38,20 +38,42 @@ export default function CreateProject() {
 
   let navigate = useNavigate();
 
-  if (!regProcess) {
-    clearStorage();
-  } else if (hasProject) {
-    axios
-      .post(`/NewMember/newProject?semesterid=${semesterId}`, {
-        studentEmail: email,
-      })
-      .then((res) => {
-        setDataIfHasProject(res.data);
-      })
-      .catch((err) => {
-        toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
-      });
+  const handleClick = () => {
+    localStorage.removeItem("address");
+    localStorage.removeItem("keyword");
+    localStorage.removeItem("hint");
+    localStorage.removeItem("phone");
+    localStorage.removeItem("previousPage");
+    localStorage.removeItem("major");
+    localStorage.removeItem("projTh");
+    localStorage.removeItem("projEn");
+    localStorage.removeItem("student2");
+    localStorage.removeItem("student3");
+    localStorage.removeItem("advisor1");
+    localStorage.removeItem("advisor2");
+    localStorage.removeItem("regProcess");
+
+    navigate("/main")
   }
+
+  useEffect(() => {
+    if (!regProcess) {
+      clearStorage();
+    } else if (hasProject) {
+      axios
+        .post(`/NewMember/newProject?semesterid=${semesterId}`, {
+          studentEmail: email,
+        })
+        .then((res) => {
+          setDataIfHasProject(res.data);
+        })
+        .catch((err) => {
+          toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
+        });
+    }
+  }, []);
+
+  console.log(hasProject)
 
   return (
     <Stack gap={96} className="content">
@@ -151,7 +173,7 @@ export default function CreateProject() {
                 <Button
                   variant="contained"
                   sx={{ width: 85 }}
-                  onClick={() => navigate("/main")}
+                  onClick={handleClick}
                 >
                   ยืนยัน
                 </Button>

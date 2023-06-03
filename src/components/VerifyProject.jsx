@@ -18,12 +18,12 @@ export default function VerifyProject() {
   const email = localStorage.getItem("email");
   const advisor1 = localStorage.getItem("advisor1");
   const advisor2 = localStorage.getItem("advisor2");
-  const regProcess = localStorage.getItem("regProcess")
+  const regProcess = localStorage.getItem("regProcess");
 
   let navigate = useNavigate();
 
-  if(!regProcess){
-    clearStorage()
+  if (!regProcess) {
+    clearStorage();
   }
 
   // const handleSubmit = () => {
@@ -50,15 +50,22 @@ export default function VerifyProject() {
   // };
 
   const handleClick = () => {
-    localStorage.removeItem("address")
-    localStorage.removeItem("keyword")
-    localStorage.removeItem("hint")
-    localStorage.removeItem("phone")
-    localStorage.removeItem("previousPage")
+    localStorage.removeItem("address");
+    localStorage.removeItem("keyword");
+    localStorage.removeItem("hint");
+    localStorage.removeItem("phone");
+    localStorage.removeItem("previousPage");
+    localStorage.removeItem("major");
+    localStorage.removeItem("projTh");
+    localStorage.removeItem("projEn");
+    localStorage.removeItem("student2");
+    localStorage.removeItem("student3");
+    localStorage.removeItem("advisor1");
+    localStorage.removeItem("advisor2");
+    localStorage.removeItem("regProcess");
 
-    navigate("/main")
-  }
-
+    navigate("/main");
+  };
 
   return (
     <Stack gap={96} className="content">

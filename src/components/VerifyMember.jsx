@@ -20,17 +20,6 @@ export default function VerifyMember() {
   const email = localStorage.getItem("email");
   const previousPage = localStorage.getItem("previousPage");
   const [nextPage, setNextPage] = useState("");
-  const [timer, setTimer] = useState(60000);
-  const renderer = ({ minutes, seconds }) => {
-    const formattedMinutes = minutes.toString().padStart(2, "0");
-    const formattedSeconds = seconds.toString().padStart(2, "0");
-
-    return (
-      <span style={{ color: "#4caf50" }}>
-        {formattedMinutes}:{formattedSeconds}
-      </span>
-    );
-  };
 
   let navigate = useNavigate();
 
@@ -38,7 +27,7 @@ export default function VerifyMember() {
     if (previousPage == "") {
       navigate("/");
     } else if (previousPage == "forget-password") {
-      setNextPage("sign-in");
+      setNextPage("main");
     } else if (previousPage == "registration") {
       setNextPage("personal-info");
       localStorage.setItem("role", "student");
@@ -137,7 +126,6 @@ export default function VerifyMember() {
       {
         loading: "กำลังดำเนินการ...",
         success: () => {
-          setTimer(60000);
           return "ส่งรหัสผ่านใหม่ไปยังอีเมลสำเร็จ";
         },
         error: () => {

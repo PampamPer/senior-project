@@ -109,7 +109,7 @@ export default function Profile() {
   };
 
   const editPassword = () => {
-    setOldPassword(newPassword);
+    // setOldPassword(newPassword);
     if (newPassword.length < 8) {
       toast.error("ต้องมีความยาวตั้งแต่ 8 ตัวอักษรขึ้นไป");
     } else if (!hasLowerCaseLetters(newPassword) || !hasUpperCaseLetters(newPassword) || !hasNumericLetters(newPassword)) {
@@ -138,6 +138,7 @@ export default function Profile() {
           loading: "กำลังดำเนินการ...",
           success: (res) => {
             setOpenEditPW(false);
+            setOldPassword(newPassword);
             setTimeout(() => {
               window.location.reload();
             }, 1000);

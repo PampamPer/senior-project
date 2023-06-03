@@ -18,7 +18,7 @@ import TablePagination from "@mui/material/TablePagination";
 export default function CustomizedTimeline(props) {
   const { timelines } = props;
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(timelines.length);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - timelines.length) : 0;
@@ -96,10 +96,10 @@ export default function CustomizedTimeline(props) {
                 <TableRow>
                   <TablePagination
                     rowsPerPageOptions={[
+                      { label: "All", value: -1 },
                       5,
                       10,
                       25,
-                      { label: "All", value: -1 },
                     ]}
                     colSpan={3}
                     count={timelines.length}

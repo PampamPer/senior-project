@@ -29,11 +29,11 @@ export default function CustomTable(props) {
             spacing={16}
             sx={{ position: "absolute", left: 0 }}
           >
-            <Button variant="contained" onClick={() => openModal1(true)}>
-              ประวัติการส่งงาน
-            </Button>
-            <Button variant="outlined" onClick={() => openModal2(true)}>
+            <Button variant="contained" onClick={() => openModal2(true)}>
               ใบรายงานผลสอบ
+            </Button>
+            <Button variant="outlined" onClick={() => openModal1(true)}>
+              ประวัติการส่งงาน
             </Button>
           </Stack>
         )}

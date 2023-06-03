@@ -20,32 +20,31 @@ export default function PersonalInfo() {
   const [hint, setHint] = useState("");
   const [keyword, setKeyword] = useState("");
   const { semesterId } = useContext(AppContext);
-  const regProcess = localStorage.getItem("regProcess")
-  let navigate = useNavigate();  
+  const regProcess = localStorage.getItem("regProcess");
+  let navigate = useNavigate();
 
   const storeData = () => {
-    localStorage.setItem("address", address)
-    localStorage.setItem("keyword", keyword)
-    localStorage.setItem("hint", hint)
-    localStorage.setItem("phone", phone)
-  }
+    localStorage.setItem("address", address);
+    localStorage.setItem("keyword", keyword);
+    localStorage.setItem("hint", hint);
+    localStorage.setItem("phone", phone);
+  };
 
-  if(!regProcess){
-    clearStorage()
-  } else if (localStorage.getItem("address")) {
-    let address = localStorage.getItem("address")
-    let keyword = localStorage.getItem("keyword")
-    let hint = localStorage.getItem("hint")
-    let phone = localStorage.getItem("phone")
+  useEffect(() => {
+    if (!regProcess) {
+      clearStorage();
+    } else if (localStorage.getItem("address")) {
+      let address = localStorage.getItem("address");
+      let keyword = localStorage.getItem("keyword");
+      let hint = localStorage.getItem("hint");
+      let phone = localStorage.getItem("phone");
 
-    setAddress(address);
-    setKeyword(keyword);
-    setHint(hint);
-    setPhone(phone);
-  }
-
-  
-
+      setAddress(address);
+      setKeyword(keyword);
+      setHint(hint);
+      setPhone(phone);
+    }
+  }, []);
 
   const handleSubmit = () => {
     if (address == "" || phone == "" || keyword == "" || hint == "") {
@@ -60,6 +59,7 @@ export default function PersonalInfo() {
           phone: phone,
         })
         .then((res) => {
+          storeData();
           createNewProject();
         })
         .catch((err) => {
@@ -74,8 +74,9 @@ export default function PersonalInfo() {
         studentEmail: email,
       })
       .then((res) => {
-        localStorage.setItem("advisor1", res.data.advisor1)
-        navigate("/create-project")
+        console.log(res.data.advisor1)
+        localStorage.setItem("advisor1", res.data.advisor1);
+        navigate("/create-project");
       })
       .catch((err) => {
         toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
@@ -113,6 +114,7 @@ export default function PersonalInfo() {
               <TextField
                 multiline
                 label="ที่อยู่ตามบัตรประชาชน"
+                value={address}
                 onChange={(event) => setAddress(event.target.value)}
               />
             </Stack>
@@ -120,6 +122,7 @@ export default function PersonalInfo() {
               <Typography variant="subtitle2">เบอร์โทรศัพท์</Typography>
               <TextField
                 label="เบอร์โทรศัพท์"
+                value={phone}
                 onChange={(event) => setPhone(event.target.value)}
               />
             </Stack>
@@ -127,10 +130,12 @@ export default function PersonalInfo() {
               <Typography variant="subtitle2">คีย์เวิร์ดยืนยันตัวตน</Typography>
               <TextField
                 label="คำใบ้สำหรับคีย์เวิร์ด"
+                value={hint}
                 onChange={(event) => setHint(event.target.value)}
               />
               <TextField
                 label="คีย์เวิร์ดยืนยันตัวตน"
+                value={keyword}
                 onChange={(event) => setKeyword(event.target.value)}
               />
             </Stack>
