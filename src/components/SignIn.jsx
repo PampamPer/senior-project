@@ -73,7 +73,7 @@ function App() {
         >
           <Stack maxWidth="360px" m="auto" spacing={16}>
             <Stack alignItems="center">
-              <Typography variant="h3">เข้าสู่ระบบ</Typography>
+              <Typography variant="h3">เข้าสู่ระบบ v1.3</Typography>
             </Stack>
             <TextField
               variant="outlined"
