@@ -74,7 +74,6 @@ export default function PersonalInfo() {
         studentEmail: email,
       })
       .then((res) => {
-        console.log(res.data.advisor1)
         localStorage.setItem("advisor1", res.data.advisor1);
         navigate("/create-project");
       })

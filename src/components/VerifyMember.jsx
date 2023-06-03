@@ -84,7 +84,6 @@ export default function VerifyMember() {
           },
           error: (err) => {
             if (getStatus(err) == "401") {
-              console.log("got 401")
               return "รหัสผ่านไม่ถูกต้อง";
             } else {
               return "เกิดข้อผิดพลาด กรุณาลองใหม่";

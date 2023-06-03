@@ -73,8 +73,6 @@ export default function CreateProject() {
     }
   }, []);
 
-  console.log(hasProject)
-
   return (
     <Stack gap={96} className="content">
       <NavBar />
