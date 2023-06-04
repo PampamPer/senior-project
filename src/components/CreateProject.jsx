@@ -14,7 +14,7 @@ import { clearStorage } from "../middleware/Auth";
 
 export default function CreateProject() {
   const email = localStorage.getItem("email");
-  const hasProject = localStorage.getItem("advisor1") != "null";
+  const hasProject = localStorage.getItem("hasProject")=="true";
   const { semesterId } = useContext(AppContext);
 
   const [projectNameEn, setProjectNameEn] = useState("");
@@ -52,12 +52,13 @@ export default function CreateProject() {
     localStorage.removeItem("advisor1");
     localStorage.removeItem("advisor2");
     localStorage.removeItem("regProcess");
+    localStorage.removeItem("้hasProject");
 
     navigate("/main")
   }
 
   useEffect(() => {
-    let hasProject = localStorage.getItem("advisor1") != "null";
+    // let hasProject = localStorage.getItem("hasProject");
     if (!regProcess) {
       clearStorage();
     } else if (hasProject) {

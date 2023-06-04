@@ -74,7 +74,8 @@ export default function PersonalInfo() {
         studentEmail: email,
       })
       .then((res) => {
-        localStorage.setItem("advisor1", res.data.advisor1);
+        localStorage.setItem("hasProject", res.data.advisor1!=null)
+        // localStorage.setItem("advisor1", res.data.advisor1);
         navigate("/create-project");
       })
       .catch((err) => {

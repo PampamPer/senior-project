@@ -63,6 +63,7 @@ export default function VerifyProject() {
     localStorage.removeItem("advisor1");
     localStorage.removeItem("advisor2");
     localStorage.removeItem("regProcess");
+    localStorage.removeItem("้hasProject");
 
     navigate("/main");
   };

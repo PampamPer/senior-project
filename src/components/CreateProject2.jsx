@@ -91,14 +91,6 @@ export default function CreateProject2() {
   }, []);
 
   const handleSubmit = () => {
-    if (
-      projectNameEn == "" ||
-      projectNameTh == "" ||
-      advisor1 == "" ||
-      major == ""
-    ) {
-      toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
-    }
     if (moreStudent2 || moreStudent3) {
       if (!student2) {
         toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
@@ -108,26 +100,38 @@ export default function CreateProject2() {
     }
     if (moreAdvisor) {
       if (!advisor2) toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+    }
+    if (
+      projectNameEn == "" ||
+      projectNameTh == "" ||
+      advisor1 == "" ||
+      major == ""
+    ) {
+      toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
     } else {
-      axios
-        .put(`NewMember/addProjectInfo?semesterid=${semesterId}`, {
-          email: email,
-          major: major,
-          projectNameTh: projectNameTh,
-          projectNameEn: projectNameEn,
-          advisorId1: advisor1,
-          advisorId2: advisor2,
-          studentId1: studentId,
-          studentId2: student2,
-          studentId3: student3,
-        })
-        .then((res) => {
-          toast.success("เพิ่มข้อมูลโครงงานสำเร็จ");
-          sendMail();
-        })
-        .catch((err) => {
-          toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
-        });
+        toast.promise(
+          axios.put(`NewMember/addProjectInfo?semesterid=${semesterId}`, {
+            email: email,
+            major: major,
+            projectNameTh: projectNameTh,
+            projectNameEn: projectNameEn,
+            advisorId1: advisor1,
+            advisorId2: advisor2,
+            studentId1: studentId,
+            studentId2: student2,
+            studentId3: student3,
+          }),
+          {
+            loading: "กำลังดำเนินการ...",
+            success: () => {
+              sendMail();
+              return "เพิ่มข้อมูลโครงงานสำเร็จ";
+            },
+            error: () => {
+              return "เกิดข้อผิดพลาด กรุณาลองใหม่";
+            },
+          }
+        );
     }
   };
 
