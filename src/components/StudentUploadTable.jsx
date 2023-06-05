@@ -147,7 +147,9 @@ export default function StudentUploadTable() {
             clearStorage();
           } else if (getStatus(err) == "413") {
             return "ขนาดไฟล์มีขนาดใหญ่เกินกำหนด";
-          } else {
+          } else if (getStatus(err) == "415") {
+            return "นามสกุลไฟล์ไม่ถูกต้อง";
+          }else {
             return "เกิดข้อผิดพลาด กรุณาลองใหม่";
           }
         },

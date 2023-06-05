@@ -74,7 +74,7 @@ export default function CreateProject2() {
     const student3 = localStorage.getItem("student3");
 
     if (advisor2) {
-      setAdvisor1(advisor2);
+      setAdvisor2(advisor2);
     }
     if (student2) {
       setStudent2(student2);
@@ -82,12 +82,11 @@ export default function CreateProject2() {
     if (student3) {
       setStudent3(student3);
     }
-    if (major || projEn || projTh) {
-      setMajor(major);
-      setProjectNameTh(projTh);
-      setProjectNameEn(projEn);
-      setAdvisor1(advisor1);
-    }
+
+    setMajor(major);
+    setProjectNameTh(projTh);
+    setProjectNameEn(projEn);
+    setAdvisor1(advisor1);
   }, []);
 
   const handleSubmit = () => {
@@ -109,29 +108,29 @@ export default function CreateProject2() {
     ) {
       toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
     } else {
-        toast.promise(
-          axios.put(`NewMember/addProjectInfo?semesterid=${semesterId}`, {
-            email: email,
-            major: major,
-            projectNameTh: projectNameTh,
-            projectNameEn: projectNameEn,
-            advisorId1: advisor1,
-            advisorId2: advisor2,
-            studentId1: studentId,
-            studentId2: student2,
-            studentId3: student3,
-          }),
-          {
-            loading: "กำลังดำเนินการ...",
-            success: () => {
-              sendMail();
-              return "เพิ่มข้อมูลโครงงานสำเร็จ";
-            },
-            error: () => {
-              return "เกิดข้อผิดพลาด กรุณาลองใหม่";
-            },
-          }
-        );
+      toast.promise(
+        axios.put(`NewMember/addProjectInfo?semesterid=${semesterId}`, {
+          email: email,
+          major: major,
+          projectNameTh: projectNameTh,
+          projectNameEn: projectNameEn,
+          advisorId1: advisor1,
+          advisorId2: advisor2,
+          studentId1: studentId,
+          studentId2: student2,
+          studentId3: student3,
+        }),
+        {
+          loading: "กำลังดำเนินการ...",
+          success: () => {
+            sendMail();
+            return "เพิ่มข้อมูลโครงงานสำเร็จ";
+          },
+          error: () => {
+            return "เกิดข้อผิดพลาด กรุณาลองใหม่";
+          },
+        }
+      );
     }
   };
 

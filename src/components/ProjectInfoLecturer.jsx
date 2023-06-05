@@ -268,27 +268,6 @@ export default function ProjectInfoLecturer() {
   const submitGrading = () => {
     formData.append("file", selectFile);
     setOpenGradingUpload(false);
-    // axios
-    //   .put(`/${path}Uploads?${path}Id=${gradingFileID}`, formData, {
-    //     headers: {
-    //       "Content-Type": "multipart/form-data",
-    //       Authorization: "Bearer " + token,
-    //       timeout: 5 * 1000,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     setLoading(false);
-    //     // alert("Upload Grading file success!");
-    //     setUploadFileSuccess(true);
-    //   })
-    //   .catch((err) => {
-    //     if(getStatus(err)=="401") {
-    //       clearStorage();
-    //     }
-    //     setError(true);
-    //     setLoading(false);
-    //   });
-
     toast.promise(
       axios.put(`/${path}Uploads?${path}Id=${gradingFileID}`, formData, {
         headers: {
@@ -310,7 +289,11 @@ export default function ProjectInfoLecturer() {
             clearStorage();
           } else if (getStatus(err) == "413") {
             return "ขนาดไฟล์มีขนาดใหญ่เกินกำหนด";
-          } else {
+          } 
+          else if (err.response.data == "Only Advisor1 can upload (MATH)!") {
+            return "เฉพาะอาจารย์ที่ปรึกษาหลักเท่านั้น";
+          }
+          else {
             return "เกิดข้อผิดพลาด กรุณาลองใหม่";
           }
         },

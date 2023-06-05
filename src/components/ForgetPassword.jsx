@@ -11,6 +11,7 @@ import NavBar from "./NavBar";
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import { getStatus } from "../middleware/Auth";
 
 export default function ForgetPassword() {
   const [email, setEmail] = useState("");
@@ -46,23 +47,37 @@ export default function ForgetPassword() {
           }
         })
         .catch((err) => {
-          toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
+          if (getStatus(err) == "403") {
+            toast.error("ไม่พบบัญชีนี้ในระบบ");
+          } else {
+            toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่");
+          }
         });
     }
   };
 
   const forgetPW = () => {
-    toast.promise(axios.put("/PersonalInfo/forgetPassword", { email: email }), {
-      loading: "กำลังดำเนินการ...",
-      success: () => {
-        localStorage.setItem("previousPage", "forget-password");
-        navigate("/verify-member");
-        return "ส่งรหัสผ่านไปยังอีเมลสำเร็จ";
-      },
-      error: () => {
-        return "เกิดข้อผิดพลาด กรุณาลองใหม่";
-      },
-    });
+    toast.promise(
+      axios.put("/PersonalInfo/forgetPassword", {
+        email: email,
+        keyword: keyword,
+      }),
+      {
+        loading: "กำลังดำเนินการ...",
+        success: () => {
+          localStorage.setItem("previousPage", "forget-password");
+          navigate("/verify-member");
+          return "ส่งรหัสผ่านไปยังอีเมลสำเร็จ";
+        },
+        error: () => {
+          if (getStatus(err) == "403") {
+            return "ไม่พบบัญชีนี้ในระบบ";
+          } else {
+            return "เกิดข้อผิดพลาด กรุณาลองใหม่";
+          }
+        },
+      }
+    );
   };
 
   const handleKeyPress = (event) => {
@@ -70,7 +85,6 @@ export default function ForgetPassword() {
       checkHint();
     }
   };
-  
 
   // if (loading) {
   //   return <p>loading...</p>;
